@@ -312,18 +312,18 @@ async function checkAuth() {
   const params = new URLSearchParams(window.location.search);
   const inviteCode = params.get('invite');
   
+  const { data: { session } } = await _supabase.auth.getSession();
+
   if (inviteCode) {
-    const { data: { session } } = await _supabase.auth.getSession();
     if (!session) {
       localStorage.setItem('pendingInvite', inviteCode);
       document.getElementById('s-login').classList.add('active');
     } else {
-      loadPartnerFeed(inviteCode);
+      await loadPartnerFeed(inviteCode);
     }
     return;
   }
 
-  const { data: { session } } = await _supabase.auth.getSession();
   if (session) {
     document.getElementById('s-home').classList.add('active');
     loadEntries();
@@ -331,6 +331,7 @@ async function checkAuth() {
     document.getElementById('s-login').classList.add('active');
   }
 }
+
 
 
 checkAuth();
