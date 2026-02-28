@@ -308,6 +308,19 @@ async function signUp() {
 
 // 앱 시작할 때 로그인 확인
 async function checkAuth() {
+  const params = new URLSearchParams(window.location.search);
+  const inviteCode = params.get('invite');
+  
+  if (inviteCode) {
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (!session) {
+      localStorage.setItem('pendingInvite', inviteCode);
+      document.getElementById('s-login').classList.add('active');
+    } else {
+      loadPartnerFeed(inviteCode);
+    }
+    return;
+  }
 
   const { data: { session } } = await _supabase.auth.getSession();
   if (session) {
@@ -317,7 +330,6 @@ async function checkAuth() {
     document.getElementById('s-login').classList.add('active');
   }
 }
-
 
 
 checkAuth();
