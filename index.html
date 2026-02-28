@@ -2,7 +2,7 @@
 
 <html lang="ko" style="color-scheme:light;">
 <head>
-  
+
 <link rel="manifest" href="/manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -209,6 +209,50 @@
     'https://sctgioatjgudhtinvesf.supabase.co',
     'sb_publishable_Fivp1MTaIYVnvTJkQDyvIw_wHrmQ5d-'
   )
+
+  // 타임라인 불러오기
+async function loadEntries() {
+  const { data, error } = await _supabase
+    .from('entries')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) { console.error(error); return; }
+
+  const timeline = document.querySelector('.timeline');
+  
+  // 기존 하드코딩 내용 지우기
+  timeline.innerHTML = '';
+
+  data.forEach(entry => {
+    const div = document.createElement('div');
+    div.innerHTML = `
+      <div class="tl-date">${entry.date || ''}</div>
+      <div class="tl-row">
+        <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+        <div class="card">
+          <div class="card-top">
+            <div class="card-icon diary">📝</div>
+            <div class="card-meta">
+              <div class="card-type">${entry.type || '일기'}</div>
+              <div class="card-time">${new Date(entry.created_at).toLocaleTimeString('ko-KR', {hour:'2-digit', minute:'2-digit'})}</div>
+            </div>
+            <div class="week-tag">${entry.week || ''}주</div>
+          </div>
+          <div class="card-body">
+            <div class="card-text">${entry.content || ''}</div>
+            ${entry.mood ? `<div class="mood">${entry.mood}</div>` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+    timeline.appendChild(div);
+  });
+}
+
+// 홈 화면 열릴 때 자동 로드
+loadEntries();
+
 // 일기 저장
 async function saveEntry() {
   const content = document.querySelector('.txt-in').value;
@@ -461,8 +505,14 @@ async function saveEntry() {
 <script>
   let hist=['s-home'];
   function goTo(id){const c=document.querySelector('.screen.active'),n=document.getElementById(id);if(!n||c===n)return;c.classList.add('exit');n.classList.add('active');hist.push(id);setTimeout(()=>c.classList.remove('active','exit'),340);}
-  function goBack(){if(hist.length<=1)return;hist.pop();const p=hist[hist.length-1],c=document.querySelector('.screen.active'),pr=document.getElementById(p);if(!pr)return;pr.classList.add('active');c.style.transition='transform 0.3s cubic-bezier(0.4,0,0.2,1)';c.style.transform='translateX(100%)';setTimeout(()=>{c.classList.remove('active');c.style.cssText='';},310);}
-  function navTo(sid,nid){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById(nid).classList.add('active');const c=document.querySelector('.screen.active'),n=document.getElementById(sid);if(!n||c===n)return;c.classList.remove('active');n.classList.add('active');hist=[sid];}
+  function goBack(){if(hist.length<=1)return;hist.pop();const p=hist[hist.length-1],c=document.querySelector('.screen.active'),pr=document.getElementById(p);if(!pr)return;pr.classList.add('active');c.style.transition='transform 0.3s cubic-bezier(0.4,0,0.2,1)';c.style.transform='translateX(100%)';setTimeout(()=>{c.classList.remove('active');c.style.cssText='';},310);if (hist[hist.length - 1] === 's-home') {
+  loadEntries();
+}
+}
+  function navTo(sid,nid){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById(nid).classList.add('active');const c=document.querySelector('.screen.active'),n=document.getElementById(sid);if(!n||c===n)return;c.classList.remove('active');n.classList.add('active');hist=[sid];if (sid === 's-home') {
+  loadEntries();
+}
+}
   function selTab(el){el.closest('.type-tabs').querySelectorAll('.type-tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');}
   function selPill(el){el.closest('.pills').querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));el.classList.add('on');}
 </script>
