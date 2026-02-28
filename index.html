@@ -278,7 +278,8 @@ async function saveEntry() {
     type, content, week, mood, date: new Date().toISOString().split('T')[0], 
     image_url,
     user_id: user.id,
-    is_public: false });
+    const isPublic = document.getElementById('privacy-public').classList.contains('on');
+
 
   if (error) { alert('저장 실패 😢'); console.error(error); return; }
   selectedFile = null;
@@ -512,6 +513,15 @@ checkAuth();
           <div class="pill" onclick="selPill(this)">😴 피곤</div>
         </div>
       </div>
+
+      <div class="fld">
+  <label class="fld-lbl">공개 범위</label>
+  <div class="pills">
+    <div class="pill on" onclick="selPill(this)" id="privacy-private">🔒 나만 보기</div>
+    <div class="pill" onclick="selPill(this)" id="privacy-public">💜 파트너 공개</div>
+  </div>
+</div>
+
       <button class="save-btn" onclick="saveEntry()">저장하기</button>
 
     </div>
