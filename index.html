@@ -295,7 +295,7 @@ async function signUp() {
 
 // 앱 시작할 때 로그인 확인
 async function checkAuth() {
-  await _supabase.auth.signOut(); // 임시로 강제 로그아웃
+
   const { data: { session } } = await _supabase.auth.getSession();
   if (session) {
     document.getElementById('s-home').classList.add('active');
