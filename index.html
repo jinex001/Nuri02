@@ -703,21 +703,27 @@ checkAuth();
     if (prevId === 's-home') loadEntries();
   }
 
-  function navTo(screenId, navId){
-    qsa('.nav-item').forEach(n => n.classList.remove('active'));
-    const nav = document.getElementById(navId);
-    if (nav) nav.classList.add('active');
+  function navTo(screenId, navId) {
+  // 네비게이션 버튼 active 처리
+  qsa('.nav-item').forEach(n => n.classList.remove('active'));
+  const nav = document.getElementById(navId);
+  if (nav) nav.classList.add('active');
 
-    const c = qs('.screen.active');
-    const n = document.getElementById(screenId);
-    if(!n) return;
+  // 화면 전환
+  const c = qs('.screen.active');
+  const n = document.getElementById(screenId);
+  if (!n) return;
+  if (c) c.classList.remove('active');
+  n.classList.add('active');
+  hist = [screenId];
 
-    if (c) c.classList.remove('active');
-    n.classList.add('active');
-    hist = [screenId];
-
-    if (screenId === 's-home') loadEntries();
+  // 화면에 따른 후처리
+  if (screenId === 's-home') {
+    loadEntries();
+  } else if (screenId === 's-settings') {
+    loadProfile();  // 설정 화면이면 프로필과 초대 링크 로딩
   }
+}
 
   function selTab(el){
     const wrap = el.closest('.type-tabs');
