@@ -652,57 +652,213 @@ checkAuth();
 </nav>
 
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+  // ===== Supabase init =====
+  const _supabase = supabase.createClient(
+    'https://sctgioatjgudhtinvesf.supabase.co',
+    'sb_publishable_Fivp1MTaIYVnvTJkQDyvIw_wHrmQ5d-'
+  );
 
-  async function loadPartnerFeed(inviteCode) {
-  // 초대코드로 작성자 찾기
-  const { data: profile } = await _supabase
-    .from('profiles')
-    .select('*')
-    .eq('invite_code', inviteCode)
-    .single();
+  // ===== Global state =====
+  let selectedFile = null;
+  let hist = ['s-home'];
 
-  if (!profile) { alert('유효하지 않은 초대 링크예요 😢'); return; }
+  // ===== Helpers =====
+  function qs(sel, root=document){ return root.querySelector(sel); }
+  function qsa(sel, root=document){ return [...root.querySelectorAll(sel)]; }
 
-  // 팔로우 저장
-  const { data: { user } } = await _supabase.auth.getUser();
-  await _supabase.from('follows').upsert({
-    follower_id: user.id,
-    following_id: profile.id
-  });
+  // ===== Navigation (screen transitions) =====
+  function goTo(id){
+    const c = qs('.screen.active');
+    const n = document.getElementById(id);
+    if(!n || c === n) return;
 
-  // 화면 업데이트
-  document.getElementById('partner-name').textContent = profile.display_name || '작성자';
-  document.getElementById('partner-week').textContent = `임신 ${profile.current_week || '?'}주차 🤰`;
+    if (c) c.classList.add('exit');
+    n.classList.add('active');
+    hist.push(id);
 
-  // 공개 글 불러오기
-  const { data: entries } = await _supabase
-    .from('entries')
-    .select('*')
-    .eq('user_id', profile.id)
-    .eq('is_public', true)
-    .order('created_at', { ascending: false });
+    setTimeout(() => { if (c) c.classList.remove('active','exit'); }, 340);
+  }
 
-  const timeline = document.getElementById('partner-timeline');
-  timeline.innerHTML = '';
+  function goBack(){
+    if(hist.length <= 1) return;
+    hist.pop();
 
-  if (!entries || entries.length === 0) {
-    timeline.innerHTML = '<div style="text-align:center;color:var(--text-soft);padding:40px;font-size:13px;">아직 공개된 기록이 없어요 🌱</div>';
-  } else {
-    entries.forEach(entry => {
+    const prevId = hist[hist.length - 1];
+    const c = qs('.screen.active');
+    const p = document.getElementById(prevId);
+    if(!p || !c) return;
+
+    p.classList.add('active');
+    c.style.transition = 'transform 0.3s cubic-bezier(0.4,0,0.2,1)';
+    c.style.transform = 'translateX(100%)';
+
+    setTimeout(() => {
+      c.classList.remove('active');
+      c.style.cssText = '';
+    }, 310);
+
+    // 홈으로 돌아오면 새로고침
+    if (prevId === 's-home') loadEntries();
+  }
+
+  function navTo(screenId, navId){
+    qsa('.nav-item').forEach(n => n.classList.remove('active'));
+    const nav = document.getElementById(navId);
+    if (nav) nav.classList.add('active');
+
+    const c = qs('.screen.active');
+    const n = document.getElementById(screenId);
+    if(!n) return;
+
+    if (c) c.classList.remove('active');
+    n.classList.add('active');
+    hist = [screenId];
+
+    if (screenId === 's-home') loadEntries();
+  }
+
+  function selTab(el){
+    const wrap = el.closest('.type-tabs');
+    if (!wrap) return;
+    qsa('.type-tab', wrap).forEach(t => t.classList.remove('on'));
+    el.classList.add('on');
+  }
+
+  function selPill(el){
+    const wrap = el.closest('.pills');
+    if (!wrap) return;
+    qsa('.pill', wrap).forEach(p => p.classList.remove('on'));
+    el.classList.add('on');
+  }
+
+  // ===== Photo preview/upload =====
+  function previewPhoto(input) {
+    const file = input.files?.[0];
+    if (!file) return;
+
+    selectedFile = file;
+
+    const reader = new FileReader();
+    reader.onload = e => {
+      const preview = document.getElementById('photo-preview');
+      if (preview) {
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+      }
+      const lbl = document.getElementById('cam-lbl');
+      if (lbl) lbl.style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  async function uploadPhoto() {
+    if (!selectedFile) return null;
+
+    const fileName = `${Date.now()}.jpg`;
+    const { error } = await _supabase.storage.from('photos').upload(fileName, selectedFile);
+    if (error) { console.error(error); return null; }
+
+    const { data } = _supabase.storage.from('photos').getPublicUrl(fileName);
+    return data?.publicUrl ?? null;
+  }
+
+  // ===== Auth =====
+  async function signIn() {
+    const email = document.getElementById('login-email')?.value?.trim();
+    const pw = document.getElementById('login-pw')?.value;
+
+    const { error } = await _supabase.auth.signInWithPassword({ email, password: pw });
+    if (error) { alert('로그인 실패 😢 ' + error.message); return; }
+
+    navTo('s-home', 'n-home');
+    loadEntries();
+  }
+
+  async function signUp() {
+    const email = document.getElementById('login-email')?.value?.trim();
+    const pw = document.getElementById('login-pw')?.value;
+
+    const { error } = await _supabase.auth.signUp({ email, password: pw });
+    if (error) { alert('가입 실패 😢 ' + error.message); return; }
+
+    alert('가입 완료! 🌸');
+    navTo('s-home', 'n-home');
+    loadEntries();
+  }
+
+  async function signOut() {
+    await _supabase.auth.signOut();
+    qsa('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('s-login')?.classList.add('active');
+    hist = ['s-login'];
+  }
+
+  async function checkAuth() {
+    const params = new URLSearchParams(window.location.search);
+    const inviteCode = params.get('invite');
+
+    const { data: { session } } = await _supabase.auth.getSession();
+
+    // 초대 링크 흐름(원래 코드 유지)
+    if (inviteCode) {
+      if (!session) {
+        localStorage.setItem('pendingInvite', inviteCode);
+        document.getElementById('s-login')?.classList.add('active');
+        hist = ['s-login'];
+      } else {
+        await loadPartnerFeed(inviteCode);
+      }
+      return;
+    }
+
+    // 일반 흐름
+    if (session) {
+      qsa('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('s-home')?.classList.add('active');
+      hist = ['s-home'];
+      loadEntries();
+    } else {
+      qsa('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('s-login')?.classList.add('active');
+      hist = ['s-login'];
+    }
+  }
+
+  // ===== Entries (timeline) =====
+  async function loadEntries() {
+    const timeline = qs('#s-home .timeline');
+    if (!timeline) return; // DOM 없으면 조용히 종료
+
+    const { data, error } = await _supabase
+      .from('entries')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) { console.error(error); return; }
+
+    timeline.innerHTML = '';
+
+    (data || []).forEach(entry => {
       const div = document.createElement('div');
       div.innerHTML = `
         <div class="tl-date">${entry.date || ''}</div>
         <div class="tl-row">
-          <div class="tl-spine"><div class="tl-dot ${entry.image_url ? 'gold' : ''}"></div><div class="tl-line"></div></div>
+          <div class="tl-spine">
+            <div class="tl-dot ${entry.image_url ? 'gold' : ''}"></div>
+            <div class="tl-line"></div>
+          </div>
           <div class="card">
             <div class="card-top">
               <div class="card-icon ${entry.image_url ? 'us' : 'diary'}">${entry.image_url ? '🔬' : '📝'}</div>
               <div class="card-meta">
                 <div class="card-type">${entry.type || '일기'}</div>
-                <div class="card-time">${new Date(entry.created_at).toLocaleTimeString('ko-KR', {hour:'2-digit', minute:'2-digit'})}</div>
+                <div class="card-time">
+                  ${entry.created_at ? new Date(entry.created_at).toLocaleTimeString('ko-KR',{hour:'2-digit', minute:'2-digit'}) : ''}
+                </div>
               </div>
-              <div class="week-tag">${entry.week || ''}주</div>
+              <div class="week-tag">${entry.week ? `${entry.week}주` : ''}</div>
             </div>
             ${entry.image_url ? `<div class="us-photo" style="background-image:url('${entry.image_url}');background-size:cover;background-position:center;"></div>` : ''}
             <div class="card-body">
@@ -716,83 +872,166 @@ checkAuth();
     });
   }
 
-  // 파트너 피드 화면으로 이동
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('s-partner').classList.add('active');
-}
+  async function saveEntry() {
+    // 메모 input은 "새 기록" 화면의 두 번째 fld에 있는 .txt-in 이라 범위를 #s-new로 제한
+    const content = qs('#s-new .txt-in')?.value ?? '';
 
+    const weekEl = qs('#s-new .fld .pills .pill.on'); // 첫번째 pills(주수)
+    const week = weekEl ? parseInt(weekEl.textContent) : null;
+
+    // 감정 pills는 세 번째 fld 쪽이라 안전하게 잡기(너 구조 기준)
+    const moodEl = qs('#s-new .fld:nth-of-type(3) .pill.on');
+    const mood = moodEl?.textContent ?? '';
+
+    const type = qs('#s-new .type-tab.on')?.textContent?.trim() ?? '일기';
+
+    const isPublic = document.getElementById('privacy-public')?.classList.contains('on') ?? false;
+
+    const { data: { user }, error: uerr } = await _supabase.auth.getUser();
+    if (uerr || !user) { alert('로그인이 필요해요 😢'); return; }
+
+    let image_url = null;
+    if (selectedFile) image_url = await uploadPhoto();
+
+    const { error } = await _supabase
+      .from('entries')
+      .insert({
+        type,
+        content,
+        week,
+        mood,
+        date: new Date().toISOString().split('T')[0],
+        image_url,
+        user_id: user.id,
+        is_public: isPublic
+      });
+
+    if (error) { alert('저장 실패 😢'); console.error(error); return; }
+
+    selectedFile = null;
+    // UI 리셋(선택)
+    const preview = document.getElementById('photo-preview');
+    if (preview) { preview.src=''; preview.style.display='none'; }
+    const camLbl = document.getElementById('cam-lbl');
+    if (camLbl) camLbl.style.display='block';
+
+    alert('저장됐어! 🌸');
+    goBack();
+  }
+
+  // ===== Partner feed / profile (원래 함수들 유지) =====
+  async function loadPartnerFeed(inviteCode) {
+    const { data: profile } = await _supabase
+      .from('profiles')
+      .select('*')
+      .eq('invite_code', inviteCode)
+      .single();
+
+    if (!profile) { alert('유효하지 않은 초대 링크예요 😢'); return; }
+
+    const { data: { user } } = await _supabase.auth.getUser();
+    await _supabase.from('follows').upsert({
+      follower_id: user.id,
+      following_id: profile.id
+    });
+
+    document.getElementById('partner-name').textContent = profile.display_name || '작성자';
+    document.getElementById('partner-week').textContent = `임신 ${profile.current_week || '?'}주차 🤰`;
+
+    const { data: entries } = await _supabase
+      .from('entries')
+      .select('*')
+      .eq('user_id', profile.id)
+      .eq('is_public', true)
+      .order('created_at', { ascending: false });
+
+    const timeline = document.getElementById('partner-timeline');
+    timeline.innerHTML = '';
+
+    if (!entries || entries.length === 0) {
+      timeline.innerHTML = '<div style="text-align:center;color:var(--text-soft);padding:40px;font-size:13px;">아직 공개된 기록이 없어요 🌱</div>';
+    } else {
+      entries.forEach(entry => {
+        const div = document.createElement('div');
+        div.innerHTML = `
+          <div class="tl-date">${entry.date || ''}</div>
+          <div class="tl-row">
+            <div class="tl-spine"><div class="tl-dot ${entry.image_url ? 'gold' : ''}"></div><div class="tl-line"></div></div>
+            <div class="card">
+              <div class="card-top">
+                <div class="card-icon ${entry.image_url ? 'us' : 'diary'}">${entry.image_url ? '🔬' : '📝'}</div>
+                <div class="card-meta">
+                  <div class="card-type">${entry.type || '일기'}</div>
+                  <div class="card-time">${new Date(entry.created_at).toLocaleTimeString('ko-KR', {hour:'2-digit', minute:'2-digit'})}</div>
+                </div>
+                <div class="week-tag">${entry.week ? `${entry.week}주` : ''}</div>
+              </div>
+              ${entry.image_url ? `<div class="us-photo" style="background-image:url('${entry.image_url}');background-size:cover;background-position:center;"></div>` : ''}
+              <div class="card-body">
+                <div class="card-text">${entry.content || ''}</div>
+                ${entry.mood ? `<div class="mood">${entry.mood}</div>` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+        timeline.appendChild(div);
+      });
+    }
+
+    qsa('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('s-partner')?.classList.add('active');
+    hist = ['s-partner'];
+  }
 
   async function loadProfile() {
-  const { data: { user } } = await _supabase.auth.getUser();
-  const { data } = await _supabase.from('profiles').select('*').eq('id', user.id).single();
-  if (data) {
-    document.getElementById('week-input').value = data.current_week || '';
-    document.getElementById('edd-input').value = data.edd || '';
-    const link = `${window.location.origin}?invite=${data.invite_code}`;
-    document.getElementById('invite-link').textContent = link;
+    const { data: { user } } = await _supabase.auth.getUser();
+    if (!user) return;
+
+    const { data } = await _supabase.from('profiles').select('*').eq('id', user.id).single();
+    if (data) {
+      document.getElementById('week-input').value = data.current_week || '';
+      document.getElementById('edd-input').value = data.edd || '';
+      const link = `${window.location.origin}?invite=${data.invite_code}`;
+      document.getElementById('invite-link').textContent = link;
+    }
   }
-}
 
-async function saveProfile() {
-  const { data: { user } } = await _supabase.auth.getUser();
-  const week = parseInt(document.getElementById('week-input').value);
-  const edd = document.getElementById('edd-input').value;
-  await _supabase.from('profiles').update({ current_week: week, edd }).eq('id', user.id);
-  alert('저장됐어! 🌸');
-}
+  async function saveProfile() {
+    const { data: { user } } = await _supabase.auth.getUser();
+    if (!user) return;
 
-async function copyInviteLink() {
-  const link = document.getElementById('invite-link').textContent;
-  await navigator.clipboard.writeText(link);
-  alert('링크 복사됐어! 📋');
-}
+    const week = parseInt(document.getElementById('week-input').value);
+    const edd = document.getElementById('edd-input').value;
 
-async function signOut() {
-  await _supabase.auth.signOut();
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('s-login').classList.add('active');
-}
+    await _supabase.from('profiles').update({ current_week: week, edd }).eq('id', user.id);
+    alert('저장됐어! 🌸');
+  }
 
+  async function copyInviteLink() {
+    const link = document.getElementById('invite-link').textContent;
+    await navigator.clipboard.writeText(link);
+    alert('링크 복사됐어! 📋');
+  }
 
-  let selectedFile = null;
+  // ===== Make functions global (onclick에서 호출하려면 필요) =====
+  window.goTo = goTo;
+  window.goBack = goBack;
+  window.navTo = navTo;
+  window.selTab = selTab;
+  window.selPill = selPill;
+  window.previewPhoto = previewPhoto;
+  window.saveEntry = saveEntry;
+  window.signIn = signIn;
+  window.signUp = signUp;
+  window.signOut = signOut;
+  window.loadProfile = loadProfile;
+  window.saveProfile = saveProfile;
+  window.copyInviteLink = copyInviteLink;
 
-function previewPhoto(input) {
-  const file = input.files[0];
-  if (!file) return;
-  selectedFile = file;
-  const reader = new FileReader();
-  reader.onload = e => {
-    const preview = document.getElementById('photo-preview');
-    preview.src = e.target.result;
-    preview.style.display = 'block';
-    document.getElementById('cam-lbl').style.display = 'none';
-  };
-  reader.readAsDataURL(file);
-}
-
-async function uploadPhoto() {
-  if (!selectedFile) return null;
-  const fileName = `${Date.now()}.jpg`;
-  const { error } = await _supabase.storage
-    .from('photos')
-    .upload(fileName, selectedFile);
-  if (error) { console.error(error); return null; }
-  const { data } = _supabase.storage.from('photos').getPublicUrl(fileName);
-  return data.publicUrl;
-}
-
-  let hist=['s-home'];
-  function goTo(id){const c=document.querySelector('.screen.active'),n=document.getElementById(id);if(!n||c===n)return;c.classList.add('exit');n.classList.add('active');hist.push(id);setTimeout(()=>c.classList.remove('active','exit'),340);}
-  function goBack(){if(hist.length<=1)return;hist.pop();const p=hist[hist.length-1],c=document.querySelector('.screen.active'),pr=document.getElementById(p);if(!pr)return;pr.classList.add('active');c.style.transition='transform 0.3s cubic-bezier(0.4,0,0.2,1)';c.style.transform='translateX(100%)';setTimeout(()=>{c.classList.remove('active');c.style.cssText='';},310);if (hist[hist.length - 1] === 's-home') {
-  loadEntries();
-}
-}
-  function navTo(sid,nid){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById(nid).classList.add('active');const c=document.querySelector('.screen.active'),n=document.getElementById(sid);if(!n||c===n)return;c.classList.remove('active');n.classList.add('active');hist=[sid];if (sid === 's-home') {
-  loadEntries();
-}
-}
-  function selTab(el){el.closest('.type-tabs').querySelectorAll('.type-tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');}
-  function selPill(el){el.closest('.pills').querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));el.classList.add('on');}
+  // ===== Start AFTER DOM is ready =====
+  window.addEventListener('DOMContentLoaded', () => {
+    checkAuth();
+  });
 </script>
 </body>
 </html>
