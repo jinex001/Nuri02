@@ -74,7 +74,11 @@
   .nav-item.active { background:var(--lilac-pale); }
   .fab { width:48px; height:48px; border-radius:16px; background:linear-gradient(135deg,#8B5E8C,#5A2E5B); display:flex; align-items:center; justify-content:center; color:white; font-size:24px; box-shadow:0 4px 16px rgba(107,61,108,0.4); cursor:pointer; margin-top:-4px; }
 
-/* HOME */
+
+
+
+
+  /* HOME */
 .home-header { padding:14px 20px 0; }
 .home-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
 .logo { font-family:‘Playfair Display’,serif; font-size:28px; color:#1E1520; letter-spacing:0.04em; }
@@ -270,12 +274,58 @@ async function saveEntry() {
   goBack();
 }
 
+async function signIn() {
+  const email = document.getElementById('login-email').value;
+  const pw = document.getElementById('login-pw').value;
+  const { error } = await _supabase.auth.signInWithPassword({ email, password: pw });
+  if (error) { alert('로그인 실패 😢 ' + error.message); return; }
+  navTo('s-home', 'n-home');
+  loadEntries();
+}
+
+async function signUp() {
+  const email = document.getElementById('login-email').value;
+  const pw = document.getElementById('login-pw').value;
+  const { error } = await _supabase.auth.signUp({ email, password: pw });
+  if (error) { alert('가입 실패 😢 ' + error.message); return; }
+  alert('가입 완료! 🌸');
+  navTo('s-home', 'n-home');
+  loadEntries();
+}
+
+// 앱 시작할 때 로그인 확인
+async function checkAuth() {
+  const { data: { session } } = await _supabase.auth.getSession();
+  if (session) {
+    navTo('s-home', 'n-home');
+    loadEntries();
+  }
+}
+
+checkAuth();
+
 
 </script>
 
 </head>
 <body>
 <div id="app">
+
+  <!-- LOGIN -->
+<div class="screen active" id="s-login">
+  <div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 32px;background:#FFFFFF;">
+    <div style="font-family:'Playfair Display',serif;font-size:48px;color:#1E1520;margin-bottom:8px;">nuri</div>
+    <div style="font-size:13px;color:#9B8A9D;margin-bottom:48px;">임신 기록을 시작해요 🌸</div>
+
+    <div style="width:100%;display:flex;flex-direction:column;gap:12px;">
+      <input id="login-email" class="txt-in" type="email" placeholder="이메일">
+      <input id="login-pw" class="txt-in" type="password" placeholder="비밀번호">
+      <button class="save-btn" onclick="signIn()">로그인</button>
+      <button onclick="signUp()" style="width:100%;background:var(--lilac-pale);color:var(--lilac-deep);border:none;border-radius:15px;padding:14px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">회원가입</button>
+    </div>
+  </div>
+</div>
+
 
   <!-- HOME -->
 
