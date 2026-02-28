@@ -231,25 +231,27 @@ async function loadEntries() {
   data.forEach(entry => {
     const div = document.createElement('div');
     div.innerHTML = `
-      <div class="tl-date">${entry.date || ''}</div>
-      <div class="tl-row">
-        <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
-        <div class="card">
-          <div class="card-top">
-            <div class="card-icon diary">📝</div>
-            <div class="card-meta">
-              <div class="card-type">${entry.type || '일기'}</div>
-              <div class="card-time">${new Date(entry.created_at).toLocaleTimeString('ko-KR', {hour:'2-digit', minute:'2-digit'})}</div>
-            </div>
-            <div class="week-tag">${entry.week || ''}주</div>
-          </div>
-          <div class="card-body">
-            <div class="card-text">${entry.content || ''}</div>
-            ${entry.mood ? `<div class="mood">${entry.mood}</div>` : ''}
-          </div>
+  <div class="tl-date">${entry.date || ''}</div>
+  <div class="tl-row">
+    <div class="tl-spine"><div class="tl-dot ${entry.image_url ? 'gold' : ''}"></div><div class="tl-line"></div></div>
+    <div class="card">
+      <div class="card-top">
+        <div class="card-icon ${entry.image_url ? 'us' : 'diary'}">${entry.image_url ? '🔬' : '📝'}</div>
+        <div class="card-meta">
+          <div class="card-type">${entry.type || '일기'}</div>
+          <div class="card-time">${new Date(entry.created_at).toLocaleTimeString('ko-KR', {hour:'2-digit', minute:'2-digit'})}</div>
         </div>
+        <div class="week-tag">${entry.week || ''}주</div>
       </div>
-    `;
+      ${entry.image_url ? `<div class="us-photo" style="background-image:url('${entry.image_url}');background-size:cover;background-position:center;"></div>` : ''}
+      <div class="card-body">
+        <div class="card-text">${entry.content || ''}</div>
+        ${entry.mood ? `<div class="mood">${entry.mood}</div>` : ''}
+      </div>
+    </div>
+  </div>
+`;
+
     timeline.appendChild(div);
   });
 }
