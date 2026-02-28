@@ -1,1 +1,470 @@
-hello
+<!DOCTYPE html>
+
+<html lang="ko" style="color-scheme:light;">
+<head>
+  
+<link rel="manifest" href="/manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Nuri">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="color-scheme" content="light">
+<title>Nuri</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+
+<style>
+  * { border-color: #D4B0D5 !important; }
+
+  :root {
+    color-scheme: light;
+    --lilac: #C8A2C9;
+    --lilac-deep: #8B5E8C;
+    --lilac-pale: #F0E6F1;
+    --cream: #FEFBCE;
+    --cream-muted: #FAF6B8;
+    --surface: #FFFFFF;
+    --surface2: #FAF7FB;
+    --text: #1E1520;
+    --text-mid: #5C4D5E;
+    --text-soft: #9B8A9D;
+    --border: #D4B0D5;
+    --gold: #C9A96E;
+    --green: #7EC8A4;
+    --green-pale: #E8F7F0;
+    --green-text: #4A9070;
+  }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans-serif; background:#2A1F2E; color:var(--text); -webkit-font-smoothing:antialiased; }
+  #app { width:100%; height:100%; max-width:430px; margin:0 auto; background:var(--surface); position:relative; overflow:hidden; }
+  .screen { position:absolute; inset:0; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; padding-bottom:82px; background:#FFFFFF; transform:translateX(100%); transition:transform 0.32s cubic-bezier(0.4,0,0.2,1); }
+  .screen.active { transform:translateX(0); }
+  .screen.exit { transform:translateX(-28%); }
+  .status-bar { padding:14px 24px 0; display:flex; justify-content:space-between; font-size:12px; font-weight:600; color:#1E1520; }
+  .status-bar.light { color:rgba(255,255,255,0.8); }
+  .bottom-nav {
+  position:fixed; bottom:20px;
+  left:50%; transform:translateX(-50%);
+  width:auto;
+  background:rgba(30,21,32,0.85);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:40px;
+  padding:10px 16px;
+  display:flex; align-items:center; gap:4px;
+  z-index:999;
+  box-shadow:0 8px 32px rgba(0,0,0,0.3);
+}
+.nav-item { padding:8px 14px; border-radius:30px; flex-direction:row; gap:6px; }
+.nav-item.active { background:rgba(200,162,201,0.25); }
+.nav-icon { display:none; }
+.nav-lbl { display:none; }
+.nav-item i { font-size:22px; color:rgba(255,255,255,0.5); }
+.nav-item.active i { color:#E2CCE3; }
+
+.nav-item.active .nav-lbl { color:#E2CCE3; }
+.fab { width:40px; height:40px; border-radius:50%; font-size:20px; margin:0 4px; box-shadow:0 4px 14px rgba(139,94,140,0.5); }
+.nav-item { display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; padding:4px 8px; border-radius:12px; }
+  .nav-icon { font-size:20px; line-height:1; }
+  .nav-lbl { font-size:20px; font-weight:600; letter-spacing:0.05em; text-transform:uppercase; color:var(--text-soft); }
+  .nav-item.active .nav-lbl { color:var(--lilac-deep); }
+  .nav-item.active { background:var(--lilac-pale); }
+  .fab { width:48px; height:48px; border-radius:16px; background:linear-gradient(135deg,#8B5E8C,#5A2E5B); display:flex; align-items:center; justify-content:center; color:white; font-size:24px; box-shadow:0 4px 16px rgba(107,61,108,0.4); cursor:pointer; margin-top:-4px; }
+
+/* HOME */
+.home-header { padding:14px 20px 0; }
+.home-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+.logo { font-family:‘Playfair Display’,serif; font-size:28px; color:#1E1520; letter-spacing:0.04em; }
+.logo em { color:var(–lilac-deep); font-style:normal; }
+.avatar-btn { width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,var(–lilac),var(–lilac-deep)); display:flex; align-items:center; justify-content:center; font-size:17px; box-shadow:0 2px 10px rgba(139,94,140,0.35); cursor:pointer; }
+.week-card { border-radius:20px; padding:16px 18px; display:flex; align-items:center; gap:14px; margin-bottom:16px; position:relative; overflow:hidden; background-color:#1E1520; background-image:linear-gradient(135deg,#1E1520 0%,#3A2B3C 100%); }
+.week-card::after { content:’’; position:absolute; right:-15px; top:-15px; width:90px; height:90px; background:radial-gradient(circle,rgba(200,162,201,0.25) 0%,transparent 70%); border-radius:50%; }
+.week-num { font-family:‘Playfair Display’,serif; font-size:54px; line-height:1; color:#FFFFFF; flex-shrink:0; }
+.week-num sup { font-family:‘Outfit’,sans-serif; font-size:14px; font-weight:300; opacity:0.5; vertical-align:super; }
+.week-info { flex:1; }
+.week-info h3 { font-size:13px; font-weight:500; color:rgba(255,255,255,0.9); margin-bottom:3px; }
+.week-info p { font-size:11px; color:rgba(255,255,255,0.5); line-height:1.5; }
+.edd-box { background:rgba(254,251,206,0.12); border:1px solid rgba(254,251,206,0.22); border-radius:10px; padding:8px 10px; text-align:center; flex-shrink:0; }
+.edd-box .lbl { font-size:9px; color:rgba(255,255,255,0.45); letter-spacing:0.08em; text-transform:uppercase; }
+.edd-box .val { font-size:15px; font-weight:600; color:#FEFBCE; margin-top:1px; }
+.cal-wrap { padding:0 20px 14px; }
+.cal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+.cal-month { font-family:‘Playfair Display’,serif; font-size:17px; color:#1E1520; }
+.cal-nav { display:flex; gap:6px; }
+.cal-nav-btn { width:28px; height:28px; border-radius:8px; background:var(–lilac-pale); border:none; color:var(–lilac-deep); font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; }
+.cal-wday { text-align:center; font-size:9px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:var(–text-soft); padding:4px 0 6px; }
+.cal-d { aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:9px; font-size:12px; color:#5C4D5E; position:relative; cursor:pointer; }
+.cal-d.empty { pointer-events:none; }
+.cal-d.today { background-color:#1E1520; color:#FFFFFF; font-weight:700; }
+.dot { position:absolute; bottom:3px; width:4px; height:4px; border-radius:50%; }
+.dot-diary { background:var(–lilac); }
+.dot-us { background:var(–gold); }
+.dot-appt { background:var(–green); }
+.cal-d.today .dot { background:rgba(255,255,255,0.7); }
+.cal-legend { display:flex; gap:12px; margin-top:8px; }
+.legend-item { display:flex; align-items:center; gap:5px; font-size:10px; color:var(–text-soft); }
+.legend-dot { width:6px; height:6px; border-radius:50%; }
+.appt-banner { margin-top:12px; background-color:#E8F7F0; border:1px solid rgba(126,200,164,0.25); border-radius:16px; padding:12px 14px; display:flex; align-items:center; gap:12px; cursor:pointer; }
+.appt-icon { width:38px; height:38px; border-radius:11px; background:rgba(126,200,164,0.3); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+.appt-info { flex:1; }
+.appt-info .top { font-size:9px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#4A9070; margin-bottom:2px; }
+.appt-info .main { font-size:13px; font-weight:600; color:#1E1520; }
+.appt-info .sub { font-size:11px; color:#5A7A6A; margin-top:1px; }
+.appt-badge { font-size:11px; font-weight:700; color:#4A9070; background:rgba(126,200,164,0.2); padding:4px 10px; border-radius:20px; flex-shrink:0; }
+.timeline { padding:0 18px 20px; }
+.tl-date { font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(–text-soft); margin:16px 0 10px 2px; display:flex; align-items:center; gap:8px; }
+.tl-date::after { content:’’; flex:1; height:1px; background:var(–border); }
+.tl-row { display:flex; gap:10px; margin-bottom:10px; animation:up 0.35s ease both; }
+.tl-row:nth-child(2){animation-delay:0.05s} .tl-row:nth-child(3){animation-delay:0.1s} .tl-row:nth-child(4){animation-delay:0.15s}
+.tl-spine { display:flex; flex-direction:column; align-items:center; padding-top:13px; flex-shrink:0; width:18px; }
+.tl-dot { width:8px; height:8px; border-radius:50%; background:var(–lilac); flex-shrink:0; }
+.tl-dot.gold{background:var(–gold)} .tl-dot.green{background:var(–green)}
+.tl-line { flex:1; width:1px; background:var(–border); margin-top:3px; min-height:16px; }
+.card { flex:1; background:#FAF7FB; border:1px solid var(–border); border-radius:16px; overflow:hidden; }
+.card.appt-card { background-color:#F4FCF8; border-color:rgba(126,200,164,0.3); }
+.card-top { padding:11px 13px 8px; display:flex; align-items:center; gap:9px; }
+.card-icon { width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; }
+.card-icon.us{background:linear-gradient(135deg,#111122,#2d2d44)} .card-icon.diary{background:#FAF6B8} .card-icon.appt{background:#E8F7F0}
+.card-meta{flex:1}
+.card-type { font-size:9px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(–text-soft); }
+.card-type.green{color:#4A9070}
+.card-time { font-size:12px; font-weight:500; color:#1E1520; }
+.week-tag { font-size:10px; font-weight:700; color:var(–lilac-deep); background:var(–lilac-pale); padding:2px 8px; border-radius:20px; }
+.week-tag.green{color:#4A9070;background:#E8F7F0}
+.us-photo { width:100%; height:125px; background-color:#111122; background-image:linear-gradient(135deg,#111122 0%,#1e1e36 50%,#111122 100%); display:flex; align-items:center; justify-content:center; position:relative; }
+.us-photo::before { content:’’; position:absolute; width:75px; height:58px; border:1.5px solid rgba(180,220,255,0.35); border-radius:50%; box-shadow:0 0 28px rgba(130,180,255,0.2); }
+.us-photo-lbl { position:absolute; bottom:7px; left:11px; font-size:9px; color:rgba(255,255,255,0.35); }
+.card-body { padding:3px 13px 11px; }
+.card-text { font-size:12px; color:#5C4D5E; line-height:1.6; }
+.mood { display:inline-flex; align-items:center; gap:4px; background:#FAF6B8; border-radius:20px; padding:3px 9px; font-size:10px; color:#5C4D5E; margin-top:5px; }
+.tag-row { display:flex; gap:5px; margin-top:6px; flex-wrap:wrap; }
+.tag { background:rgba(126,200,164,0.18); border-radius:7px; padding:3px 9px; font-size:10px; font-weight:600; color:#4A9070; }
+.comments { border-top:1px solid var(--border);border-top:1px solid var(–border); padding:8px 13px 11px; display:flex; flex-direction:column; gap:7px; }
+.cmt-row{display:flex;gap:7px;align-items:flex-start}
+.cmt-av { width:22px; height:22px; border-radius:50%; background:var(–lilac-pale); display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; border:1px solid var(–border); }
+.cmt-bubble { background:white; border:1px solid var(–border); border-radius:9px 9px 9px 2px; padding:6px 10px; flex:1; }
+.cmt-name{font-size:9px;font-weight:700;color:var(–lilac-deep);margin-bottom:1px}
+.cmt-text{font-size:11px;color:#5C4D5E;line-height:1.4}
+.cmt-input-row{display:flex;gap:7px;align-items:center}
+.cmt-input { flex:1; background:white; border:1px solid var(–border); border-radius:18px; padding:6px 12px; font-size:11px; color:var(–text-soft); font-family:‘Outfit’,sans-serif; outline:none; }
+
+/* NEW ENTRY */
+.screen-hdr { padding:14px 18px 12px; display:flex; align-items:center; gap:11px; border-bottom:1px solid var(–border); background:#FFFFFF; }
+.back-btn { width:34px; height:34px; border-radius:10px; background:#FAF7FB; border:1px solid var(–border); display:flex; align-items:center; justify-content:center; font-size:16px; color:#5C4D5E; cursor:pointer; }
+.screen-hdr-title { font-family:‘Playfair Display’,serif; font-size:20px; color:#1E1520; }
+.type-tabs { display:flex; background:#FAF7FB; border:1px solid var(–border); border-radius:14px; padding:4px; margin:14px 18px 0; }
+.type-tab { flex:1; padding:9px 4px; border-radius:10px; text-align:center; font-size:11px; font-weight:500; color:var(–text-soft); cursor:pointer; }
+.type-tab.on { background:white; color:#1E1520; box-shadow:0 2px 8px rgba(30,21,32,0.07); }
+.form-pad { padding:14px 18px; background:#FFFFFF; }
+.cam-zone { border:1.5px dashed rgba(200,162,201,0.5); border-radius:20px; height:168px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; background:rgba(200,162,201,0.04); cursor:pointer; margin-bottom:18px; }
+.cam-zone .ic{font-size:30px;opacity:0.65} .cam-zone .lbl{font-size:13px;font-weight:500;color:#5C4D5E} .cam-zone .sub{font-size:11px;color:var(–text-soft)}
+.fld{margin-bottom:15px}
+.fld-lbl { font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(–text-soft); display:block; margin-bottom:7px; }
+.txt-in { width:100%; background:#FAF7FB; border:1px solid var(–border); border-radius:13px; padding:11px 14px; font-size:13px; color:#1E1520; font-family:‘Outfit’,sans-serif; outline:none; }
+.txt-in:focus { border-color:var(–lilac); background:white; box-shadow:0 0 0 3px rgba(200,162,201,0.12); }
+.pills{display:flex;gap:7px;flex-wrap:wrap}
+.pill { padding:6px 13px; border-radius:20px; font-size:11px; font-weight:500; background:#FAF7FB; border:1px solid var(–border); color:var(–text-soft); cursor:pointer; }
+.pill.on { background:var(–lilac-pale); border-color:var(–lilac); color:var(–lilac-deep); }
+.save-btn { width:100%; background-image:linear-gradient(135deg,#8B5E8C 0%,#5A2E5B 100%); color:white; border:none; border-radius:15px; padding:14px; font-family:‘Outfit’,sans-serif; font-size:14px; font-weight:600; cursor:pointer; box-shadow:0 5px 20px rgba(107,61,108,0.3); margin-top:6px; }
+
+/* MEDICAL */
+.med-hero { background-color:#1E1520; background-image:linear-gradient(155deg,#1E1520 0%,#3A2B3C 55%,#5A3A5C 100%); padding:52px 22px 26px; position:relative; overflow:hidden; }
+.med-hero::before { content:’’; position:absolute; width:160px; height:160px; background:radial-gradient(circle,rgba(200,162,201,0.18) 0%,transparent 70%); top:-40px; right:-30px; border-radius:50%; }
+.med-lbl{font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:4px}
+.med-name { font-family:‘Playfair Display’,serif; font-size:26px; color:#FFFFFF; margin-bottom:18px; line-height:1.2; }
+.sos-strip { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); border-radius:15px; padding:11px 14px; display:flex; align-items:center; gap:11px; }
+.sos-icon { width:34px; height:34px; border-radius:9px; background:rgba(220,50,50,0.25); border:1px solid rgba(220,50,50,0.35); display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+.sos-txt{font-size:11px;color:rgba(255,255,255,0.65);line-height:1.5}
+.sos-txt strong{color:white;font-weight:500;display:block;margin-bottom:1px;font-size:12px}
+.sos-arrow{margin-left:auto;color:rgba(255,255,255,0.25);font-size:16px}
+.med-body{padding:14px 16px 20px;background:#FFFFFF}
+.info-block { background:#FAF7FB; border:1px solid var(–border); border-radius:18px; overflow:hidden; margin-bottom:11px; }
+.info-block.appt-block{border-color:rgba(126,200,164,0.3)}
+.block-title { padding:11px 16px 8px; font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(–text-soft); border-bottom:1px solid var(–border); background:#FAF7FB; }
+.block-title.green{color:#4A9070}
+.info-row { display:flex; justify-content:space-between; align-items:center; padding:10px 16px; border-bottom:1px solid var(–border); background:#FAF7FB; }
+.info-row:last-child{border-bottom:none}
+.i-lbl{font-size:12px;color:var(–text-soft)}
+.i-val{font-size:13px;font-weight:500;color:#1E1520;text-align:right}
+.chip-blood { background-image:linear-gradient(135deg,#8B5E8C,#6B3D6C); color:white; padding:4px 11px; border-radius:8px; font-size:14px; font-weight:700; }
+.chip-ok{background:#E6F4EA;color:#2D7A3A;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:600}
+.chip-warn{background:#FFF3E0;color:#C35A00;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:600}
+.appt-row-inner{flex:1}
+.appt-row-inner .albl{font-size:11px;color:var(–text-soft);margin-bottom:2px}
+.appt-row-inner .atitle{font-size:13px;font-weight:600;color:#1E1520}
+.appt-row-inner .asub{font-size:11px;color:#5A7A6A;margin-top:1px}
+.d-badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:18px;flex-shrink:0;margin-left:10px}
+.d-badge.soon{color:#4A9070;background:#E8F7F0}
+.d-badge.later{color:var(–text-soft);background:#FAF7FB;border:1px solid var(–border)}
+
+@keyframes up { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const _supabase = supabase.createClient(
+    'https://sctgioatjgudhtinvesf.supabase.co',
+    'sb_publishable_Fivp1MTaIYVnvTJkQDyvIw_wHrmQ5d-'
+  )
+// 일기 저장
+async function saveEntry() {
+  const content = document.querySelector('.txt-in').value;
+  const week = parseInt(document.querySelector('.pill.on').textContent);
+  const mood = document.querySelector('.fld:last-of-type .pill.on')?.textContent || '';
+  const type = document.querySelector('.type-tab.on').textContent.trim();
+
+  const { error } = await _supabase
+    .from('entries')
+    .insert({ type, content, week, mood, date: new Date().toISOString().split('T')[0] });
+
+  if (error) { alert('저장 실패 😢'); console.error(error); return; }
+  
+  alert('저장됐어! 🌸');
+  goBack();
+}
+
+
+</script>
+
+</head>
+<body>
+<div id="app">
+
+  <!-- HOME -->
+
+  <div class="screen active" id="s-home">
+    <div class="status-bar"><span>9:41</span><span>●●● 🔋</span></div>
+    <div class="home-header">
+      <div class="home-top">
+        <div class="logo">nu<em>ri</em></div>
+        <div class="avatar-btn" onclick="goTo('s-medical')">🌸</div>
+      </div>
+      <div class="week-card">
+        <div class="week-num">24<sup>w</sup></div>
+        <div class="week-info">
+          <h3>임신 24주 · 6개월</h3>
+          <p>아기는 옥수수 크기 🌽<br>청각이 발달 중이에요</p>
+        </div>
+        <div class="edd-box"><div class="lbl">예정일</div><div class="val">6.15</div></div>
+      </div>
+    </div>
+    <div class="cal-wrap">
+      <div class="cal-header">
+        <div class="cal-month">February 2024</div>
+        <div class="cal-nav"><button class="cal-nav-btn">‹</button><button class="cal-nav-btn">›</button></div>
+      </div>
+      <div class="cal-grid">
+        <div class="cal-wday">S</div><div class="cal-wday">M</div><div class="cal-wday">T</div><div class="cal-wday">W</div><div class="cal-wday">T</div><div class="cal-wday">F</div><div class="cal-wday">S</div>
+        <div class="cal-d empty"></div><div class="cal-d empty"></div><div class="cal-d empty"></div>
+        <div class="cal-d">1</div><div class="cal-d">2</div><div class="cal-d">3<span class="dot dot-diary"></span></div><div class="cal-d">4</div>
+        <div class="cal-d">5</div><div class="cal-d">6</div><div class="cal-d">7<span class="dot dot-diary"></span></div><div class="cal-d">8</div><div class="cal-d">9</div><div class="cal-d">10<span class="dot dot-us"></span></div><div class="cal-d">11</div>
+        <div class="cal-d">12<span class="dot dot-us"></span></div><div class="cal-d">13</div><div class="cal-d">14<span class="dot dot-diary"></span></div><div class="cal-d">15</div><div class="cal-d">16</div><div class="cal-d">17</div><div class="cal-d">18</div>
+        <div class="cal-d">19</div><div class="cal-d today">20<span class="dot"></span></div><div class="cal-d">21</div><div class="cal-d">22</div><div class="cal-d">23<span class="dot dot-appt"></span></div><div class="cal-d">24</div><div class="cal-d">25</div>
+        <div class="cal-d">26</div><div class="cal-d">27</div><div class="cal-d">28</div><div class="cal-d">29</div>
+      </div>
+      <div class="cal-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--lilac)"></div>일기</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div>초음파</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>진료</div>
+      </div>
+      <div class="appt-banner" onclick="goTo('s-medical')">
+        <div class="appt-icon">🏥</div>
+        <div class="appt-info">
+          <div class="top">다음 진료</div>
+          <div class="main">2월 23일 (토) 오전 10:30</div>
+          <div class="sub">서울 성모 병원 · Dr. 박미연</div>
+        </div>
+        <div class="appt-badge">3일 후</div>
+      </div>
+    </div>
+    <div class="timeline">
+      <div class="tl-date">Feb 23 · 예정</div>
+      <div class="tl-row">
+        <div class="tl-spine"><div class="tl-dot green"></div><div class="tl-line"></div></div>
+        <div class="card appt-card">
+          <div class="card-top">
+            <div class="card-icon appt">🏥</div>
+            <div class="card-meta"><div class="card-type green">진료 예정</div><div class="card-time">오전 10:30</div></div>
+            <div class="week-tag green">25주</div>
+          </div>
+          <div class="card-body">
+            <div class="card-text">서울 성모 병원 · Dr. 박미연</div>
+            <div class="tag-row"><div class="tag">정기검진</div><div class="tag">초음파 예정</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="tl-date">Feb 12</div>
+      <div class="tl-row">
+        <div class="tl-spine"><div class="tl-dot gold"></div><div class="tl-line"></div></div>
+        <div class="card">
+          <div class="card-top">
+            <div class="card-icon us">🔬</div>
+            <div class="card-meta"><div class="card-type">초음파</div><div class="card-time">오후 2:30</div></div>
+            <div class="week-tag">24주</div>
+          </div>
+          <div class="us-photo"><div class="us-photo-lbl">Ultrasound · 24w</div></div>
+          <div class="card-body" style="padding-top:9px"><div class="card-text">얼굴이 처음으로 보였어 🥹</div></div>
+          <div class="comments">
+            <div class="cmt-row">
+              <div class="cmt-av">👨</div>
+              <div class="cmt-bubble"><div class="cmt-name">Mats · 파트너</div><div class="cmt-text">코가 나를 닮은 것 같은데? 💜</div></div>
+            </div>
+            <div class="cmt-input-row">
+              <div class="cmt-av" style="background:var(--lilac-pale)">🌸</div>
+              <input class="cmt-input" placeholder="코멘트...">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tl-date">Feb 10</div>
+      <div class="tl-row">
+        <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+        <div class="card">
+          <div class="card-top">
+            <div class="card-icon diary">📝</div>
+            <div class="card-meta"><div class="card-type">일기</div><div class="card-time">저녁 9:15</div></div>
+            <div class="week-tag">23주</div>
+          </div>
+          <div class="card-body">
+            <div class="card-text">처음으로 아기가 발로 차는 걸 느꼈다. 나비가 날개짓 하는 것 같은 느낌이었어.</div>
+            <div class="mood">💛 행복함</div>
+          </div>
+          <div class="comments">
+            <div class="cmt-row">
+              <div class="cmt-av">👨</div>
+              <div class="cmt-bubble"><div class="cmt-name">Mats · 파트너</div><div class="cmt-text">나도 같이 있고 싶었는데 🥺 다음엔 꼭!</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEW ENTRY -->
+
+  <div class="screen" id="s-new">
+    <div class="status-bar"><span>9:41</span><span>●●● 🔋</span></div>
+    <div class="screen-hdr">
+      <div class="back-btn" onclick="goBack()">←</div>
+      <div class="screen-hdr-title">새로운 기록</div>
+    </div>
+    <div class="type-tabs">
+      <div class="type-tab on" onclick="selTab(this)">📷 초음파</div>
+      <div class="type-tab" onclick="selTab(this)">📝 일기</div>
+      <div class="type-tab" onclick="selTab(this)">🏥 진료</div>
+    </div>
+    <div class="form-pad">
+      <div class="cam-zone">
+        <div class="ic">📷</div>
+        <div class="lbl">초음파 사진 촬영</div>
+        <div class="sub">사진 영역이 자동 인식돼요</div>
+      </div>
+      <div class="fld">
+        <label class="fld-lbl">임신 주수</label>
+        <div class="pills">
+          <div class="pill" onclick="selPill(this)">22주</div>
+          <div class="pill" onclick="selPill(this)">23주</div>
+          <div class="pill on" onclick="selPill(this)">24주</div>
+          <div class="pill" onclick="selPill(this)">25주</div>
+          <div class="pill" onclick="selPill(this)">26주</div>
+        </div>
+      </div>
+      <div class="fld">
+        <label class="fld-lbl">메모</label>
+        <input class="txt-in" placeholder="오늘 진료 기록...">
+      </div>
+      <div class="fld">
+        <label class="fld-lbl">감정</label>
+        <div class="pills">
+          <div class="pill" onclick="selPill(this)">😊 행복</div>
+          <div class="pill on" onclick="selPill(this)">🥹 감동</div>
+          <div class="pill" onclick="selPill(this)">😰 걱정</div>
+          <div class="pill" onclick="selPill(this)">😴 피곤</div>
+        </div>
+      </div>
+      <button class="save-btn" onclick="saveEntry()">저장하기</button>
+
+    </div>
+  </div>
+
+  <!-- MEDICAL -->
+
+  <div class="screen" id="s-medical">
+    <div class="status-bar light" style="position:absolute;top:0;left:0;right:0;z-index:2;background:transparent">
+      <span>9:41</span><span>●●● 🔋</span>
+    </div>
+    <div class="med-hero">
+      <div class="med-lbl">메디컬 프로필</div>
+      <div class="med-name">김지은님의<br>건강 기록</div>
+      <div class="sos-strip">
+        <div class="sos-icon">🆘</div>
+        <div class="sos-txt"><strong>잠금화면 응급 정보 연동</strong>iPhone Health 앱에서 즉시 확인 가능</div>
+        <div class="sos-arrow">›</div>
+      </div>
+    </div>
+    <div class="med-body">
+      <div class="info-block">
+        <div class="block-title">기본 정보</div>
+        <div class="info-row"><div class="i-lbl">이름</div><div class="i-val">김지은</div></div>
+        <div class="info-row"><div class="i-lbl">임신 주수</div><div class="i-val">24주 3일</div></div>
+        <div class="info-row"><div class="i-lbl">출산 예정일</div><div class="i-val">2024. 6. 15</div></div>
+      </div>
+      <div class="info-block">
+        <div class="block-title">의료 정보</div>
+        <div class="info-row"><div class="i-lbl">혈액형</div><div class="chip-blood">A+</div></div>
+        <div class="info-row"><div class="i-lbl">임신 상태</div><div class="chip-ok">✓ 정상 임신</div></div>
+        <div class="info-row"><div class="i-lbl">알레르기</div><div class="chip-warn">⚠ 페니실린</div></div>
+        <div class="info-row"><div class="i-lbl">담당 산부인과</div><div class="i-val" style="font-size:11px;line-height:1.5">서울 성모 병원<br><span style="color:var(--text-soft)">Dr. 박미연</span></div></div>
+      </div>
+      <div class="info-block appt-block">
+        <div class="block-title green">다음 진료 일정</div>
+        <div class="info-row">
+          <div class="appt-row-inner"><div class="albl">정기검진 · 초음파</div><div class="atitle">2월 23일 (토) 오전 10:30</div><div class="asub">서울 성모 병원 · Dr. 박미연</div></div>
+          <div class="d-badge soon">3일 후</div>
+        </div>
+        <div class="info-row">
+          <div class="appt-row-inner"><div class="albl">혈액검사</div><div class="atitle">3월 8일 (금) 오전 9:00</div><div class="asub">서울 성모 병원</div></div>
+          <div class="d-badge later">17일 후</div>
+        </div>
+      </div>
+      <div class="info-block">
+        <div class="block-title">비상 연락처</div>
+        <div class="info-row"><div class="i-lbl">파트너</div><div class="i-val" style="font-size:11px;line-height:1.5">Mats<br><span style="color:var(--text-soft)">010-XXXX-XXXX</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+
+  <nav class="bottom-nav">
+  <div class="nav-item active" id="n-home" onclick="navTo('s-home','n-home')">
+    <i class="ph ph-house"></i>
+  </div>
+  <div class="nav-item" id="n-cal" onclick="navTo('s-home','n-cal')">
+    <i class="ph ph-calendar"></i>
+  </div>
+  <div class="fab" onclick="goTo('s-new')">
+    <i class="ph ph-plus"></i>
+  </div>
+  <div class="nav-item" id="n-med" onclick="navTo('s-medical','n-med')">
+    <i class="ph ph-heart"></i>
+  </div>
+  <div class="nav-item" id="n-set">
+    <i class="ph ph-gear"></i>
+  </div>
+</nav>
+
+</div>
+<script>
+  let hist=['s-home'];
+  function goTo(id){const c=document.querySelector('.screen.active'),n=document.getElementById(id);if(!n||c===n)return;c.classList.add('exit');n.classList.add('active');hist.push(id);setTimeout(()=>c.classList.remove('active','exit'),340);}
+  function goBack(){if(hist.length<=1)return;hist.pop();const p=hist[hist.length-1],c=document.querySelector('.screen.active'),pr=document.getElementById(p);if(!pr)return;pr.classList.add('active');c.style.transition='transform 0.3s cubic-bezier(0.4,0,0.2,1)';c.style.transform='translateX(100%)';setTimeout(()=>{c.classList.remove('active');c.style.cssText='';},310);}
+  function navTo(sid,nid){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById(nid).classList.add('active');const c=document.querySelector('.screen.active'),n=document.getElementById(sid);if(!n||c===n)return;c.classList.remove('active');n.classList.add('active');hist=[sid];}
+  function selTab(el){el.closest('.type-tabs').querySelectorAll('.type-tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');}
+  function selPill(el){el.closest('.pills').querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));el.classList.add('on');}
+</script>
+</body>
+</html>
