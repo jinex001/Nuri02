@@ -260,19 +260,26 @@ loadEntries();
 // 일기 저장
 async function saveEntry() {
   const content = document.querySelector('.txt-in').value;
-  const week = parseInt(document.querySelector('.pill.on').textContent);
+  const weekEl = document.querySelector('#s-new .pill.on');
+  const week = weekEl ? parseInt(weekEl.textContent) : null;
   const mood = document.querySelector('.fld:last-of-type .pill.on')?.textContent || '';
   const type = document.querySelector('.type-tab.on').textContent.trim();
 
+  let image_url = null;
+  if (selectedFile) {
+    image_url = await uploadPhoto();
+  }
+
   const { error } = await _supabase
     .from('entries')
-    .insert({ type, content, week, mood, date: new Date().toISOString().split('T')[0] });
+    .insert({ type, content, week, mood, date: new Date().toISOString().split('T')[0], image_url });
 
   if (error) { alert('저장 실패 😢'); console.error(error); return; }
-  
+  selectedFile = null;
   alert('저장됐어! 🌸');
   goBack();
 }
+
 
 async function signIn() {
   const email = document.getElementById('login-email').value;
@@ -456,11 +463,14 @@ checkAuth();
       <div class="type-tab" onclick="selTab(this)">🏥 진료</div>
     </div>
     <div class="form-pad">
-      <div class="cam-zone">
-        <div class="ic">📷</div>
-        <div class="lbl">초음파 사진 촬영</div>
-        <div class="sub">사진 영역이 자동 인식돼요</div>
-      </div>
+      <div class="cam-zone" onclick="document.getElementById('photo-input').click()">
+  <div class="ic">📷</div>
+  <div class="lbl" id="cam-lbl">초음파 사진 촬영</div>
+  <div class="sub">사진 영역이 자동 인식돼요</div>
+  <img id="photo-preview" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:18px;">
+</div>
+<input type="file" id="photo-input" accept="image/*" capture="environment" style="display:none" onchange="previewPhoto(this)">
+
       <div class="fld">
         <label class="fld-lbl">임신 주수</label>
         <div class="pills">
@@ -558,6 +568,34 @@ checkAuth();
 
 </div>
 <script>
+
+  let selectedFile = null;
+
+function previewPhoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+  selectedFile = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const preview = document.getElementById('photo-preview');
+    preview.src = e.target.result;
+    preview.style.display = 'block';
+    document.getElementById('cam-lbl').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function uploadPhoto() {
+  if (!selectedFile) return null;
+  const fileName = `${Date.now()}.jpg`;
+  const { error } = await _supabase.storage
+    .from('photos')
+    .upload(fileName, selectedFile);
+  if (error) { console.error(error); return null; }
+  const { data } = _supabase.storage.from('photos').getPublicUrl(fileName);
+  return data.publicUrl;
+}
+
   let hist=['s-home'];
   function goTo(id){const c=document.querySelector('.screen.active'),n=document.getElementById(id);if(!n||c===n)return;c.classList.add('exit');n.classList.add('active');hist.push(id);setTimeout(()=>c.classList.remove('active','exit'),340);}
   function goBack(){if(hist.length<=1)return;hist.pop();const p=hist[hist.length-1],c=document.querySelector('.screen.active'),pr=document.getElementById(p);if(!pr)return;pr.classList.add('active');c.style.transition='transform 0.3s cubic-bezier(0.4,0,0.2,1)';c.style.transform='translateX(100%)';setTimeout(()=>{c.classList.remove('active');c.style.cssText='';},310);if (hist[hist.length - 1] === 's-home') {
