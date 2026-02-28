@@ -984,17 +984,37 @@ checkAuth();
   }
 
   async function loadProfile() {
-    const { data: { user } } = await _supabase.auth.getUser();
-    if (!user) return;
+  // 현재 로그인한 사용자 가져오기
+  const { data: { user } } = await _supabase.auth.getUser();
+  if (!user) return;
 
-    const { data } = await _supabase.from('profiles').select('*').eq('id', user.id).single();
-    if (data) {
-      document.getElementById('week-input').value = data.current_week || '';
-      document.getElementById('edd-input').value = data.edd || '';
-      const link = `${window.location.origin}?invite=${data.invite_code}`;
-      document.getElementById('invite-link').textContent = link;
-    }
+  // 프로필 조회
+  const { data: profile, error } = await _supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', user.id)
+    .single();
+  if (error) { console.error(error); return; }
+
+  let code = profile.invite_code;
+
+  // 초대 코드가 없으면 새로 생성 → DB 갱신
+  if (!code) {
+    // 8자리 랜덤 문자열 생성
+    code = Math.random().toString(36).slice(2, 10);
+
+    const { error: updError } = await _supabase
+      .from('profiles')
+      .update({ invite_code: code })
+      .eq('id', user.id);             // 특정 행만 업데이트 [oai_citation:0‡supabase.com](https://supabase.com/docs/reference/javascript/update#:~:text=)
+
+    if (updError) { console.error(updError); }
   }
+
+  // 링크 만들기: 현 사이트 도메인 + ?invite=코드
+  const link = `${window.location.origin}?invite=${code}`;
+  document.getElementById('invite-link').textContent = link;
+}
 
   async function saveProfile() {
     const { data: { user } } = await _supabase.auth.getUser();
