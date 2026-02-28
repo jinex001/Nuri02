@@ -295,12 +295,17 @@ async function signUp() {
 
 // 앱 시작할 때 로그인 확인
 async function checkAuth() {
+  await _supabase.auth.signOut(); // 임시로 강제 로그아웃
   const { data: { session } } = await _supabase.auth.getSession();
   if (session) {
-    navTo('s-home', 'n-home');
+    document.getElementById('s-home').classList.add('active');
     loadEntries();
+  } else {
+    document.getElementById('s-login').classList.add('active');
   }
 }
+
+
 
 checkAuth();
 
@@ -312,7 +317,7 @@ checkAuth();
 <div id="app">
 
   <!-- LOGIN -->
-<div class="screen active" id="s-login">
+<div class="screen" id="s-login">
   <div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 32px;background:#FFFFFF;">
     <div style="font-family:'Playfair Display',serif;font-size:48px;color:#1E1520;margin-bottom:8px;">nuri</div>
     <div style="font-size:13px;color:#9B8A9D;margin-bottom:48px;">임신 기록을 시작해요 🌸</div>
@@ -329,7 +334,7 @@ checkAuth();
 
   <!-- HOME -->
 
-  <div class="screen active" id="s-home">
+  <div class="screen" id="s-home">
     <div class="status-bar"><span>9:41</span><span>●●● 🔋</span></div>
     <div class="home-header">
       <div class="home-top">
