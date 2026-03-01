@@ -547,31 +547,40 @@
   }
 
   // ===== ENTRIES =====
-  function entryHTML(entry) {
-    return `
-      <div class="tl-date">${entry.date || ''}</div>
-      <div class="tl-row">
-        <div class="tl-spine">
-          <div class="tl-dot ${entry.image_url ? 'gold' : ''}"></div>
-          <div class="tl-line"></div>
-        </div>
-        <div class="card">
-          <div class="card-top">
-            <div class="card-icon ${entry.image_url ? 'us' : 'diary'}">${entry.image_url ? '🔬' : '📝'}</div>
-            <div class="card-meta">
-              <div class="card-type">${entry.type || '일기'}</div>
-              <div class="card-time">${entry.created_at ? new Date(entry.created_at).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}) : ''}</div>
-            </div>
-            <div class="week-tag">${entry.week ? entry.week+'주' : ''}</div>
+  function entryHTML(entry, showComments = false) {
+  return `
+    <div class="tl-date">${entry.date || ''}</div>
+    <div class="tl-row">
+      <div class="tl-spine">
+        <div class="tl-dot ${entry.image_url ? 'gold' : ''}"></div>
+        <div class="tl-line"></div>
+      </div>
+      <div class="card">
+        <div class="card-top">
+          <div class="card-icon ${entry.image_url ? 'us' : 'diary'}">${entry.image_url ? '🔬' : '📝'}</div>
+          <div class="card-meta">
+            <div class="card-type">${entry.type || '일기'}</div>
+            <div class="card-time">${entry.created_at ? new Date(entry.created_at).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}) : ''}</div>
           </div>
-          ${entry.image_url ? `<div class="us-photo" style="background-image:url('${entry.image_url}');background-size:cover;background-position:center;"></div>` : ''}
-          <div class="card-body">
-            <div class="card-text">${entry.content || ''}</div>
-            ${entry.mood ? `<div class="mood">${entry.mood}</div>` : ''}
-          </div>
+          <div class="week-tag">${entry.week ? entry.week+'주' : ''}</div>
         </div>
-      </div>`;
-  }
+        ${entry.image_url ? `<div class="us-photo" style="background-image:url('${entry.image_url}');background-size:cover;background-position:center;"></div>` : ''}
+        <div class="card-body">
+          <div class="card-text">${entry.content || ''}</div>
+          ${entry.mood ? `<div class="mood">${entry.mood}</div>` : ''}
+        </div>
+        <div class="comments" id="comments-${entry.id}">
+          <div class="cmt-loading" style="font-size:11px;color:var(--text-soft);padding:4px 0;">댓글 불러오는 중...</div>
+        </div>
+        <div class="cmt-input-row" style="padding:0 13px 11px;display:flex;gap:7px;align-items:center;">
+          <div class="cmt-av" style="background:var(--lilac-pale)">🌸</div>
+          <input class="cmt-input" placeholder="댓글..." id="cmt-input-${entry.id}">
+          <button onclick="addComment(${entry.id})" style="background:var(--lilac-deep);color:white;border:none;border-radius:10px;padding:6px 12px;font-size:11px;cursor:pointer;">전송</button>
+        </div>
+      </div>
+    </div>`;
+}
+
 
   async function loadEntries() {
     const timeline = document.querySelector('#s-home .timeline');
@@ -582,7 +591,8 @@
     (data || []).forEach(entry => {
       const div = document.createElement('div');
       div.innerHTML = entryHTML(entry);
-      timeline.appendChild(div);
+      timeline.appendChild(div);loadComments(entry.id);
+
     });
   }
 
@@ -619,6 +629,57 @@
     alert('저장됐어! 🌸');
     goBack();
   }
+
+async function loadComments(entryId) {
+  const { data, error } = await _supabase
+    .from('comments')
+    .select('*')
+    .eq('entry_id', entryId)
+    .order('created_at', { ascending: true });
+
+  const container = document.getElementById(`comments-${entryId}`);
+  if (!container) return;
+
+  if (error || !data || data.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+
+  container.innerHTML = data.map(c => `
+    <div class="cmt-row">
+      <div class="cmt-av">💬</div>
+      <div class="cmt-bubble">
+        <div class="cmt-name">${c.display_name || '익명'}</div>
+        <div class="cmt-text">${c.content}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function addComment(entryId) {
+  const input = document.getElementById(`cmt-input-${entryId}`);
+  const content = input?.value?.trim();
+  if (!content) return;
+
+  const { data: { user } } = await _supabase.auth.getUser();
+  if (!user) { alert('로그인이 필요해요'); return; }
+
+  const { data: profile } = await _supabase.from('profiles').select('display_name').eq('id', user.id).single();
+  const display_name = profile?.display_name || user.email;
+
+  const { error } = await _supabase.from('comments').insert({
+    entry_id: entryId,
+    user_id: user.id,
+    display_name,
+    content
+  });
+
+  if (error) { console.error(error); return; }
+  input.value = '';
+  loadComments(entryId);
+}
+
+
 
   // ===== PARTNER FEED =====
   async function loadPartnerFeed(inviteCode) {
