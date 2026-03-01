@@ -212,7 +212,7 @@
   <!-- HOME -->
 
   <div class="screen" id="s-home">
-    <div class="status-bar"><span>9:41</span><span>●●● 🔋</span></div>
+    
     <div class="home-header">
       <div class="home-top">
         <div class="logo">nu<em>ri</em></div>
@@ -262,7 +262,7 @@
   <!-- NEW ENTRY -->
 
   <div class="screen" id="s-new">
-    <div class="status-bar"><span>9:41</span><span>●●● 🔋</span></div>
+    
     <div class="screen-hdr">
       <div class="back-btn" onclick="goBack()">←</div>
       <div class="screen-hdr-title">새로운 기록</div>
@@ -342,7 +342,7 @@
   <!-- PARTNER FEED -->
 
   <div class="screen" id="s-partner">
-    <div class="status-bar"><span>9:41</span><span>●●● 🔋</span></div>
+    
     <div style="padding:20px 20px 0;">
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
         <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--lilac),var(--lilac-deep));display:flex;align-items:center;justify-content:center;font-size:22px;">🌸</div>
@@ -358,7 +358,7 @@
   <!-- SETTINGS -->
 
   <div class="screen" id="s-settings">
-    <div class="status-bar"><span>9:41</span><span>●●● 🔋</span></div>
+    
     <div class="screen-hdr">
       <div class="back-btn" onclick="goBack()">←</div>
       <div class="screen-hdr-title">설정</div>
@@ -652,21 +652,30 @@
 
   // ===== PROFILE / SETTINGS =====
   async function loadProfile() {
-    const { data: { user } } = await _supabase.auth.getUser();
-    if (!user) return;
-    const { data: profile } = await _supabase.from('profiles').select('*').eq('id', user.id).single();
-    if (!profile) return;
+  const { data: { user } } = await _supabase.auth.getUser();
+  if (!user) return;
 
-    let code = profile.invite_code;
-    if (!code) {
-      code = Math.random().toString(36).slice(2, 10);
-      await _supabase.from('profiles').update({ invite_code: code }).eq('id', user.id);
-    }
-
-    if (profile.current_week) document.getElementById('week-input').value = profile.current_week;
-    if (profile.edd) document.getElementById('edd-input').value = profile.edd;
-    document.getElementById('invite-link').textContent = `${window.location.origin}?invite=${code}`;
+  // 프로필 없으면 먼저 생성
+  let { data: profile } = await _supabase.from('profiles').select('*').eq('id', user.id).single();
+  
+  if (!profile) {
+    await _supabase.from('profiles').insert({ id: user.id, display_name: user.email });
+    let { data: newProfile } = await _supabase.from('profiles').select('*').eq('id', user.id).single();
+    profile = newProfile;
   }
+
+  if (!profile) return;
+
+  let code = profile.invite_code;
+  if (!code) {
+    code = Math.random().toString(36).slice(2, 10);
+    await _supabase.from('profiles').update({ invite_code: code }).eq('id', user.id);
+  }
+
+  if (profile.current_week) document.getElementById('week-input').value = profile.current_week;
+  if (profile.edd) document.getElementById('edd-input').value = profile.edd;
+  document.getElementById('invite-link').textContent = `${window.location.origin}?invite=${code}`;
+}
 
   async function saveProfile() {
     const { data: { user } } = await _supabase.auth.getUser();
