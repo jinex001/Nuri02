@@ -754,6 +754,8 @@ async function addComment(entryId) {
   }
 
   // ===== START =====
+  window.addComment = addComment;
+
   window.addEventListener('DOMContentLoaded', () => { checkAuth(); });
 </script>
 
