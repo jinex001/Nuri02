@@ -56,6 +56,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
 
 /* HOME */
 .home-pad { padding:17px 0 0; display:flex; flex-direction:column; gap:20px; }
+#s-home { scroll-behavior:smooth; }
 
 /* TOP ROW: 24 week + date */
 .home-top-row {
@@ -83,19 +84,27 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
 .fact-sub { font-size:14px; font-weight:400; color:#fff; margin-left:auto; }
 
 /* APPT SCROLL ROW */
-.appt-scroll-row { display:flex; flex-direction:row; gap:10px; padding-left:30px; overflow-x:auto; -webkit-overflow-scrolling:touch; box-shadow:var(--card-shadow); }
+.appt-scroll-row { display:flex; flex-direction:row; gap:10px; padding:10px 20px 10px 20px; overflow-x:auto; -webkit-overflow-scrolling:touch; margin-left:0; }
 .appt-scroll-row::-webkit-scrollbar { display:none; }
 .appt-card {
   flex-shrink:0; width:227px; height:132px;
   background:linear-gradient(180deg, rgba(254,251,206,0.55) 0%, rgba(240,230,241,0.35) 100%);
-  border-radius:10px; padding:20px; display:flex; flex-direction:column; gap:15px;
+  box-shadow:0px 16px 16px -8px rgba(12,12,13,0.1), 0px 4px 4px -4px rgba(12,12,13,0.05);
+  border-radius:10px; padding:20px;
+  display:flex; flex-direction:column; justify-content:center; align-items:center; gap:15px;
 }
-.appt-top { display:flex; flex-direction:row; align-items:center; gap:20px; }
-.appt-badge { display:inline-flex; padding:5px 10px; background:rgba(200,162,201,0.18); border:1px solid rgba(200,162,201,0.45); border-radius:999px; font-size:12px; font-weight:800; color:var(--text-mid); white-space:nowrap; }
+.appt-top { display:flex; flex-direction:row; align-items:center; gap:20px; width:187px; height:27px; }
+.appt-badge {
+  display:inline-flex; flex-direction:column; align-items:flex-start;
+  padding:5px 10px; width:54px; height:27px;
+  background:rgba(200,162,201,0.18); border:1px solid rgba(200,162,201,0.45);
+  border-radius:999px; font-size:12px; font-weight:800; color:#5C4D5E;
+  white-space:nowrap; box-sizing:border-box;
+}
 .appt-type { font-size:12px; font-weight:800; color:#000; }
-.appt-info { display:flex; flex-direction:column; gap:10px; }
-.appt-date { font-size:14px; font-weight:500; color:var(--text-mid); line-height:1.3; }
-.appt-place { font-size:14px; font-weight:500; color:var(--text-mid); line-height:1.3; }
+.appt-info { display:flex; flex-direction:column; align-items:flex-start; gap:10px; width:187px; }
+.appt-date { font-size:14px; font-weight:500; color:#5C4D5E; line-height:18px; width:187px; }
+.appt-place { font-size:14px; font-weight:500; color:#5C4D5E; line-height:18px; width:187px; }
 
 /* TIMELINE */
 .timeline-wrap {
@@ -205,6 +214,21 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
 .login-sub { font-size:13px; color:var(--text-soft); margin-bottom:48px; }
 .login-fields { width:100%; display:flex; flex-direction:column; gap:12px; }
 .login-btn-sub { width:100%; background:rgba(200,162,201,0.15); color:var(--lilac-deep); border:none; border-radius:15px; padding:14px; font-family:'Outfit',sans-serif; font-size:14px; font-weight:600; cursor:pointer; }
+
+/* SETUP */
+.setup-wrap { min-height:100%; display:flex; flex-direction:column; padding:60px 28px 40px; background:var(--bg); }
+.setup-logo { font-size:42px; font-weight:800; color:var(--lilac-deep); letter-spacing:-1px; margin-bottom:4px; }
+.setup-sub { font-size:14px; color:var(--text-soft); margin-bottom:48px; }
+.setup-step { display:none; flex-direction:column; gap:24px; }
+.setup-step.on { display:flex; }
+.setup-q { font-size:22px; font-weight:700; color:var(--text); line-height:1.3; }
+.setup-hint { font-size:13px; color:var(--text-soft); margin-top:-16px; }
+.setup-input { width:100%; background:#fff; border:1.5px solid rgba(200,162,201,0.4); border-radius:14px; padding:14px 16px; font-size:16px; font-weight:500; color:var(--text); font-family:'Outfit',sans-serif; outline:none; }
+.setup-input:focus { border-color:var(--lilac); }
+.setup-calc { background:rgba(200,162,201,0.12); border-radius:12px; padding:14px 16px; font-size:14px; color:var(--text-mid); min-height:48px; }
+.setup-calc strong { color:var(--lilac-deep); font-size:18px; }
+.setup-btn { width:100%; background:linear-gradient(135deg,#834D84,#5A2E5B); color:white; border:none; border-radius:15px; padding:16px; font-family:'Outfit',sans-serif; font-size:15px; font-weight:700; cursor:pointer; margin-top:8px; }
+.setup-skip { text-align:center; font-size:13px; color:var(--text-soft); cursor:pointer; padding:12px; text-decoration:underline; }
 
 @keyframes up { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 </style>
@@ -358,6 +382,39 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
   </div>
 </div>
 
+<!-- SETUP -->
+<div class="screen plain" id="s-setup">
+  <div class="setup-wrap">
+    <div class="setup-logo">nuri 🌸</div>
+    <div class="setup-sub">임신 정보를 입력해줘요</div>
+
+    <!-- STEP 1: 마지막 생리일 or 예정일 선택 -->
+    <div class="setup-step on" id="setup-step-1">
+      <div class="setup-q">어떤 날짜를 알고 있어요?</div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div id="opt-lmp" onclick="selectSetupOpt('lmp')" style="border:1.5px solid rgba(200,162,201,0.4);border-radius:14px;padding:18px;cursor:pointer;background:#fff;">
+          <div style="font-size:15px;font-weight:700;color:var(--text);">마지막 생리 시작일</div>
+          <div style="font-size:12px;color:var(--text-soft);margin-top:4px;">가장 정확한 계산 방법이에요</div>
+        </div>
+        <div id="opt-edd" onclick="selectSetupOpt('edd')" style="border:1.5px solid rgba(200,162,201,0.4);border-radius:14px;padding:18px;cursor:pointer;background:#fff;">
+          <div style="font-size:15px;font-weight:700;color:var(--text);">출산 예정일 (EDD)</div>
+          <div style="font-size:12px;color:var(--text-soft);margin-top:4px;">산부인과에서 받은 날짜예요</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: 날짜 입력 -->
+    <div class="setup-step" id="setup-step-2">
+      <div class="setup-q" id="setup-step2-q">마지막 생리 시작일을 입력해줘요</div>
+      <div class="setup-hint">날짜를 선택하면 주수를 자동으로 계산해요</div>
+      <input type="date" class="setup-input" id="setup-date-input" oninput="calcWeekPreview()">
+      <div class="setup-calc" id="setup-calc-result">날짜를 선택하면 주수가 계산돼요 ✨</div>
+      <button class="setup-btn" onclick="saveSetup()">시작하기 🌱</button>
+      <div class="setup-skip" onclick="skipSetup()">나중에 입력할게요</div>
+    </div>
+  </div>
+</div>
+
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <div class="nav-item active" id="n-home" onclick="navTo('s-home','n-home')"><i class="ph ph-house"></i></div>
@@ -487,13 +544,98 @@ async function checkAuth() {
   }
   document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
   if (session) {
-    document.getElementById('s-home').classList.add('active');
-    hist = ['s-home'];
-    loadEntries();
+    // 프로필 확인 - 없으면 셋업으로
+    var ures = await _supabase.auth.getUser();
+    var user = ures.data && ures.data.user;
+    var needsSetup = true;
+    if (user) {
+      var pres = await _supabase.from('profiles').select('current_week').eq('id', user.id).single();
+      if (pres.data && pres.data.current_week) needsSetup = false;
+    }
+    if (needsSetup) {
+      document.getElementById('s-setup').classList.add('active');
+      hist = ['s-setup'];
+    } else {
+      document.getElementById('s-home').classList.add('active');
+      hist = ['s-home'];
+      loadEntries();
+    }
   } else {
     document.getElementById('s-login').classList.add('active');
     hist = ['s-login'];
   }
+}
+var setupMode = 'lmp';
+function selectSetupOpt(mode) {
+  setupMode = mode;
+  var lmp = document.getElementById('opt-lmp');
+  var edd = document.getElementById('opt-edd');
+  var q = document.getElementById('setup-step2-q');
+  if (mode === 'lmp') {
+    lmp.style.borderColor = '#834D84';
+    lmp.style.background = 'rgba(131,77,132,0.06)';
+    edd.style.borderColor = 'rgba(200,162,201,0.4)';
+    edd.style.background = '#fff';
+    q.textContent = '마지막 생리 시작일을 입력해줘요';
+  } else {
+    edd.style.borderColor = '#834D84';
+    edd.style.background = 'rgba(131,77,132,0.06)';
+    lmp.style.borderColor = 'rgba(200,162,201,0.4)';
+    lmp.style.background = '#fff';
+    q.textContent = '출산 예정일을 입력해줘요';
+  }
+  document.getElementById('setup-step-1').classList.remove('on');
+  document.getElementById('setup-step-2').classList.add('on');
+}
+function calcWeekPreview() {
+  var val = document.getElementById('setup-date-input').value;
+  var result = document.getElementById('setup-calc-result');
+  if (!val) return;
+  var inputDate = new Date(val);
+  var today = new Date();
+  var week, edd;
+  if (setupMode === 'lmp') {
+    var diffMs = today - inputDate;
+    var diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    week = Math.floor(diffDays / 7);
+    edd = new Date(inputDate.getTime() + 280 * 24 * 60 * 60 * 1000);
+  } else {
+    var diffMs2 = new Date(val) - today;
+    var daysLeft = Math.ceil(diffMs2 / (1000 * 60 * 60 * 24));
+    week = 40 - Math.round(daysLeft / 7);
+    edd = inputDate;
+  }
+  if (week < 1) week = 1;
+  if (week > 42) week = 42;
+  var eddStr = edd.getFullYear() + '년 ' + (edd.getMonth()+1) + '월 ' + edd.getDate() + '일';
+  result.innerHTML = '현재 임신 <strong>' + week + '주차</strong> &nbsp;·&nbsp; 예정일 ' + eddStr;
+}
+async function saveSetup() {
+  var val = document.getElementById('setup-date-input').value;
+  if (!val) { alert('날짜를 입력해주세요'); return; }
+  var inputDate = new Date(val);
+  var today = new Date();
+  var week, edd;
+  if (setupMode === 'lmp') {
+    var diffDays = Math.floor((today - inputDate) / (1000 * 60 * 60 * 24));
+    week = Math.floor(diffDays / 7);
+    edd = new Date(inputDate.getTime() + 280 * 24 * 60 * 60 * 1000);
+  } else {
+    var daysLeft = Math.ceil((inputDate - today) / (1000 * 60 * 60 * 24));
+    week = 40 - Math.round(daysLeft / 7);
+    edd = inputDate;
+  }
+  if (week < 1) week = 1;
+  if (week > 42) week = 42;
+  var eddStr = edd.toISOString().split('T')[0];
+  var ures = await _supabase.auth.getUser();
+  var user = ures.data && ures.data.user;
+  if (!user) return;
+  await _supabase.from('profiles').upsert({ id: user.id, current_week: week, edd: eddStr });
+  showHome();
+}
+function skipSetup() {
+  showHome();
 }
 var babyFacts = {
   4:'씨앗 크기 🌱', 5:'참깨 크기', 6:'완두콩 크기', 7:'블루베리 크기',
@@ -539,14 +681,13 @@ function buildFeedItemHTML(entry) {
 function buildWeekSectionHTML(week, entries, isFuture, isCurrentWeek) {
   var fact = babyFacts[week] || '';
   var dev = babyDev[week] || '';
-  var opacity = isFuture ? ' style="opacity:0.45"' : '';
-  var html = '<div class="week-section" data-week="' + week + '"' + opacity + '>';
+  var html = '<div class="week-section" data-week="' + week + '">';
   html += '<div class="week-sticky">';
-  html += '<div class="dot-wrap"><div class="dot-inner' + (isCurrentWeek ? ' current-dot' : '') + '"></div></div>';
+  html += '<div class="dot-wrap"><div class="dot-inner"></div></div>';
   html += '<div class="week-block">';
-  html += '<span class="week-num" style="color:' + (isCurrentWeek ? '#834D84' : (isFuture ? '#C8A2C9' : '#5C4D5E')) + '">' + week + '</span>';
+  html += '<span class="week-num">' + week + '</span>';
   html += '<div class="week-label-col">';
-  html += '<span class="week-lbl" style="color:' + (isCurrentWeek ? '#834D84' : (isFuture ? '#C8A2C9' : '#5C4D5E')) + '">week</span>';
+  html += '<span class="week-lbl">week</span>';
   if (isCurrentWeek) {
     var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
     var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -556,7 +697,7 @@ function buildWeekSectionHTML(week, entries, isFuture, isCurrentWeek) {
   }
   html += '</div></div></div>';
   if (fact) {
-    html += '<div class="week-fact"><div class="fact-bar" style="' + (isFuture ? 'background:rgba(200,162,201,0.4)' : 'background:#C8A2C9') + '">';
+    html += '<div class="week-fact"><div class="fact-bar">';
     html += '<div class="fact-icon">💡</div>';
     html += '<span class="fact-main">' + fact + '</span>';
     html += '<span class="fact-sub">' + dev + '</span>';
@@ -584,51 +725,54 @@ async function loadEntries() {
   if (res.error) { console.error(res.error); return; }
   var data = res.data || [];
 
-  var ures = await _supabase.auth.getUser();
-  var user = ures.data && ures.data.user;
   var currentWeek = 24;
   var maxWeek = 40;
-  if (user) {
-    var pres = await _supabase.from('profiles').select('current_week,edd').eq('id', user.id).single();
-    if (pres.data) {
-      if (pres.data.current_week) currentWeek = parseInt(pres.data.current_week);
-      if (pres.data.edd) {
-        var edd = new Date(pres.data.edd);
-        var now2 = new Date();
-        var diffDays = Math.round((edd - now2) / (1000 * 60 * 60 * 24));
+  try {
+    var ures = await _supabase.auth.getUser();
+    var user = ures.data && ures.data.user;
+    if (user) {
+      var pres = await _supabase.from('profiles').select('current_week,edd').eq('id', user.id).single();
+      if (pres.data && pres.data.current_week) currentWeek = parseInt(pres.data.current_week);
+      if (pres.data && pres.data.edd) {
+        var eddDate = new Date(pres.data.edd);
+        var nowDate = new Date();
+        var diffDays = Math.round((eddDate - nowDate) / (1000 * 60 * 60 * 24));
         maxWeek = currentWeek + Math.round(diffDays / 7);
         if (maxWeek > 42) maxWeek = 42;
       }
     }
-  }
+  } catch(err) { console.log('profile error', err); }
 
   var groups = {};
   data.forEach(function(e) {
-    var w = e.week || 0;
-    if (!groups[w]) groups[w] = [];
-    groups[w].push(e);
+    var wk = e.week || 0;
+    if (!groups[wk]) groups[wk] = [];
+    groups[wk].push(e);
   });
 
   timeline.innerHTML = '';
-  for (var week = 4; week <= maxWeek; week++) {
-    var entries = groups[week] || [];
-    var isFuture = week > currentWeek;
-    var isCurrentWeek = (week === currentWeek);
-    var div = document.createElement('div');
-    div.innerHTML = buildWeekSectionHTML(week, entries, isFuture, isCurrentWeek);
-    timeline.appendChild(div);
-    entries.forEach(function(e) { loadComments(e.id); });
+  var cw = currentWeek;
+  for (var i = 4; i <= maxWeek; i++) {
+    var wEntries = groups[i] || [];
+    var wIsFuture = i > cw;
+    var wIsCurrent = (i === cw);
+    var wDiv = document.createElement('div');
+    wDiv.innerHTML = buildWeekSectionHTML(i, wEntries, wIsFuture, wIsCurrent);
+    timeline.appendChild(wDiv);
+    wEntries.forEach(function(e) { loadComments(e.id); });
   }
 
-  // 맨 위로 먼저 이동 후 현재 주차로 스크롤 애니메이션
   var screen = document.getElementById('s-home');
-  if (screen) screen.scrollTop = 0;
-  setTimeout(function() {
-    var target = timeline.querySelector('[data-week="' + currentWeek + '"]');
-    if (target && screen) {
-      screen.scrollTo({ top: target.offsetTop - 10, behavior: 'smooth' });
-    }
-  }, 300);
+  if (screen) {
+    screen.scrollTop = 0;
+    setTimeout(function() {
+      var target = document.querySelector('[data-week="' + cw + '"]');
+      if (target && screen) {
+        var top = target.getBoundingClientRect().top - screen.getBoundingClientRect().top + screen.scrollTop;
+        screen.scrollTo({ top: top - 10, behavior: 'smooth' });
+      }
+    }, 200);
+  }
 }
 async function saveEntry() {
   const content = document.getElementById('entry-content') ? document.getElementById('entry-content').value : '';
