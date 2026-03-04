@@ -83,7 +83,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
 .fact-sub { font-size:14px; font-weight:400; color:#fff; margin-left:auto; }
 
 /* APPT SCROLL ROW */
-.appt-scroll-row { display:flex; flex-direction:row; gap:10px; padding:10px 20px 10px 30px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.appt-scroll-row { display:flex; flex-direction:row; gap:10px; padding-left:30px; overflow-x:auto; -webkit-overflow-scrolling:touch; box-shadow:var(--card-shadow); }
 .appt-scroll-row::-webkit-scrollbar { display:none; }
 .appt-card {
   flex-shrink:0; width:227px; height:132px;
@@ -97,8 +97,41 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
 .appt-date { font-size:14px; font-weight:500; color:var(--text-mid); line-height:1.3; }
 .appt-place { font-size:14px; font-weight:500; color:var(--text-mid); line-height:1.3; }
 
+/* TIMELINE */
+.timeline-wrap {
+  position:relative;
+  padding-left:15px;
+}
+.timeline-wrap::before {
+  content:'';
+  position:absolute;
+  left:15px; top:0; bottom:0;
+  width:1px;
+  background:#C8A2C9;
+}
+
+/* WEEK SECTION */
+.week-section { position:relative; }
+.week-sticky {
+  position:sticky; top:0; z-index:10;
+  background:var(--bg);
+  padding:14px 10px 10px 20px;
+  display:flex; flex-direction:row; align-items:center; gap:7px;
+}
+.week-sticky .dot-wrap { width:20px; height:20px; background:rgba(238,226,238,0.49); border-radius:40px; backdrop-filter:blur(2px); display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-left:-27px; z-index:1; }
+.week-sticky .dot-inner { width:10px; height:10px; background:#C8A2C9; border-radius:50%; }
+.week-sticky .week-block { display:flex; flex-direction:row; align-items:flex-start; gap:10px; }
+.week-sticky .week-num { font-size:36px; font-weight:700; letter-spacing:-0.5px; line-height:1; color:var(--lilac-deep); }
+.week-sticky .week-label-col { display:flex; flex-direction:column; gap:2px; padding-top:2px; }
+.week-sticky .week-lbl { font-size:18px; font-weight:700; letter-spacing:-0.5px; color:var(--lilac-deep); line-height:1; }
+.week-sticky .week-date-lbl { font-size:14px; font-weight:700; letter-spacing:-0.5px; color:var(--green); line-height:1; }
+
+/* WEEK FACT BAR */
+.week-fact { padding:0 10px 12px 20px; }
+.week-fact .fact-bar { background:#C8A2C9; border-radius:10px; padding:15px 20px; display:flex; align-items:center; gap:5px; }
+
 /* FEED */
-.feed-section { padding:0 10px 0 30px; display:flex; flex-direction:column; gap:10px; }
+.feed-section { padding:0 10px 20px 20px; display:flex; flex-direction:column; gap:10px; }
 .feed-item {
   background:var(--card-bg); box-shadow:var(--card-shadow);
   border-radius:10px; overflow:hidden; display:flex; flex-direction:column;
@@ -197,21 +230,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
 <div class="screen" id="s-home">
   <div class="home-pad">
 
-    <!-- TOP ROW: 24 week + date -->
-    <div class="home-top-row">
-      <div class="home-left">
-        <div class="dot-wrap"><div class="dot-inner"></div></div>
-        <div class="week-block">
-          <span class="week-num">24</span>
-          <div class="week-label-col">
-            <span class="week-lbl">week</span>
-            <span class="week-date" id="today-date">Tue.3.Mar.2026</span>
-          </div>
-        </div>
-      </div>
-      <div class="home-right"></div>
-    </div>
-
+    
     <!-- FACT BAR -->
     <div class="fact-wrap">
       <div class="fact-bar">
@@ -245,8 +264,8 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
       </div>
     </div>
 
-    <!-- FEED -->
-    <div class="feed-section" id="home-timeline"></div>
+    <!-- TIMELINE -->
+    <div class="timeline-wrap" id="home-timeline"></div>
 
   </div>
 </div>
@@ -512,12 +531,33 @@ async function checkAuth() {
     hist = ['s-login'];
   }
 }
-function buildEntryHTML(entry) {
-  const hasPhoto = !!entry.image_url;
-  const time = entry.created_at ? new Date(entry.created_at).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}) : '';
-  const moodEmoji = entry.mood ? entry.mood.split(' ')[0] : '';
-  return '<div class="week-pill">' + (entry.week ? entry.week + '주차' : '') + '</div>' +
-    '<div class="feed-item">' +
+var babyFacts = {
+  4:'씨앗 크기 🌱', 5:'참깨 크기', 6:'완두콩 크기', 7:'블루베리 크기',
+  8:'강낭콩 크기', 9:'포도 크기', 10:'딸기 크기', 11:'라임 크기',
+  12:'자두 크기', 13:'복숭아 크기', 14:'레몬 크기', 15:'오렌지 크기',
+  16:'아보카도 크기', 17:'배 크기', 18:'피망 크기', 19:'토마토 크기',
+  20:'바나나 크기', 21:'당근 크기', 22:'파파야 크기', 23:'망고 크기',
+  24:'옥수수 크기 🌽', 25:'순무 크기', 26:'양상추 크기', 27:'꽃양배추 크기',
+  28:'가지 크기', 29:'버터넛 스쿼시', 30:'양배추 크기', 31:'코코넛 크기',
+  32:'네타 멜론 크기', 33:'파인애플 크기', 34:'칸탈루프 크기', 35:'허니듀 크기',
+  36:'상추 크기', 37:'스위스 차드', 38:'미니 수박', 39:'수박 크기', 40:'호박 크기'
+};
+var babyDev = {
+  4:'심장 형성 중', 5:'뇌 발달 시작', 6:'팔다리 싹 발생', 7:'손가락 형성',
+  8:'모든 주요 장기 형성', 9:'근육 발달', 10:'손톱 자라기 시작', 11:'생식기 발달',
+  12:'반사 신경 발달', 13:'지문 형성 중', 14:'얼굴 근육 발달', 15:'청각 발달 시작',
+  16:'눈이 빛 감지', 17:'땀샘 발달', 18:'하품하고 기지개', 19:'신장 기능 시작',
+  20:'태동 느낄 수 있어요', 21:'눈썹 자라기 시작', 22:'입술 발달', 23:'폐 발달 중',
+  24:'청각이 발달 중이에요', 25:'손바닥 잡기 반사', 26:'눈 뜨기 시작', 27:'뇌 급속 성장',
+  28:'REM 수면 시작', 29:'뼈 굳어지기 시작', 30:'골수 적혈구 생성', 31:'모든 감각 활성화',
+  32:'피부 윤곽 잡히기 시작', 33:'뼈 완전히 발달', 34:'중추신경계 성숙', 35:'신장 완전 발달',
+  36:'지방 축적 중', 37:'면역 체계 강화', 38:'출산 준비 완료', 39:'폐 완전히 성숙', 40:'출산 대기 중'
+};
+function buildFeedItemHTML(entry) {
+  var hasPhoto = !!entry.image_url;
+  var time = entry.created_at ? new Date(entry.created_at).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}) : '';
+  var moodEmoji = entry.mood ? entry.mood.split(' ')[0] : '';
+  return '<div class="feed-item">' +
     (hasPhoto ? '<img class="feed-photo" src="' + entry.image_url + '" alt="사진">' : '') +
     '<div class="feed-body">' +
     '<div class="feed-row1"><span class="feed-date">' + (entry.date || '') + '</span><span class="feed-time">' + time + '</span></div>' +
@@ -532,18 +572,86 @@ function buildEntryHTML(entry) {
     '<button class="cmt-send" onclick="window.addComment(' + entry.id + ')">전송</button>' +
     '</div></div>';
 }
+function buildWeekSectionHTML(week, entries, isFuture) {
+  var fact = babyFacts[week] || '';
+  var dev = babyDev[week] || '';
+  var html = '<div class="week-section" data-week="' + week + '"' + (isFuture ? ' style="opacity:0.5"' : '') + '>';
+  html += '<div class="week-sticky">';
+  html += '<div class="dot-wrap"><div class="dot-inner"></div></div>';
+  html += '<div class="week-block">';
+  html += '<span class="week-num">' + week + '</span>';
+  html += '<div class="week-label-col"><span class="week-lbl">week</span></div>';
+  html += '</div></div>';
+  if (fact) {
+    html += '<div class="week-fact"><div class="fact-bar">';
+    html += '<div class="fact-icon">💡</div>';
+    html += '<span class="fact-main">' + fact + '</span>';
+    html += '<span class="fact-sub">' + dev + '</span>';
+    html += '</div></div>';
+  }
+  if (entries.length > 0) {
+    html += '<div class="feed-section">';
+    entries.forEach(function(e) { html += buildFeedItemHTML(e); });
+    html += '</div>';
+  }
+  html += '</div>';
+  return html;
+}
 async function loadEntries() {
-  const timeline = document.getElementById('home-timeline');
+  var timeline = document.getElementById('home-timeline');
   if (!timeline) return;
-  const res = await _supabase.from('entries').select('*').order('created_at', { ascending: false });
+  var res = await _supabase.from('entries').select('*').order('created_at', { ascending: false });
   if (res.error) { console.error(res.error); return; }
-  timeline.innerHTML = '';
-  (res.data || []).forEach(function(entry) {
-    const div = document.createElement('div');
-    div.innerHTML = buildEntryHTML(entry);
-    timeline.appendChild(div);
-    loadComments(entry.id);
+  var data = res.data || [];
+
+  // 프로필에서 현재 주차 + 예정일 가져오기
+  var ures = await _supabase.auth.getUser();
+  var user = ures.data && ures.data.user;
+  var currentWeek = 24;
+  var maxWeek = 40;
+  if (user) {
+    var pres = await _supabase.from('profiles').select('current_week,edd').eq('id', user.id).single();
+    if (pres.data) {
+      if (pres.data.current_week) currentWeek = pres.data.current_week;
+      if (pres.data.edd) {
+        var edd = new Date(pres.data.edd);
+        var now = new Date();
+        var diffDays = Math.round((edd - now) / (1000 * 60 * 60 * 24));
+        maxWeek = currentWeek + Math.round(diffDays / 7);
+        if (maxWeek > 42) maxWeek = 42;
+      }
+    }
+  }
+
+  // 피드를 주차별로 그룹핑
+  var groups = {};
+  data.forEach(function(e) {
+    var w = e.week || 0;
+    if (!groups[w]) groups[w] = [];
+    groups[w].push(e);
   });
+
+  // 4주차부터 maxWeek까지 오름차순
+  timeline.innerHTML = '';
+  for (var week = 4; week <= maxWeek; week++) {
+    var entries = groups[week] || [];
+    var isFuture = week > currentWeek;
+    var div = document.createElement('div');
+    div.innerHTML = buildWeekSectionHTML(week, entries, isFuture);
+    timeline.appendChild(div);
+    entries.forEach(function(e) { loadComments(e.id); });
+  }
+
+  // 현재 주차로 스크롤
+  setTimeout(function() {
+    var sections = timeline.querySelectorAll('.week-section');
+    var target = null;
+    sections.forEach(function(s) {
+      var num = parseInt(s.getAttribute('data-week'));
+      if (num === currentWeek) target = s;
+    });
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
 }
 async function saveEntry() {
   const content = document.getElementById('entry-content') ? document.getElementById('entry-content').value : '';
