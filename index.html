@@ -117,6 +117,27 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
   left:15px; top:0; bottom:0;
   width:1px;
   background:#C8A2C9;
+  /* C: 라인이 위에서 그려짐 */
+  transform-origin:top;
+  animation:none;
+}
+.timeline-wrap.animating::before {
+  animation:drawLine 1.5s cubic-bezier(0.4,0,0.2,1) forwards;
+}
+@keyframes drawLine {
+  from { transform:scaleY(0); }
+  to   { transform:scaleY(1); }
+}
+
+/* A: 각 섹션 fade+slide up */
+.week-section {
+  opacity:0;
+  transform:translateY(16px);
+  transition:opacity 0.45s ease, transform 0.45s ease;
+}
+.week-section.visible {
+  opacity:1;
+  transform:translateY(0);
 }
 
 /* WEEK SECTION */
@@ -804,13 +825,30 @@ async function loadEntries() {
   var screen = document.getElementById('s-home');
   if (screen) {
     screen.scrollTop = 0;
+
+    // A: 모든 섹션 초기 숨김 (이미 CSS로 opacity:0)
+    // C: 잠깐 후 현재주차로 스크롤 시작
     setTimeout(function() {
       var target = document.querySelector('[data-week="' + cw + '"]');
-      if (target && screen) {
-        var top = target.getBoundingClientRect().top - screen.getBoundingClientRect().top + screen.scrollTop;
-        screen.scrollTo({ top: top - 10, behavior: 'smooth' });
-      }
-    }, 500);
+      if (!target || !screen) return;
+
+      // 라인 드로우 애니메이션 시작
+      var wrap = document.getElementById('home-timeline');
+      if (wrap) wrap.classList.add('animating');
+
+      // 스크롤 전 보이는 섹션들 먼저 fade-up (4주~현재 앞)
+      var allSections = document.querySelectorAll('.week-section');
+      allSections.forEach(function(s, idx) {
+        setTimeout(function() {
+          s.classList.add('visible');
+        }, idx * 40);
+      });
+
+      // C: 현재주차로 부드럽게 스크롤
+      var top = target.getBoundingClientRect().top - screen.getBoundingClientRect().top + screen.scrollTop;
+      screen.scrollTo({ top: top - 10, behavior: 'smooth' });
+
+    }, 300);
   }
 }
 async function calcEntryWeek() {
