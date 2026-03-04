@@ -388,13 +388,17 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
     <div class="setup-logo">nuri 🌸</div>
     <div class="setup-sub">임신 정보를 입력해줘요</div>
 
-    <!-- STEP 1: 마지막 생리일 or 예정일 선택 -->
+    <!-- STEP 1: 입력 방식 선택 -->
     <div class="setup-step on" id="setup-step-1">
-      <div class="setup-q">어떤 날짜를 알고 있어요?</div>
+      <div class="setup-q">어떤 정보를 알고 있어요?</div>
       <div style="display:flex;flex-direction:column;gap:12px;">
+        <div id="opt-week" onclick="selectSetupOpt('week')" style="border:1.5px solid rgba(200,162,201,0.4);border-radius:14px;padding:18px;cursor:pointer;background:#fff;">
+          <div style="font-size:15px;font-weight:700;color:var(--text);">현재 임신 주수</div>
+          <div style="font-size:12px;color:var(--text-soft);margin-top:4px;">지금 몇 주인지 알고 있어요</div>
+        </div>
         <div id="opt-lmp" onclick="selectSetupOpt('lmp')" style="border:1.5px solid rgba(200,162,201,0.4);border-radius:14px;padding:18px;cursor:pointer;background:#fff;">
           <div style="font-size:15px;font-weight:700;color:var(--text);">마지막 생리 시작일</div>
-          <div style="font-size:12px;color:var(--text-soft);margin-top:4px;">가장 정확한 계산 방법이에요</div>
+          <div style="font-size:12px;color:var(--text-soft);margin-top:4px;">날짜로 자동 계산해요</div>
         </div>
         <div id="opt-edd" onclick="selectSetupOpt('edd')" style="border:1.5px solid rgba(200,162,201,0.4);border-radius:14px;padding:18px;cursor:pointer;background:#fff;">
           <div style="font-size:15px;font-weight:700;color:var(--text);">출산 예정일 (EDD)</div>
@@ -403,12 +407,18 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
       </div>
     </div>
 
-    <!-- STEP 2: 날짜 입력 -->
+    <!-- STEP 2: 입력 -->
     <div class="setup-step" id="setup-step-2">
-      <div class="setup-q" id="setup-step2-q">마지막 생리 시작일을 입력해줘요</div>
-      <div class="setup-hint">날짜를 선택하면 주수를 자동으로 계산해요</div>
-      <input type="date" class="setup-input" id="setup-date-input" oninput="calcWeekPreview()">
-      <div class="setup-calc" id="setup-calc-result">날짜를 선택하면 주수가 계산돼요 ✨</div>
+      <div class="setup-q" id="setup-step2-q">현재 임신 주수를 입력해줘요</div>
+      <div class="setup-hint" id="setup-step2-hint">예정일도 함께 입력하면 더 정확해요</div>
+      <div id="setup-week-row" style="display:flex;align-items:center;gap:10px;">
+        <input type="number" class="setup-input" id="setup-week-input" min="1" max="42" placeholder="24" style="font-size:28px;font-weight:800;text-align:center;width:120px;" oninput="calcWeekPreview()">
+        <span style="font-size:16px;color:var(--text-soft);">주차</span>
+      </div>
+      <div id="setup-date-row">
+        <input type="date" class="setup-input" id="setup-date-input" oninput="calcWeekPreview()">
+      </div>
+      <div class="setup-calc" id="setup-calc-result">입력하면 예정일을 계산해요 ✨</div>
       <button class="setup-btn" onclick="saveSetup()">시작하기 🌱</button>
       <div class="setup-skip" onclick="skipSetup()">나중에 입력할게요</div>
     </div>
@@ -565,45 +575,65 @@ async function checkAuth() {
     hist = ['s-login'];
   }
 }
-var setupMode = 'lmp';
+var setupMode = 'week';
 function selectSetupOpt(mode) {
   setupMode = mode;
-  var lmp = document.getElementById('opt-lmp');
-  var edd = document.getElementById('opt-edd');
+  var opts = ['opt-week','opt-lmp','opt-edd'];
+  opts.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) { el.style.borderColor = 'rgba(200,162,201,0.4)'; el.style.background = '#fff'; }
+  });
+  var sel = document.getElementById('opt-' + mode);
+  if (sel) { sel.style.borderColor = '#834D84'; sel.style.background = 'rgba(131,77,132,0.06)'; }
+
   var q = document.getElementById('setup-step2-q');
-  if (mode === 'lmp') {
-    lmp.style.borderColor = '#834D84';
-    lmp.style.background = 'rgba(131,77,132,0.06)';
-    edd.style.borderColor = 'rgba(200,162,201,0.4)';
-    edd.style.background = '#fff';
+  var hint = document.getElementById('setup-step2-hint');
+  var weekRow = document.getElementById('setup-week-row');
+  var dateRow = document.getElementById('setup-date-row');
+
+  if (mode === 'week') {
+    q.textContent = '현재 임신 주수를 입력해줘요';
+    hint.textContent = '예정일도 함께 입력하면 더 정확해요';
+    weekRow.style.display = 'flex';
+    dateRow.style.display = 'none';
+  } else if (mode === 'lmp') {
     q.textContent = '마지막 생리 시작일을 입력해줘요';
+    hint.textContent = '날짜로 주수를 자동 계산해요';
+    weekRow.style.display = 'none';
+    dateRow.style.display = 'block';
   } else {
-    edd.style.borderColor = '#834D84';
-    edd.style.background = 'rgba(131,77,132,0.06)';
-    lmp.style.borderColor = 'rgba(200,162,201,0.4)';
-    lmp.style.background = '#fff';
     q.textContent = '출산 예정일을 입력해줘요';
+    hint.textContent = '산부인과에서 받은 날짜예요';
+    weekRow.style.display = 'none';
+    dateRow.style.display = 'block';
   }
+  document.getElementById('setup-calc-result').innerHTML = '입력하면 예정일을 계산해요 ✨';
   document.getElementById('setup-step-1').classList.remove('on');
   document.getElementById('setup-step-2').classList.add('on');
 }
 function calcWeekPreview() {
-  var val = document.getElementById('setup-date-input').value;
   var result = document.getElementById('setup-calc-result');
-  if (!val) return;
-  var inputDate = new Date(val);
-  var today = new Date();
   var week, edd;
-  if (setupMode === 'lmp') {
-    var diffMs = today - inputDate;
-    var diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    week = Math.floor(diffDays / 7);
-    edd = new Date(inputDate.getTime() + 280 * 24 * 60 * 60 * 1000);
+  if (setupMode === 'week') {
+    var wVal = parseInt(document.getElementById('setup-week-input').value);
+    if (!wVal || wVal < 1 || wVal > 42) return;
+    week = wVal;
+    var today = new Date();
+    edd = new Date(today.getTime() + (40 - week) * 7 * 24 * 60 * 60 * 1000);
   } else {
-    var diffMs2 = new Date(val) - today;
-    var daysLeft = Math.ceil(diffMs2 / (1000 * 60 * 60 * 24));
-    week = 40 - Math.round(daysLeft / 7);
-    edd = inputDate;
+    var dVal = document.getElementById('setup-date-input').value;
+    if (!dVal) return;
+    var inputDate = new Date(dVal);
+    var today2 = new Date();
+    if (setupMode === 'lmp') {
+      var diffDays = Math.floor((today2 - inputDate) / (1000 * 60 * 60 * 24));
+      week = Math.floor(diffDays / 7);
+      edd = new Date(inputDate.getTime() + 280 * 24 * 60 * 60 * 1000);
+    } else {
+      var daysLeft = Math.ceil((inputDate - today2) / (1000 * 60 * 60 * 24));
+      week = 40 - Math.round(daysLeft / 7);
+      edd = inputDate;
+    }
   }
   if (week < 1) week = 1;
   if (week > 42) week = 42;
@@ -611,19 +641,26 @@ function calcWeekPreview() {
   result.innerHTML = '현재 임신 <strong>' + week + '주차</strong> &nbsp;·&nbsp; 예정일 ' + eddStr;
 }
 async function saveSetup() {
-  var val = document.getElementById('setup-date-input').value;
-  if (!val) { alert('날짜를 입력해주세요'); return; }
-  var inputDate = new Date(val);
-  var today = new Date();
   var week, edd;
-  if (setupMode === 'lmp') {
-    var diffDays = Math.floor((today - inputDate) / (1000 * 60 * 60 * 24));
-    week = Math.floor(diffDays / 7);
-    edd = new Date(inputDate.getTime() + 280 * 24 * 60 * 60 * 1000);
+  if (setupMode === 'week') {
+    week = parseInt(document.getElementById('setup-week-input').value);
+    if (!week || week < 1 || week > 42) { alert('주수를 입력해주세요 (1~42)'); return; }
+    var today = new Date();
+    edd = new Date(today.getTime() + (40 - week) * 7 * 24 * 60 * 60 * 1000);
   } else {
-    var daysLeft = Math.ceil((inputDate - today) / (1000 * 60 * 60 * 24));
-    week = 40 - Math.round(daysLeft / 7);
-    edd = inputDate;
+    var dVal = document.getElementById('setup-date-input').value;
+    if (!dVal) { alert('날짜를 입력해주세요'); return; }
+    var inputDate = new Date(dVal);
+    var today2 = new Date();
+    if (setupMode === 'lmp') {
+      var diffDays = Math.floor((today2 - inputDate) / (1000 * 60 * 60 * 24));
+      week = Math.floor(diffDays / 7);
+      edd = new Date(inputDate.getTime() + 280 * 24 * 60 * 60 * 1000);
+    } else {
+      var daysLeft = Math.ceil((inputDate - today2) / (1000 * 60 * 60 * 24));
+      week = 40 - Math.round(daysLeft / 7);
+      edd = inputDate;
+    }
   }
   if (week < 1) week = 1;
   if (week > 42) week = 42;
@@ -771,7 +808,7 @@ async function loadEntries() {
         var top = target.getBoundingClientRect().top - screen.getBoundingClientRect().top + screen.scrollTop;
         screen.scrollTo({ top: top - 10, behavior: 'smooth' });
       }
-    }, 200);
+    }, 500);
   }
 }
 async function saveEntry() {
