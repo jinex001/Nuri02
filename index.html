@@ -229,44 +229,8 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
 <!-- HOME -->
 <div class="screen" id="s-home">
   <div class="home-pad">
-
-    
-    <!-- FACT BAR -->
-    <div class="fact-wrap">
-      <div class="fact-bar">
-        <div class="fact-icon">💡</div>
-        <span class="fact-main">아기는 옥수수 크기</span>
-        <span class="fact-sub">청각이 발달 중이에요</span>
-      </div>
-    </div>
-
-    <!-- APPT SCROLL -->
-    <div class="appt-scroll-row">
-      <div class="appt-card">
-        <div class="appt-top">
-          <div class="appt-badge">3일 후</div>
-          <div class="appt-type">초음파</div>
-        </div>
-        <div class="appt-info">
-          <div class="appt-date">3월 6일 금요일 오전 10:30</div>
-          <div class="appt-place">서울 성모 병원 Dr. 박미연</div>
-        </div>
-      </div>
-      <div class="appt-card">
-        <div class="appt-top">
-          <div class="appt-badge">4일 후</div>
-          <div class="appt-type">초음파</div>
-        </div>
-        <div class="appt-info">
-          <div class="appt-date">2월 7일 토요일 오전 10:30</div>
-          <div class="appt-place">서울 성모 병원 Dr. 박미연</div>
-        </div>
-      </div>
-    </div>
-
     <!-- TIMELINE -->
     <div class="timeline-wrap" id="home-timeline"></div>
-
   </div>
 </div>
 
@@ -572,16 +536,23 @@ function buildFeedItemHTML(entry) {
     '<button class="cmt-send" onclick="window.addComment(' + entry.id + ')">전송</button>' +
     '</div></div>';
 }
-function buildWeekSectionHTML(week, entries, isFuture) {
+function buildWeekSectionHTML(week, entries, isFuture, isCurrentWeek) {
   var fact = babyFacts[week] || '';
   var dev = babyDev[week] || '';
-  var html = '<div class="week-section" data-week="' + week + '"' + (isFuture ? ' style="opacity:0.5"' : '') + '>';
-  html += '<div class="week-sticky">';
+  var html = '<div class="week-section" data-week="' + week + '"' + (isFuture ? ' style="opacity:0.45"' : '') + '>';
+  html += '<div class="week-sticky' + (isCurrentWeek ? ' current' : '') + '">';
   html += '<div class="dot-wrap"><div class="dot-inner"></div></div>';
   html += '<div class="week-block">';
   html += '<span class="week-num">' + week + '</span>';
-  html += '<div class="week-label-col"><span class="week-lbl">week</span></div>';
-  html += '</div></div>';
+  html += '<div class="week-label-col"><span class="week-lbl">week</span>';
+  if (isCurrentWeek) {
+    var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var now = new Date();
+    var dateStr = days[now.getDay()] + '.' + now.getDate() + '.' + months[now.getMonth()] + '.' + now.getFullYear();
+    html += '<span class="week-date-lbl">' + dateStr + '</span>';
+  }
+  html += '</div></div></div>';
   if (fact) {
     html += '<div class="week-fact"><div class="fact-bar">';
     html += '<div class="fact-icon">💡</div>';
@@ -636,8 +607,9 @@ async function loadEntries() {
   for (var week = 4; week <= maxWeek; week++) {
     var entries = groups[week] || [];
     var isFuture = week > currentWeek;
+    var isCurrentWeek = week === currentWeek;
     var div = document.createElement('div');
-    div.innerHTML = buildWeekSectionHTML(week, entries, isFuture);
+    div.innerHTML = buildWeekSectionHTML(week, entries, isFuture, isCurrentWeek);
     timeline.appendChild(div);
     entries.forEach(function(e) { loadComments(e.id); });
   }
