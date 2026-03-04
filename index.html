@@ -364,8 +364,9 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
       </div>
       <div class="info-row">
         <div class="i-lbl">출산 예정일</div>
-        <input id="edd-input" type="date" class="txt-in" style="width:150px;text-align:right;padding:6px 10px;">
+        <input id="edd-input" type="date" class="txt-in" style="width:150px;text-align:right;padding:6px 10px;" oninput="autoCalcWeekFromEdd()">
       </div>
+      <div style="padding:4px 16px 12px;font-size:12px;color:var(--text-soft);" id="settings-calc-hint"></div>
       <div style="padding:12px 16px;">
         <button class="save-btn" onclick="saveProfile()">저장</button>
       </div>
@@ -885,6 +886,20 @@ async function loadPartnerFeed(inviteCode) {
   document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
   document.getElementById('s-partner').classList.add('active');
   hist = ['s-partner'];
+}
+function autoCalcWeekFromEdd() {
+  var eddVal = document.getElementById('edd-input').value;
+  var hint = document.getElementById('settings-calc-hint');
+  if (!eddVal) { if (hint) hint.textContent = ''; return; }
+  var edd = new Date(eddVal);
+  var today = new Date();
+  var daysLeft = Math.ceil((edd - today) / (1000 * 60 * 60 * 24));
+  var week = 40 - Math.round(daysLeft / 7);
+  if (week < 1) week = 1;
+  if (week > 42) week = 42;
+  var wi = document.getElementById('week-input');
+  if (wi) wi.value = week;
+  if (hint) hint.textContent = '예정일 기준으로 ' + week + '주차로 자동 계산됐어요';
 }
 async function loadProfile() {
   const ures = await _supabase.auth.getUser();
