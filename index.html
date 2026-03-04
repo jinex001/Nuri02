@@ -278,14 +278,9 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
     </div>
     <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="previewPhoto(this)">
     <div class="fld">
-      <label class="fld-lbl">임신 주수</label>
-      <div class="pills" id="week-pills">
-        <div class="pill" onclick="selPill(this)">22주</div>
-        <div class="pill" onclick="selPill(this)">23주</div>
-        <div class="pill on" onclick="selPill(this)">24주</div>
-        <div class="pill" onclick="selPill(this)">25주</div>
-        <div class="pill" onclick="selPill(this)">26주</div>
-      </div>
+      <label class="fld-lbl">날짜</label>
+      <input type="date" id="entry-date-input" class="txt-in" oninput="calcEntryWeek()">
+      <div style="font-size:12px;color:var(--text-soft);margin-top:6px;" id="entry-week-hint"></div>
     </div>
     <div class="fld">
       <label class="fld-lbl">메모</label>
@@ -452,7 +447,12 @@ function goTo(id) {
   if (c) c.classList.add('exit');
   n.classList.add('active');
   hist.push(id);
-  setTimeout(() => { if (c) c.classList.remove('active','exit'); }, 340);
+  if (id === 's-new') {
+    var di = document.getElementById('entry-date-input');
+    if (di && !di.value) di.value = new Date().toISOString().split('T')[0];
+    calcEntryWeek();
+  }
+  setTimeout(function() { if (c) c.classList.remove('active','exit'); }, 340);
 }
 function goBack() {
   if (hist.length <= 1) return;
@@ -670,6 +670,7 @@ async function saveSetup() {
   var user = ures.data && ures.data.user;
   if (!user) return;
   await _supabase.from('profiles').upsert({ id: user.id, current_week: week, edd: eddStr });
+  localStorage.setItem('nuri_current_week', week);
   showHome();
 }
 function skipSetup() {
@@ -812,10 +813,35 @@ async function loadEntries() {
     }, 500);
   }
 }
+function calcEntryWeek() {
+  var dateVal = document.getElementById('entry-date-input').value;
+  var hint = document.getElementById('entry-week-hint');
+  if (!dateVal || !hint) return;
+  // EDD 기반으로 주수 계산 — 로컬스토리지 대신 그냥 날짜 차이로
+  var entryDate = new Date(dateVal);
+  var today = new Date();
+  // 오늘이 currentWeek이므로 날짜 차이로 주수 역산
+  var diffDays = Math.round((entryDate - today) / (1000 * 60 * 60 * 24));
+  var diffWeeks = Math.round(diffDays / 7);
+  var storedWeek = parseInt(localStorage.getItem('nuri_current_week') || '24');
+  var entryWeek = storedWeek + diffWeeks;
+  if (entryWeek < 1) entryWeek = 1;
+  if (entryWeek > 42) entryWeek = 42;
+  hint.textContent = '임신 ' + entryWeek + '주차 기록으로 저장돼요';
+}
 async function saveEntry() {
   const content = document.getElementById('entry-content') ? document.getElementById('entry-content').value : '';
-  const weekEl = document.querySelector('#week-pills .pill.on');
-  const week = weekEl ? parseInt(weekEl.textContent) : null;
+  const dateInput = document.getElementById('entry-date-input');
+  const dateVal = dateInput ? dateInput.value : new Date().toISOString().split('T')[0];
+  // 날짜로 주수 계산
+  var entryDate = new Date(dateVal);
+  var today = new Date();
+  var diffDays = Math.round((entryDate - today) / (1000 * 60 * 60 * 24));
+  var diffWeeks = Math.round(diffDays / 7);
+  var storedWeek = parseInt(localStorage.getItem('nuri_current_week') || '24');
+  var week = storedWeek + diffWeeks;
+  if (week < 1) week = 1;
+  if (week > 42) week = 42;
   const moodEl = document.querySelector('#mood-pills .pill.on');
   const mood = moodEl ? moodEl.textContent : '';
   const typeEl = document.querySelector('#s-new .type-tab.on');
@@ -827,7 +853,7 @@ async function saveEntry() {
   if (!user) { alert('로그인이 필요해요'); return; }
   let image_url = null;
   if (selectedFile) image_url = await uploadPhoto();
-  const ins = await _supabase.from('entries').insert({ type, content, week, mood, date: new Date().toISOString().split('T')[0], image_url, user_id: user.id, is_public: isPublic });
+  const ins = await _supabase.from('entries').insert({ type, content, week, mood, date: dateVal, image_url, user_id: user.id, is_public: isPublic });
   if (ins.error) { alert('저장 실패'); console.error(ins.error); return; }
   selectedFile = null;
   const preview = document.getElementById('photo-preview');
