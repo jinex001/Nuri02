@@ -813,18 +813,24 @@ async function loadEntries() {
     }, 500);
   }
 }
-function calcEntryWeek() {
+async function calcEntryWeek() {
   var dateVal = document.getElementById('entry-date-input').value;
   var hint = document.getElementById('entry-week-hint');
   if (!dateVal || !hint) return;
-  // EDD 기반으로 주수 계산 — 로컬스토리지 대신 그냥 날짜 차이로
+  var currentWeek = 13;
+  try {
+    var ures = await _supabase.auth.getUser();
+    var user = ures.data && ures.data.user;
+    if (user) {
+      var pres = await _supabase.from('profiles').select('current_week').eq('id', user.id).single();
+      if (pres.data && pres.data.current_week) currentWeek = parseInt(pres.data.current_week);
+    }
+  } catch(e) {}
   var entryDate = new Date(dateVal);
   var today = new Date();
-  // 오늘이 currentWeek이므로 날짜 차이로 주수 역산
   var diffDays = Math.round((entryDate - today) / (1000 * 60 * 60 * 24));
   var diffWeeks = Math.round(diffDays / 7);
-  var storedWeek = parseInt(localStorage.getItem('nuri_current_week') || '24');
-  var entryWeek = storedWeek + diffWeeks;
+  var entryWeek = currentWeek + diffWeeks;
   if (entryWeek < 1) entryWeek = 1;
   if (entryWeek > 42) entryWeek = 42;
   hint.textContent = '임신 ' + entryWeek + '주차 기록으로 저장돼요';
@@ -833,13 +839,24 @@ async function saveEntry() {
   const content = document.getElementById('entry-content') ? document.getElementById('entry-content').value : '';
   const dateInput = document.getElementById('entry-date-input');
   const dateVal = dateInput ? dateInput.value : new Date().toISOString().split('T')[0];
-  // 날짜로 주수 계산
+
+  // 현재 주수 Supabase에서 가져오기
+  var currentWeek = 13;
+  try {
+    var ures2 = await _supabase.auth.getUser();
+    var user2 = ures2.data && ures2.data.user;
+    if (user2) {
+      var pres2 = await _supabase.from('profiles').select('current_week').eq('id', user2.id).single();
+      if (pres2.data && pres2.data.current_week) currentWeek = parseInt(pres2.data.current_week);
+    }
+  } catch(e) {}
+
+  // 날짜 차이로 주수 계산
   var entryDate = new Date(dateVal);
   var today = new Date();
   var diffDays = Math.round((entryDate - today) / (1000 * 60 * 60 * 24));
   var diffWeeks = Math.round(diffDays / 7);
-  var storedWeek = parseInt(localStorage.getItem('nuri_current_week') || '24');
-  var week = storedWeek + diffWeeks;
+  var week = currentWeek + diffWeeks;
   if (week < 1) week = 1;
   if (week > 42) week = 42;
   const moodEl = document.querySelector('#mood-pills .pill.on');
