@@ -539,12 +539,14 @@ function buildFeedItemHTML(entry) {
 function buildWeekSectionHTML(week, entries, isFuture, isCurrentWeek) {
   var fact = babyFacts[week] || '';
   var dev = babyDev[week] || '';
-  var html = '<div class="week-section" data-week="' + week + '"' + (isFuture ? ' style="opacity:0.45"' : '') + '>';
-  html += '<div class="week-sticky' + (isCurrentWeek ? ' current' : '') + '">';
-  html += '<div class="dot-wrap"><div class="dot-inner"></div></div>';
+  var opacity = isFuture ? ' style="opacity:0.45"' : '';
+  var html = '<div class="week-section" data-week="' + week + '"' + opacity + '>';
+  html += '<div class="week-sticky">';
+  html += '<div class="dot-wrap"><div class="dot-inner' + (isCurrentWeek ? ' current-dot' : '') + '"></div></div>';
   html += '<div class="week-block">';
-  html += '<span class="week-num">' + week + '</span>';
-  html += '<div class="week-label-col"><span class="week-lbl">week</span>';
+  html += '<span class="week-num" style="color:' + (isCurrentWeek ? '#834D84' : (isFuture ? '#C8A2C9' : '#5C4D5E')) + '">' + week + '</span>';
+  html += '<div class="week-label-col">';
+  html += '<span class="week-lbl" style="color:' + (isCurrentWeek ? '#834D84' : (isFuture ? '#C8A2C9' : '#5C4D5E')) + '">week</span>';
   if (isCurrentWeek) {
     var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
     var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -554,11 +556,18 @@ function buildWeekSectionHTML(week, entries, isFuture, isCurrentWeek) {
   }
   html += '</div></div></div>';
   if (fact) {
-    html += '<div class="week-fact"><div class="fact-bar">';
+    html += '<div class="week-fact"><div class="fact-bar" style="' + (isFuture ? 'background:rgba(200,162,201,0.4)' : 'background:#C8A2C9') + '">';
     html += '<div class="fact-icon">💡</div>';
     html += '<span class="fact-main">' + fact + '</span>';
     html += '<span class="fact-sub">' + dev + '</span>';
     html += '</div></div>';
+  }
+  // 현재 주차에 진료 카드 추가
+  if (isCurrentWeek) {
+    html += '<div class="appt-scroll-row">';
+    html += '<div class="appt-card"><div class="appt-top"><div class="appt-badge">3일 후</div><div class="appt-type">초음파</div></div><div class="appt-info"><div class="appt-date">3월 6일 금요일 오전 10:30</div><div class="appt-place">서울 성모 병원 Dr. 박미연</div></div></div>';
+    html += '<div class="appt-card"><div class="appt-top"><div class="appt-badge">4일 후</div><div class="appt-type">초음파</div></div><div class="appt-info"><div class="appt-date">2월 7일 토요일 오전 10:30</div><div class="appt-place">서울 성모 병원 Dr. 박미연</div></div></div>';
+    html += '</div>';
   }
   if (entries.length > 0) {
     html += '<div class="feed-section">';
@@ -575,7 +584,6 @@ async function loadEntries() {
   if (res.error) { console.error(res.error); return; }
   var data = res.data || [];
 
-  // 프로필에서 현재 주차 + 예정일 가져오기
   var ures = await _supabase.auth.getUser();
   var user = ures.data && ures.data.user;
   var currentWeek = 24;
@@ -583,18 +591,17 @@ async function loadEntries() {
   if (user) {
     var pres = await _supabase.from('profiles').select('current_week,edd').eq('id', user.id).single();
     if (pres.data) {
-      if (pres.data.current_week) currentWeek = pres.data.current_week;
+      if (pres.data.current_week) currentWeek = parseInt(pres.data.current_week);
       if (pres.data.edd) {
         var edd = new Date(pres.data.edd);
-        var now = new Date();
-        var diffDays = Math.round((edd - now) / (1000 * 60 * 60 * 24));
+        var now2 = new Date();
+        var diffDays = Math.round((edd - now2) / (1000 * 60 * 60 * 24));
         maxWeek = currentWeek + Math.round(diffDays / 7);
         if (maxWeek > 42) maxWeek = 42;
       }
     }
   }
 
-  // 피드를 주차별로 그룹핑
   var groups = {};
   data.forEach(function(e) {
     var w = e.week || 0;
@@ -602,28 +609,26 @@ async function loadEntries() {
     groups[w].push(e);
   });
 
-  // 4주차부터 maxWeek까지 오름차순
   timeline.innerHTML = '';
   for (var week = 4; week <= maxWeek; week++) {
     var entries = groups[week] || [];
     var isFuture = week > currentWeek;
-    var isCurrentWeek = week === currentWeek;
+    var isCurrentWeek = (week === currentWeek);
     var div = document.createElement('div');
     div.innerHTML = buildWeekSectionHTML(week, entries, isFuture, isCurrentWeek);
     timeline.appendChild(div);
     entries.forEach(function(e) { loadComments(e.id); });
   }
 
-  // 현재 주차로 스크롤
+  // 맨 위로 먼저 이동 후 현재 주차로 스크롤 애니메이션
+  var screen = document.getElementById('s-home');
+  if (screen) screen.scrollTop = 0;
   setTimeout(function() {
-    var sections = timeline.querySelectorAll('.week-section');
-    var target = null;
-    sections.forEach(function(s) {
-      var num = parseInt(s.getAttribute('data-week'));
-      if (num === currentWeek) target = s;
-    });
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 100);
+    var target = timeline.querySelector('[data-week="' + currentWeek + '"]');
+    if (target && screen) {
+      screen.scrollTo({ top: target.offsetTop - 10, behavior: 'smooth' });
+    }
+  }, 300);
 }
 async function saveEntry() {
   const content = document.getElementById('entry-content') ? document.getElementById('entry-content').value : '';
