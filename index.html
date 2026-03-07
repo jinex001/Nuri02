@@ -93,8 +93,25 @@ position: relative;
   position: fixed;
   width: 2px;
   background: var(--lilac);
-  z-index: 998;
+  z-index: 1;
   pointer-events: none;
+}
+
+.week-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+}
+
+.dot-wrap {
+  position: relative;
+  z-index: 11;
+}
+
+.dot-inner {
+  position: relative;
+  z-index: 12;
 }
 #timeline-fixed-line.animate {
 animation: lineGrow 1.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
