@@ -89,30 +89,49 @@ position: relative;
 }
 
 /* Fixed line — lives outside #app, positioned via JS */
+#app {
+  position: relative;
+}
+
 #timeline-fixed-line {
-  position: fixed;
+  position: absolute;
   width: 2px;
   background: var(--lilac);
   z-index: 1;
   pointer-events: none;
 }
 
-.week-sticky {
-  position: sticky;
-  top: 0;
+.dot-wrap {
+  width: 20px;
+  height: 20px;
+  position: relative;
+  border-radius: 999px;
+  overflow: hidden;
   z-index: 10;
-  background: var(--bg);
 }
 
-.dot-wrap {
-  position: relative;
-  z-index: 11;
+.dot-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(95, 158, 136, 0.10);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1;
 }
 
 .dot-inner {
-  position: relative;
-  z-index: 12;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--lilac);
+  z-index: 2;
 }
+
 #timeline-fixed-line.animate {
 animation: lineGrow 1.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
@@ -927,15 +946,26 @@ async function loadEntries() {
       }
       // Find dot position from the first week-section dot
       
+const app = document.getElementById('app');
 const firstDot = document.querySelector('.dot-wrap');
-if (firstDot) {
+
+if (app && firstDot) {
+  let fixedLine = document.getElementById('timeline-fixed-line');
+  if (!fixedLine) {
+    fixedLine = document.createElement('div');
+    fixedLine.id = 'timeline-fixed-line';
+    app.appendChild(fixedLine);
+  }
+
+  const appRect = app.getBoundingClientRect();
   const rect = firstDot.getBoundingClientRect();
   const lineWidth = 2;
-  const dotCenterX = rect.left + rect.width / 2;
+  const dotCenterX = rect.left + rect.width / 2 - appRect.left;
+  const startY = rect.bottom - appRect.top;
 
   fixedLine.style.left = `${dotCenterX - lineWidth / 2}px`;
-  fixedLine.style.top = `${rect.top}px`;
-  fixedLine.style.height = `${window.innerHeight - rect.top}px`;
+  fixedLine.style.top = `${startY}px`;
+  fixedLine.style.height = `${app.scrollHeight - startY}px`;
 }
       requestAnimationFrame(() => fixedLine.classList.add('animate'));
 
