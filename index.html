@@ -90,15 +90,15 @@ position: relative;
 
 /* Fixed line — lives outside #app, positioned via JS */
 #timeline-fixed-line {
-position: fixed;
-top: 0;
-width: 1px;
-height: 100vh;
-background: var(–lilac);
-z-index: 998;
-pointer-events: none;
-transform-origin: top;
-transform: scaleY(0);
+  position: fixed;
+  top: 0;
+  left: 24px !important;
+  width: 4px;
+  height: 100vh;
+  background: red !important;
+  z-index: 9999;
+  pointer-events: none;
+  transform: none !important;
 }
 #timeline-fixed-line.animate {
 animation: lineGrow 1.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
