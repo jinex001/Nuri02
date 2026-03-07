@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="ko" style="color-scheme:light;">
 <head>
 <meta charset="UTF-8">
@@ -7,7 +8,6 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Nuri">
-<link rel="manifest" href="/manifest.json">
 <title>Nuri</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
@@ -29,13 +29,13 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
 #app { width:100%; height:100%; max-width:430px; margin:0 auto; position:relative; overflow:hidden; }
 
 .screen {
-  position:absolute; inset:0;
-  overflow-y:auto; overflow-x:hidden;
-  -webkit-overflow-scrolling:touch;
-  padding-bottom:90px;
-  transform:translateX(100%);
-  transition:transform 0.32s cubic-bezier(0.4,0,0.2,1);
-  background:var(--bg);
+position:absolute; inset:0;
+overflow-y:auto; overflow-x:hidden;
+-webkit-overflow-scrolling:touch;
+padding-bottom:100px;
+transform:translateX(100%);
+transition:transform 0.32s cubic-bezier(0.4,0,0.2,1);
+background:var(–bg);
 }
 .screen.active { transform:translateX(0); }
 .screen.exit { transform:translateX(-28%); }
@@ -43,10 +43,10 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
 
 /* BOTTOM NAV */
 .bottom-nav {
-  position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
-  background:rgba(30,21,32,0.88); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
-  border-radius:40px; padding:10px 18px; display:flex; align-items:center; gap:4px;
-  z-index:999; box-shadow:0 8px 32px rgba(0,0,0,0.3);
+position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+background:rgba(30,21,32,0.88); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+border-radius:40px; padding:10px 18px; display:flex; align-items:center; gap:4px;
+z-index:999; box-shadow:0 8px 32px rgba(0,0,0,0.3);
 }
 .nav-item { display:flex; align-items:center; justify-content:center; padding:8px 14px; border-radius:30px; cursor:pointer; }
 .nav-item i { font-size:22px; color:rgba(255,255,255,0.45); }
@@ -56,161 +56,135 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
 
 /* HOME */
 .home-pad { padding:17px 0 0; display:flex; flex-direction:column; gap:20px; }
-#s-home { scroll-behavior:smooth; }
-
-/* TOP ROW: 24 week + date */
-.home-top-row {
-  display:flex; flex-direction:row; justify-content:space-between; align-items:center;
-  padding:0 10px 0 5px;
-}
-.home-left { display:flex; flex-direction:row; align-items:center; gap:7px; }
-.dot-wrap { width:20px; height:20px; background:rgba(238,226,238,0.49); border-radius:40px; backdrop-filter:blur(2px); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.dot-inner { width:10px; height:10px; background:#C8A2C9; border-radius:50%; box-shadow:var(--card-shadow); }
-.week-block { display:flex; flex-direction:row; align-items:flex-start; padding:0 10px; gap:10px; }
-.week-num { font-size:36px; font-weight:700; letter-spacing:-0.5px; line-height:1; color:var(--lilac-deep); }
-.week-label-col { display:flex; flex-direction:column; align-items:flex-start; gap:2px; padding-top:2px; }
-.week-lbl { font-size:18px; font-weight:700; letter-spacing:-0.5px; color:var(--lilac-deep); line-height:1; }
-.week-date { font-size:14px; font-weight:700; letter-spacing:-0.5px; color:var(--green); line-height:1; }
-.home-right { display:flex; flex-direction:row; align-items:center; gap:10px; }
-
-/* FACT BAR */
-.fact-wrap { padding:0 10px 0 30px; }
-.fact-bar {
-  background:#C8A2C9; border-radius:10px; padding:15px 20px;
-  display:flex; align-items:center; gap:5px;
-}
-.fact-icon { width:30px; height:30px; background:#B581B6; border-radius:50px; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
-.fact-main { font-size:14px; font-weight:700; color:var(--text-mid); }
-.fact-sub { font-size:14px; font-weight:400; color:#fff; margin-left:auto; }
-
-/* APPT SCROLL ROW */
-.appt-scroll-row { display:flex; flex-direction:row; gap:10px; padding:10px 20px 10px 20px; overflow-x:auto; -webkit-overflow-scrolling:touch; margin-left:0; }
-.appt-scroll-row::-webkit-scrollbar { display:none; }
-.appt-card {
-  flex-shrink:0; width:227px; height:132px;
-  background:linear-gradient(180deg, rgba(254,251,206,0.55) 0%, rgba(240,230,241,0.35) 100%);
-  box-shadow:0px 16px 16px -8px rgba(12,12,13,0.1), 0px 4px 4px -4px rgba(12,12,13,0.05);
-  border-radius:10px; padding:20px;
-  display:flex; flex-direction:column; justify-content:center; align-items:center; gap:15px;
-}
-.appt-top { display:flex; flex-direction:row; align-items:center; gap:20px; width:187px; height:27px; }
-.appt-badge {
-  display:inline-flex; flex-direction:column; align-items:flex-start;
-  padding:5px 10px; width:54px; height:27px;
-  background:rgba(200,162,201,0.18); border:1px solid rgba(200,162,201,0.45);
-  border-radius:999px; font-size:12px; font-weight:800; color:#5C4D5E;
-  white-space:nowrap; box-sizing:border-box;
-}
-.appt-type { font-size:12px; font-weight:800; color:#000; }
-.appt-info { display:flex; flex-direction:column; align-items:flex-start; gap:10px; width:187px; }
-.appt-date { font-size:14px; font-weight:500; color:#5C4D5E; line-height:18px; width:187px; }
-.appt-place { font-size:14px; font-weight:500; color:#5C4D5E; line-height:18px; width:187px; }
 
 /* TIMELINE */
-.timeline-wrap {
-  position:relative;
-  padding-left:15px;
-}
+.timeline-wrap { position:relative; padding-left:15px; }
 .timeline-wrap::before {
-  content:'';
-  position:absolute;
-  left:15px; top:0; bottom:0;
-  width:1px;
-  background:#C8A2C9;
-  /* C: 라인이 위에서 그려짐 */
-  transform-origin:top;
-  animation:none;
+content:’’; position:absolute; left:15px; top:0; bottom:0; width:1px; background:#C8A2C9;
+transform-origin:top;
 }
-.timeline-wrap.animating::before {
-  animation:drawLine 1.5s cubic-bezier(0.4,0,0.2,1) forwards;
-}
-@keyframes drawLine {
-  from { transform:scaleY(0); }
-  to   { transform:scaleY(1); }
-}
+.timeline-wrap.animating::before { animation:drawLine 1.5s cubic-bezier(0.4,0,0.2,1) forwards; }
+@keyframes drawLine { from{transform:scaleY(0)} to{transform:scaleY(1)} }
 
-/* A: 각 섹션 fade+slide up */
-.week-section {
-  opacity:0;
-  transform:translateY(16px);
-  transition:opacity 0.45s ease, transform 0.45s ease;
-}
-.week-section.visible {
-  opacity:1;
-  transform:translateY(0);
-}
+.week-section { position:relative; opacity:0; transform:translateY(16px); transition:opacity 0.45s ease, transform 0.45s ease; }
+.week-section.visible { opacity:1; transform:translateY(0); }
 
-/* WEEK SECTION */
-.week-section { position:relative; }
 .week-sticky {
-  position:sticky; top:0; z-index:10;
-  background:var(--bg);
-  padding:14px 10px 10px 20px;
-  display:flex; flex-direction:row; align-items:center; gap:7px;
+position:sticky; top:0; z-index:10; background:var(–bg);
+padding:14px 10px 10px 20px; display:flex; flex-direction:row; align-items:center; gap:7px;
 }
 .week-sticky .dot-wrap { width:20px; height:20px; background:rgba(238,226,238,0.49); border-radius:40px; backdrop-filter:blur(2px); display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-left:-27px; z-index:1; }
 .week-sticky .dot-inner { width:10px; height:10px; background:#C8A2C9; border-radius:50%; }
 .week-sticky .week-block { display:flex; flex-direction:row; align-items:flex-start; gap:10px; }
-.week-sticky .week-num { font-size:36px; font-weight:700; letter-spacing:-0.5px; line-height:1; color:var(--lilac-deep); }
+.week-sticky .week-num { font-size:36px; font-weight:700; letter-spacing:-0.5px; line-height:1; color:var(–lilac-deep); }
 .week-sticky .week-label-col { display:flex; flex-direction:column; gap:2px; padding-top:2px; }
-.week-sticky .week-lbl { font-size:18px; font-weight:700; letter-spacing:-0.5px; color:var(--lilac-deep); line-height:1; }
-.week-sticky .week-date-lbl { font-size:14px; font-weight:700; letter-spacing:-0.5px; color:var(--green); line-height:1; }
+.week-sticky .week-lbl { font-size:18px; font-weight:700; letter-spacing:-0.5px; color:var(–lilac-deep); line-height:1; }
+.week-sticky .week-date-lbl { font-size:14px; font-weight:700; letter-spacing:-0.5px; color:var(–green); line-height:1; }
 
-/* WEEK FACT BAR */
 .week-fact { padding:0 10px 12px 20px; }
-.week-fact .fact-bar { background:#C8A2C9; border-radius:10px; padding:15px 20px; display:flex; align-items:center; gap:5px; }
+.fact-bar { background:#C8A2C9; border-radius:10px; padding:15px 20px; display:flex; align-items:center; gap:5px; }
+.fact-icon { width:30px; height:30px; background:#B581B6; border-radius:50px; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+.fact-main { font-size:14px; font-weight:700; color:var(–text-mid); }
+.fact-sub { font-size:14px; font-weight:400; color:#fff; margin-left:auto; }
+
+.appt-scroll-row { display:flex; flex-direction:row; gap:10px; padding:10px 20px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.appt-scroll-row::-webkit-scrollbar { display:none; }
+.appt-card {
+flex-shrink:0; width:227px; height:132px;
+background:linear-gradient(180deg, rgba(254,251,206,0.55) 0%, rgba(240,230,241,0.35) 100%);
+box-shadow:var(–card-shadow); border-radius:10px; padding:20px;
+display:flex; flex-direction:column; justify-content:center; align-items:center; gap:15px;
+}
+.appt-top { display:flex; flex-direction:row; align-items:center; gap:20px; width:187px; }
+.appt-badge { display:inline-flex; align-items:center; padding:5px 10px; background:rgba(200,162,201,0.18); border:1px solid rgba(200,162,201,0.45); border-radius:999px; font-size:12px; font-weight:800; color:#5C4D5E; white-space:nowrap; }
+.appt-type { font-size:12px; font-weight:800; color:#000; }
+.appt-info { display:flex; flex-direction:column; gap:4px; width:187px; }
+.appt-date { font-size:13px; font-weight:500; color:#5C4D5E; }
+.appt-place { font-size:13px; font-weight:500; color:#5C4D5E; }
 
 /* FEED */
 .feed-section { padding:0 10px 20px 20px; display:flex; flex-direction:column; gap:10px; }
-.feed-item {
-  background:var(--card-bg); box-shadow:var(--card-shadow);
-  border-radius:10px; overflow:hidden; display:flex; flex-direction:column;
-  padding-bottom:12px; gap:8px;
-}
+.feed-item { background:var(–card-bg); box-shadow:var(–card-shadow); border-radius:10px; overflow:hidden; display:flex; flex-direction:column; }
 .feed-photo { width:100%; height:243px; object-fit:cover; display:block; border-radius:10px 10px 0 0; }
-.feed-body { padding:0 10px; display:flex; flex-direction:column; gap:6px; }
-.feed-row1 { display:flex; justify-content:space-between; align-items:flex-start; gap:6px; }
-.feed-date { font-size:12px; font-weight:600; color:var(--text-soft); flex:1; }
-.feed-time { font-size:12px; font-weight:600; color:var(--text-soft); white-space:nowrap; }
-.feed-type { font-size:12px; font-weight:900; color:var(--text-mid); letter-spacing:0.2px; }
-.feed-text { font-size:15px; font-weight:800; color:var(--text); letter-spacing:-0.2px; }
-.feed-mood { width:35px; height:35px; background:rgba(240,230,241,0.55); border-radius:999px; display:flex; align-items:center; justify-content:center; font-size:22px; padding-top:3px; }
+.feed-body { padding:10px 12px 6px; display:flex; flex-direction:column; gap:5px; }
+.feed-row1 { display:flex; justify-content:space-between; align-items:flex-start; }
+.feed-date { font-size:12px; font-weight:600; color:var(–text-soft); }
+.feed-time { font-size:12px; font-weight:600; color:var(–text-soft); }
+.feed-type { font-size:12px; font-weight:900; color:var(–text-mid); }
+.feed-text { font-size:15px; font-weight:800; color:var(–text); letter-spacing:-0.2px; }
+.feed-mood { width:35px; height:35px; background:rgba(240,230,241,0.55); border-radius:999px; display:flex; align-items:center; justify-content:center; font-size:22px; padding-top:3px; align-self:flex-end; }
 
-/* COMMENTS */
-.cmt-area { padding:0 10px; }
-.cmt-row { display:flex; gap:7px; align-items:flex-start; margin-bottom:6px; }
-.cmt-av { width:22px; height:22px; border-radius:50%; background:rgba(200,162,201,0.2); display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; }
-.cmt-bubble { background:rgba(240,230,241,0.5); border-radius:9px 9px 9px 2px; padding:6px 10px; flex:1; }
-.cmt-name { font-size:9px; font-weight:700; color:var(--lilac-deep); margin-bottom:1px; }
-.cmt-text { font-size:11px; color:var(--text-mid); line-height:1.4; }
-.cmt-input-row { display:flex; gap:7px; align-items:center; padding:8px 10px 12px; }
-.cmt-input { flex:1; background:rgba(240,230,241,0.4); border:1px solid rgba(200,162,201,0.35); border-radius:18px; padding:7px 12px; font-size:11px; color:var(--text-soft); font-family:'Outfit',sans-serif; outline:none; }
-.cmt-send { background:var(--lilac-deep); color:white; border:none; border-radius:10px; padding:7px 13px; font-size:11px; cursor:pointer; font-family:'Outfit',sans-serif; }
+/* ─── PARTNER BADGE on feed ─── */
+.partner-badge {
+display:inline-flex; align-items:center; gap:5px;
+background:linear-gradient(135deg,rgba(200,162,201,0.15),rgba(95,158,136,0.1));
+border:1px solid rgba(200,162,201,0.35); border-radius:20px;
+padding:3px 9px; font-size:10px; font-weight:700; color:var(–lilac-deep);
+margin:0 12px 6px;
+}
+
+/* ─── COMMENTS ─── */
+.cmt-section { border-top:1px solid rgba(200,162,201,0.15); }
+.cmt-toggle {
+display:flex; align-items:center; gap:6px; padding:8px 12px;
+font-size:11px; font-weight:600; color:var(–text-soft); cursor:pointer;
+user-select:none;
+}
+.cmt-toggle:hover { color:var(–lilac-deep); }
+.cmt-toggle .cmt-count { background:rgba(200,162,201,0.2); border-radius:10px; padding:2px 7px; font-size:10px; font-weight:700; color:var(–lilac-deep); }
+.cmt-list { padding:0 12px 4px; display:flex; flex-direction:column; gap:6px; }
+.cmt-row { display:flex; gap:7px; align-items:flex-start; }
+.cmt-av { width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0; }
+.cmt-av.mine { background:linear-gradient(135deg,#C8A2C9,#834D84); }
+.cmt-av.partner { background:linear-gradient(135deg,#5F9E88,#3A7A65); }
+.cmt-av.other { background:rgba(200,162,201,0.25); }
+.cmt-bubble { background:rgba(240,230,241,0.5); border-radius:4px 10px 10px 10px; padding:6px 10px; flex:1; }
+.cmt-bubble.mine { background:rgba(131,77,132,0.1); border-radius:10px 4px 10px 10px; }
+.cmt-bubble.partner { background:rgba(95,158,136,0.1); border-radius:4px 10px 10px 10px; }
+.cmt-name { font-size:9px; font-weight:700; color:var(–lilac-deep); margin-bottom:2px; }
+.cmt-name.partner-name { color:var(–green); }
+.cmt-text { font-size:12px; color:var(–text-mid); line-height:1.45; }
+.cmt-time { font-size:9px; color:var(–text-soft); margin-top:2px; }
+
+/* Comment input */
+.cmt-input-area {
+display:flex; align-items:center; gap:8px; padding:8px 12px 12px;
+border-top:1px solid rgba(200,162,201,0.12);
+}
+.cmt-av-input { width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#C8A2C9,#834D84); display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; }
+.cmt-input-wrap { flex:1; display:flex; align-items:center; gap:6px; background:rgba(240,230,241,0.5); border:1px solid rgba(200,162,201,0.3); border-radius:20px; padding:6px 10px; }
+.cmt-input { flex:1; background:none; border:none; outline:none; font-size:12px; color:var(–text); font-family:‘Outfit’,sans-serif; }
+.cmt-input::placeholder { color:var(–text-soft); }
+.cmt-send-btn {
+width:28px; height:28px; border-radius:50%; background:var(–lilac-deep); border:none;
+display:flex; align-items:center; justify-content:center; cursor:pointer;
+flex-shrink:0; transition:transform 0.15s, background 0.15s;
+}
+.cmt-send-btn:hover { background:#5A2E5B; transform:scale(1.05); }
+.cmt-send-btn i { font-size:13px; color:white; }
+.cmt-loading { padding:8px 12px; font-size:11px; color:var(–text-soft); }
 
 /* NEW ENTRY */
 .screen-hdr { padding:16px 18px 12px; display:flex; align-items:center; gap:11px; background:#fff; border-bottom:1px solid rgba(200,162,201,0.2); }
-.back-btn { width:34px; height:34px; border-radius:10px; background:#F8F6FA; border:1px solid rgba(200,162,201,0.3); display:flex; align-items:center; justify-content:center; font-size:16px; color:var(--text-mid); cursor:pointer; }
-.screen-title { font-size:20px; font-weight:700; color:var(--text); }
+.back-btn { width:34px; height:34px; border-radius:10px; background:#F8F6FA; border:1px solid rgba(200,162,201,0.3); display:flex; align-items:center; justify-content:center; font-size:16px; color:var(–text-mid); cursor:pointer; }
+.screen-title { font-size:20px; font-weight:700; color:var(–text); }
 .type-tabs { display:flex; background:#F8F6FA; border:1px solid rgba(200,162,201,0.3); border-radius:14px; padding:4px; margin:14px 18px 0; }
-.type-tab { flex:1; padding:8px 4px; border-radius:10px; text-align:center; font-size:11px; font-weight:500; color:var(--text-soft); cursor:pointer; }
-.type-tab.on { background:#fff; color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,0.07); }
+.type-tab { flex:1; padding:8px 4px; border-radius:10px; text-align:center; font-size:11px; font-weight:500; color:var(–text-soft); cursor:pointer; }
+.type-tab.on { background:#fff; color:var(–text); box-shadow:0 2px 8px rgba(0,0,0,0.07); }
 .form-pad { padding:14px 18px; }
 .cam-zone { border:1.5px dashed rgba(200,162,201,0.5); border-radius:20px; height:160px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; cursor:pointer; margin-bottom:16px; overflow:hidden; position:relative; }
-.cam-zone .ic { font-size:28px; opacity:0.6; }
-.cam-zone .lbl { font-size:13px; font-weight:500; color:var(--text-mid); }
-.cam-zone .sub { font-size:11px; color:var(--text-soft); }
 .fld { margin-bottom:14px; }
-.fld-lbl { font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-soft); display:block; margin-bottom:7px; }
-.txt-in { width:100%; background:#F8F6FA; border:1px solid rgba(200,162,201,0.3); border-radius:13px; padding:11px 14px; font-size:13px; color:var(--text); font-family:'Outfit',sans-serif; outline:none; }
-.txt-in:focus { border-color:var(--lilac); background:#fff; }
+.fld-lbl { font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(–text-soft); display:block; margin-bottom:7px; }
+.txt-in { width:100%; background:#F8F6FA; border:1px solid rgba(200,162,201,0.3); border-radius:13px; padding:11px 14px; font-size:13px; color:var(–text); font-family:‘Outfit’,sans-serif; outline:none; }
+.txt-in:focus { border-color:var(–lilac); background:#fff; }
 .pills { display:flex; gap:7px; flex-wrap:wrap; }
-.pill { padding:6px 13px; border-radius:20px; font-size:11px; font-weight:500; background:#F8F6FA; border:1px solid rgba(200,162,201,0.3); color:var(--text-soft); cursor:pointer; }
-.pill.on { background:rgba(200,162,201,0.15); border-color:var(--lilac); color:var(--lilac-deep); }
-.save-btn { width:100%; background:linear-gradient(135deg,#8B5E8C,#5A2E5B); color:white; border:none; border-radius:15px; padding:14px; font-family:'Outfit',sans-serif; font-size:14px; font-weight:600; cursor:pointer; box-shadow:0 5px 20px rgba(107,61,108,0.3); margin-top:6px; }
+.pill { padding:6px 13px; border-radius:20px; font-size:11px; font-weight:500; background:#F8F6FA; border:1px solid rgba(200,162,201,0.3); color:var(–text-soft); cursor:pointer; }
+.pill.on { background:rgba(200,162,201,0.15); border-color:var(–lilac); color:var(–lilac-deep); }
+.save-btn { width:100%; background:linear-gradient(135deg,#8B5E8C,#5A2E5B); color:white; border:none; border-radius:15px; padding:14px; font-family:‘Outfit’,sans-serif; font-size:14px; font-weight:600; cursor:pointer; box-shadow:0 5px 20px rgba(107,61,108,0.3); margin-top:6px; }
 
 /* MEDICAL */
 .med-hero { background:linear-gradient(155deg,#1E1520 0%,#3A2B3C 55%,#5A3A5C 100%); padding:48px 22px 26px; position:relative; overflow:hidden; }
-.med-hero::before { content:''; position:absolute; width:160px; height:160px; background:radial-gradient(circle,rgba(200,162,201,0.18) 0%,transparent 70%); top:-40px; right:-30px; border-radius:50%; }
+.med-hero::before { content:’’; position:absolute; width:160px; height:160px; background:radial-gradient(circle,rgba(200,162,201,0.18) 0%,transparent 70%); top:-40px; right:-30px; border-radius:50%; }
 .med-lbl { font-size:9px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:rgba(255,255,255,0.4); margin-bottom:4px; }
 .med-name { font-size:26px; font-weight:700; color:#fff; margin-bottom:18px; line-height:1.2; }
 .sos-strip { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); border-radius:15px; padding:11px 14px; display:flex; align-items:center; gap:11px; }
@@ -220,44 +194,99 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
 .sos-arrow { margin-left:auto; color:rgba(255,255,255,0.25); font-size:16px; }
 .med-body { padding:14px 16px 20px; background:#fff; }
 .info-block { background:#F8F6FA; border:1px solid rgba(200,162,201,0.25); border-radius:18px; overflow:hidden; margin-bottom:11px; }
-.block-title { padding:10px 16px 8px; font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-soft); border-bottom:1px solid rgba(200,162,201,0.15); }
+.block-title { padding:10px 16px 8px; font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(–text-soft); border-bottom:1px solid rgba(200,162,201,0.15); }
 .info-row { display:flex; justify-content:space-between; align-items:center; padding:10px 16px; border-bottom:1px solid rgba(200,162,201,0.12); }
 .info-row:last-child { border-bottom:none; }
-.i-lbl { font-size:12px; color:var(--text-soft); }
-.i-val { font-size:13px; font-weight:500; color:var(--text); text-align:right; }
+.i-lbl { font-size:12px; color:var(–text-soft); }
+.i-val { font-size:13px; font-weight:500; color:var(–text); text-align:right; }
 .chip-blood { background:linear-gradient(135deg,#8B5E8C,#6B3D6C); color:white; padding:4px 11px; border-radius:8px; font-size:14px; font-weight:700; }
 .chip-ok { background:#E6F4EA; color:#2D7A3A; border-radius:8px; padding:4px 10px; font-size:11px; font-weight:600; }
 .chip-warn { background:#FFF3E0; color:#C35A00; border-radius:8px; padding:4px 10px; font-size:11px; font-weight:600; }
 
+/* ─── PARTNER SCREEN ─── */
+.partner-hero {
+background:linear-gradient(155deg,#1A2F28 0%,#2A4A3C 50%,#3A6B5A 100%);
+padding:48px 22px 26px; position:relative; overflow:hidden;
+}
+.partner-hero::before { content:’’; position:absolute; width:160px; height:160px; background:radial-gradient(circle,rgba(95,158,136,0.25) 0%,transparent 70%); top:-40px; right:-30px; border-radius:50%; }
+.partner-avatars { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+.p-av { width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; border:2px solid rgba(255,255,255,0.2); }
+.p-av.mom { background:linear-gradient(135deg,#C8A2C9,#8B5E8C); }
+.p-av.partner { background:linear-gradient(135deg,#5F9E88,#3A7A65); }
+.p-connector { width:24px; height:2px; background:rgba(255,255,255,0.2); position:relative; }
+.p-connector::after { content:‘💜’; position:absolute; top:-10px; left:50%; transform:translateX(-50%); font-size:14px; }
+.partner-status-bar {
+background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14);
+border-radius:15px; padding:11px 14px; display:flex; align-items:center; gap:11px;
+}
+.p-status-dot { width:8px; height:8px; border-radius:50%; background:#5F9E88; flex-shrink:0; animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.2)} }
+.p-status-txt { font-size:12px; color:rgba(255,255,255,0.8); }
+.p-status-txt strong { color:white; font-weight:600; }
+
+/* ─── PARTNER CONNECT CARD ─── */
+.connect-card {
+margin:16px; background:#fff; border-radius:20px;
+box-shadow:0 8px 24px rgba(0,0,0,0.08); overflow:hidden;
+}
+.connect-card-hdr { background:linear-gradient(135deg,rgba(200,162,201,0.15),rgba(95,158,136,0.1)); padding:16px 18px 12px; border-bottom:1px solid rgba(200,162,201,0.15); }
+.connect-card-title { font-size:15px; font-weight:700; color:var(–text); margin-bottom:3px; }
+.connect-card-sub { font-size:11px; color:var(–text-soft); }
+.connect-card-body { padding:16px 18px; }
+.invite-code-box {
+background:linear-gradient(135deg,rgba(131,77,132,0.06),rgba(95,158,136,0.06));
+border:1px dashed rgba(200,162,201,0.5); border-radius:14px;
+padding:14px 16px; display:flex; align-items:center; justify-content:space-between;
+margin-bottom:12px; cursor:pointer; transition:all 0.2s;
+}
+.invite-code-box:hover { border-color:var(–lilac); background:rgba(200,162,201,0.1); }
+.invite-code-text { font-size:12px; color:var(–lilac-deep); font-weight:600; word-break:break-all; flex:1; }
+.invite-copy-btn { width:32px; height:32px; border-radius:10px; background:var(–lilac-deep); display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-left:10px; }
+.invite-copy-btn i { font-size:14px; color:white; }
+
+/* ─── PARTNER FEED (connected view) ─── */
+.partner-feed-section { padding:16px; }
+.pf-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.pf-title { font-size:15px; font-weight:700; color:var(–text); }
+.pf-badge { background:rgba(95,158,136,0.15); border:1px solid rgba(95,158,136,0.3); border-radius:20px; padding:3px 10px; font-size:10px; font-weight:700; color:var(–green); }
+.pf-empty { text-align:center; padding:40px 20px; color:var(–text-soft); font-size:13px; }
+
+/* ─── SHARED FEED ENTRY ─── */
+.feed-item.partner-entry { border-left:3px solid var(–green); }
+.feed-item.mine-entry { border-left:3px solid var(–lilac); }
+
 /* LOGIN */
 .login-wrap { height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 32px; }
-.login-logo { font-size:52px; font-weight:800; color:var(--text); margin-bottom:8px; letter-spacing:-1px; }
-.login-sub { font-size:13px; color:var(--text-soft); margin-bottom:48px; }
+.login-logo { font-size:52px; font-weight:800; color:var(–text); margin-bottom:8px; letter-spacing:-1px; }
+.login-sub { font-size:13px; color:var(–text-soft); margin-bottom:48px; }
 .login-fields { width:100%; display:flex; flex-direction:column; gap:12px; }
-.login-btn-sub { width:100%; background:rgba(200,162,201,0.15); color:var(--lilac-deep); border:none; border-radius:15px; padding:14px; font-family:'Outfit',sans-serif; font-size:14px; font-weight:600; cursor:pointer; }
+.login-btn-sub { width:100%; background:rgba(200,162,201,0.15); color:var(–lilac-deep); border:none; border-radius:15px; padding:14px; font-family:‘Outfit’,sans-serif; font-size:14px; font-weight:600; cursor:pointer; }
 
 /* SETUP */
-.setup-wrap { min-height:100%; display:flex; flex-direction:column; padding:60px 28px 40px; background:var(--bg); }
-.setup-logo { font-size:42px; font-weight:800; color:var(--lilac-deep); letter-spacing:-1px; margin-bottom:4px; }
-.setup-sub { font-size:14px; color:var(--text-soft); margin-bottom:48px; }
+.setup-wrap { min-height:100%; display:flex; flex-direction:column; padding:60px 28px 40px; background:var(–bg); }
+.setup-logo { font-size:42px; font-weight:800; color:var(–lilac-deep); letter-spacing:-1px; margin-bottom:4px; }
+.setup-sub { font-size:14px; color:var(–text-soft); margin-bottom:48px; }
 .setup-step { display:none; flex-direction:column; gap:24px; }
 .setup-step.on { display:flex; }
-.setup-q { font-size:22px; font-weight:700; color:var(--text); line-height:1.3; }
-.setup-hint { font-size:13px; color:var(--text-soft); margin-top:-16px; }
-.setup-input { width:100%; background:#fff; border:1.5px solid rgba(200,162,201,0.4); border-radius:14px; padding:14px 16px; font-size:16px; font-weight:500; color:var(--text); font-family:'Outfit',sans-serif; outline:none; }
-.setup-input:focus { border-color:var(--lilac); }
-.setup-calc { background:rgba(200,162,201,0.12); border-radius:12px; padding:14px 16px; font-size:14px; color:var(--text-mid); min-height:48px; }
-.setup-calc strong { color:var(--lilac-deep); font-size:18px; }
-.setup-btn { width:100%; background:linear-gradient(135deg,#834D84,#5A2E5B); color:white; border:none; border-radius:15px; padding:16px; font-family:'Outfit',sans-serif; font-size:15px; font-weight:700; cursor:pointer; margin-top:8px; }
-.setup-skip { text-align:center; font-size:13px; color:var(--text-soft); cursor:pointer; padding:12px; text-decoration:underline; }
+.setup-q { font-size:22px; font-weight:700; color:var(–text); line-height:1.3; }
+.setup-hint { font-size:13px; color:var(–text-soft); margin-top:-16px; }
+.setup-input { width:100%; background:#fff; border:1.5px solid rgba(200,162,201,0.4); border-radius:14px; padding:14px 16px; font-size:16px; font-weight:500; color:var(–text); font-family:‘Outfit’,sans-serif; outline:none; }
+.setup-input:focus { border-color:var(–lilac); }
+.setup-calc { background:rgba(200,162,201,0.12); border-radius:12px; padding:14px 16px; font-size:14px; color:var(–text-mid); min-height:48px; }
+.setup-calc strong { color:var(–lilac-deep); font-size:18px; }
+.setup-btn { width:100%; background:linear-gradient(135deg,#834D84,#5A2E5B); color:white; border:none; border-radius:15px; padding:16px; font-family:‘Outfit’,sans-serif; font-size:15px; font-weight:700; cursor:pointer; margin-top:8px; }
+.setup-skip { text-align:center; font-size:13px; color:var(–text-soft); cursor:pointer; padding:12px; text-decoration:underline; }
 
-@keyframes up { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+/* SETTINGS */
+.settings-scroll { padding:20px 18px; }
 </style>
+
 </head>
 <body>
 <div id="app">
 
 <!-- LOGIN -->
+
 <div class="screen" id="s-login">
   <div class="login-wrap">
     <div class="login-logo">nuri</div>
@@ -272,14 +301,15 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
 </div>
 
 <!-- HOME -->
+
 <div class="screen" id="s-home">
   <div class="home-pad">
-    <!-- TIMELINE -->
     <div class="timeline-wrap" id="home-timeline"></div>
   </div>
 </div>
 
 <!-- NEW ENTRY -->
+
 <div class="screen plain" id="s-new">
   <div class="screen-hdr">
     <div class="back-btn" onclick="goBack()">&#8592;</div>
@@ -292,9 +322,9 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
   </div>
   <div class="form-pad">
     <div class="cam-zone" onclick="document.getElementById('photo-input').click()">
-      <div class="ic">📷</div>
-      <div class="lbl" id="cam-lbl">사진 추가</div>
-      <div class="sub">탭해서 촬영하거나 선택</div>
+      <div style="font-size:28px;opacity:0.6;">📷</div>
+      <div style="font-size:13px;font-weight:500;color:var(--text-mid);" id="cam-lbl">사진 추가</div>
+      <div style="font-size:11px;color:var(--text-soft);">탭해서 촬영하거나 선택</div>
       <img id="photo-preview" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
     </div>
     <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="previewPhoto(this)">
@@ -320,7 +350,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
       <label class="fld-lbl">공개 범위</label>
       <div class="pills" id="privacy-pills">
         <div class="pill on" onclick="selPill(this)" id="privacy-private">🔒 나만 보기</div>
-        <div class="pill" onclick="selPill(this)" id="privacy-public">💜 파트너 공개</div>
+        <div class="pill" onclick="selPill(this)" id="privacy-public">💜 파트너 공유</div>
       </div>
     </div>
     <button class="save-btn" onclick="saveEntry()">저장하기</button>
@@ -328,6 +358,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
 </div>
 
 <!-- MEDICAL -->
+
 <div class="screen" id="s-medical">
   <div class="med-hero">
     <div class="med-lbl">메디컬 프로필</div>
@@ -335,7 +366,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
     <div class="sos-strip">
       <div class="sos-icon">🆘</div>
       <div class="sos-txt"><strong>응급 정보</strong>iPhone Health 앱에서 확인 가능</div>
-      <div class="sos-arrow">&#8250;</div>
+      <div class="sos-arrow">›</div>
     </div>
   </div>
   <div class="med-body">
@@ -354,24 +385,24 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
 </div>
 
 <!-- PARTNER -->
+
 <div class="screen" id="s-partner">
-  <div style="padding:26px 18px 0;display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-    <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#C8A2C9,#8B5E8C);display:flex;align-items:center;justify-content:center;font-size:22px;">🌸</div>
-    <div>
-      <div id="partner-name" style="font-size:18px;font-weight:700;color:var(--text);">...</div>
-      <div id="partner-week" style="font-size:12px;color:var(--text-soft);">임신 주수 확인 중...</div>
-    </div>
-  </div>
-  <div style="padding:0 18px 20px;" id="partner-timeline"></div>
+  <!-- Hero: dynamic -->
+  <div id="partner-hero-area"></div>
+  <!-- Connect card (shown when no partner yet) -->
+  <div id="partner-connect-area"></div>
+  <!-- Partner feed -->
+  <div id="partner-feed-area"></div>
 </div>
 
 <!-- SETTINGS -->
+
 <div class="screen plain" id="s-settings">
   <div class="screen-hdr">
     <div class="back-btn" onclick="goBack()">&#8592;</div>
     <div class="screen-title">설정</div>
   </div>
-  <div style="padding:20px 18px;">
+  <div class="settings-scroll">
     <div class="info-block" style="margin-bottom:16px;">
       <div class="block-title">내 프로필</div>
       <div class="info-row">
@@ -387,25 +418,16 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
         <button class="save-btn" onclick="saveProfile()">저장</button>
       </div>
     </div>
-    <div class="info-block" style="margin-bottom:16px;">
-      <div class="block-title">파트너 초대</div>
-      <div style="padding:16px;">
-        <div style="font-size:12px;color:var(--text-soft);margin-bottom:12px;">초대 링크를 파트너에게 보내면 내 기록을 볼 수 있어요</div>
-        <div id="invite-link" style="background:rgba(200,162,201,0.12);border-radius:12px;padding:12px;font-size:11px;color:var(--lilac-deep);word-break:break-all;margin-bottom:10px;">링크 생성 중...</div>
-        <button class="save-btn" onclick="copyInviteLink()">링크 복사 📋</button>
-      </div>
-    </div>
     <button onclick="signOut()" style="width:100%;background:#F8F6FA;color:var(--text-soft);border:1px solid rgba(200,162,201,0.3);border-radius:15px;padding:14px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">로그아웃</button>
   </div>
 </div>
 
 <!-- SETUP -->
+
 <div class="screen plain" id="s-setup">
   <div class="setup-wrap">
     <div class="setup-logo">nuri 🌸</div>
     <div class="setup-sub">임신 정보를 입력해줘요</div>
-
-    <!-- STEP 1: 입력 방식 선택 -->
     <div class="setup-step on" id="setup-step-1">
       <div class="setup-q">어떤 정보를 알고 있어요?</div>
       <div style="display:flex;flex-direction:column;gap:12px;">
@@ -423,8 +445,6 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
         </div>
       </div>
     </div>
-
-    <!-- STEP 2: 입력 -->
     <div class="setup-step" id="setup-step-2">
       <div class="setup-q" id="setup-step2-q">현재 임신 주수를 입력해줘요</div>
       <div class="setup-hint" id="setup-step2-hint">예정일도 함께 입력하면 더 정확해요</div>
@@ -443,24 +463,33 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
 </div>
 
 <!-- BOTTOM NAV -->
+
 <nav class="bottom-nav">
   <div class="nav-item active" id="n-home" onclick="navTo('s-home','n-home')"><i class="ph ph-house"></i></div>
-  <div class="nav-item" id="n-cal" onclick="navTo('s-home','n-cal')"><i class="ph ph-calendar"></i></div>
+  <div class="nav-item" id="n-partner" onclick="navTo('s-partner','n-partner');loadPartnerScreen()"><i class="ph ph-users-three"></i></div>
   <div class="fab" onclick="goTo('s-new')"><i class="ph ph-plus"></i></div>
   <div class="nav-item" id="n-med" onclick="navTo('s-medical','n-med')"><i class="ph ph-heart"></i></div>
-  <div class="nav-item" id="n-set" onclick="navTo('s-settings','n-set')"><i class="ph ph-gear"></i></div>
+  <div class="nav-item" id="n-set" onclick="navTo('s-settings','n-set');loadProfile()"><i class="ph ph-gear"></i></div>
 </nav>
 
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
+// ─── SUPABASE ───────────────────────────────────────────
 const _supabase = supabase.createClient(
   'https://sctgioatjgudhtinvesf.supabase.co',
   'sb_publishable_Fivp1MTaIYVnvTJkQDyvIw_wHrmQ5d-'
 );
+
+// ─── STATE ──────────────────────────────────────────────
 let selectedFile = null;
 let hist = [];
+let currentUserId = null;
+let currentUserProfile = null;
 
+// ─── NAVIGATION ─────────────────────────────────────────
 function goTo(id) {
   const c = document.querySelector('.screen.active');
   const n = document.getElementById(id);
@@ -469,11 +498,11 @@ function goTo(id) {
   n.classList.add('active');
   hist.push(id);
   if (id === 's-new') {
-    var di = document.getElementById('entry-date-input');
+    const di = document.getElementById('entry-date-input');
     if (di && !di.value) di.value = new Date().toISOString().split('T')[0];
     calcEntryWeek();
   }
-  setTimeout(function() { if (c) c.classList.remove('active','exit'); }, 340);
+  setTimeout(() => { if (c) c.classList.remove('active','exit'); }, 340);
 }
 function goBack() {
   if (hist.length <= 1) return;
@@ -499,8 +528,9 @@ function navTo(screenId, navId) {
   n.classList.add('active');
   hist = [screenId];
   if (screenId === 's-home') loadEntries();
-  if (screenId === 's-settings') loadProfile();
 }
+
+// ─── UI HELPERS ──────────────────────────────────────────
 function selTab(el) {
   el.closest('.type-tabs').querySelectorAll('.type-tab').forEach(t => t.classList.remove('on'));
   el.classList.add('on');
@@ -514,7 +544,7 @@ function previewPhoto(input) {
   if (!file) return;
   selectedFile = file;
   const reader = new FileReader();
-  reader.onload = function(e) {
+  reader.onload = e => {
     const preview = document.getElementById('photo-preview');
     if (preview) { preview.src = e.target.result; preview.style.display = 'block'; }
     const lbl = document.getElementById('cam-lbl');
@@ -522,39 +552,54 @@ function previewPhoto(input) {
   };
   reader.readAsDataURL(file);
 }
-async function uploadPhoto() {
-  if (!selectedFile) return null;
-  const fileName = Date.now() + '.jpg';
-  const res = await _supabase.storage.from('photos').upload(fileName, selectedFile);
-  if (res.error) { console.error(res.error); return null; }
-  const pub = _supabase.storage.from('photos').getPublicUrl(fileName);
-  return pub.data && pub.data.publicUrl ? pub.data.publicUrl : null;
+function fmtTime(iso) {
+  if (!iso) return '';
+  return new Date(iso).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
 }
+function fmtRelTime(iso) {
+  if (!iso) return '';
+  const diff = Date.now() - new Date(iso).getTime();
+  const m = Math.floor(diff/60000);
+  if (m < 1) return '방금';
+  if (m < 60) return m + '분 전';
+  const h = Math.floor(m/60);
+  if (h < 24) return h + '시간 전';
+  return Math.floor(h/24) + '일 전';
+}
+
+// ─── AUTH ────────────────────────────────────────────────
 async function signIn() {
   const email = document.getElementById('login-email').value.trim();
   const pw = document.getElementById('login-pw').value;
   const res = await _supabase.auth.signInWithPassword({ email, password: pw });
-  if (res.error) { alert('로그인 실패 ' + res.error.message); return; }
-  const pending = localStorage.getItem('pendingInvite');
-  if (pending) { localStorage.removeItem('pendingInvite'); await loadPartnerFeed(pending); return; }
+  if (res.error) { alert('로그인 실패: ' + res.error.message); return; }
+  currentUserId = res.data.user.id;
+  await loadCurrentProfile();
   showHome();
 }
 async function signUp() {
   const email = document.getElementById('login-email').value.trim();
   const pw = document.getElementById('login-pw').value;
   const res = await _supabase.auth.signUp({ email, password: pw });
-  if (res.error) { alert('가입 실패 ' + res.error.message); return; }
+  if (res.error) { alert('가입 실패: ' + res.error.message); return; }
+  currentUserId = res.data.user.id;
   alert('가입 완료! 🌸');
   showHome();
 }
 async function signOut() {
   await _supabase.auth.signOut();
-  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  currentUserId = null; currentUserProfile = null;
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('s-login').classList.add('active');
   hist = ['s-login'];
 }
+async function loadCurrentProfile() {
+  if (!currentUserId) return;
+  const res = await _supabase.from('profiles').select('*').eq('id', currentUserId).single();
+  currentUserProfile = res.data;
+}
 function showHome() {
-  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('s-home').classList.add('active');
   hist = ['s-home'];
   loadEntries();
@@ -564,140 +609,320 @@ async function checkAuth() {
   const inviteCode = params.get('invite');
   const res = await _supabase.auth.getSession();
   const session = res.data && res.data.session;
-  if (inviteCode) {
-    if (!session) {
-      localStorage.setItem('pendingInvite', inviteCode);
-      document.getElementById('s-login').classList.add('active');
-      hist = ['s-login'];
-    } else {
-      await loadPartnerFeed(inviteCode);
-    }
-    return;
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  if (inviteCode && !session) {
+    localStorage.setItem('pendingInvite', inviteCode);
   }
-  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
   if (session) {
-    // 프로필 확인 - 없으면 셋업으로
-    var ures = await _supabase.auth.getUser();
-    var user = ures.data && ures.data.user;
-    var needsSetup = true;
-    if (user) {
-      var pres = await _supabase.from('profiles').select('current_week').eq('id', user.id).single();
-      if (pres.data && pres.data.current_week) needsSetup = false;
+    currentUserId = session.user.id;
+    await loadCurrentProfile();
+    if (inviteCode) {
+      await acceptInvite(inviteCode);
+      localStorage.removeItem('pendingInvite');
     }
+    const pending = localStorage.getItem('pendingInvite');
+    if (pending) { localStorage.removeItem('pendingInvite'); await acceptInvite(pending); }
+    const needsSetup = !currentUserProfile || !currentUserProfile.current_week;
     if (needsSetup) {
       document.getElementById('s-setup').classList.add('active');
       hist = ['s-setup'];
     } else {
-      document.getElementById('s-home').classList.add('active');
-      hist = ['s-home'];
-      loadEntries();
+      showHome();
     }
   } else {
     document.getElementById('s-login').classList.add('active');
     hist = ['s-login'];
   }
 }
-var setupMode = 'week';
-function selectSetupOpt(mode) {
-  setupMode = mode;
-  var opts = ['opt-week','opt-lmp','opt-edd'];
-  opts.forEach(function(id) {
-    var el = document.getElementById(id);
-    if (el) { el.style.borderColor = 'rgba(200,162,201,0.4)'; el.style.background = '#fff'; }
+
+// ─── PARTNER INVITE / ACCEPT ─────────────────────────────
+async function acceptInvite(inviteCode) {
+  const pres = await _supabase.from('profiles').select('*').eq('invite_code', inviteCode).single();
+  if (!pres.data || pres.data.id === currentUserId) return;
+  // Link both ways
+  await _supabase.from('follows').upsert([
+    { follower_id: currentUserId, following_id: pres.data.id },
+    { follower_id: pres.data.id, following_id: currentUserId }
+  ]);
+  alert('💜 파트너와 연결됐어요! ' + (pres.data.display_name || '파트너'));
+}
+
+async function getOrCreateInviteCode() {
+  await loadCurrentProfile();
+  if (currentUserProfile && currentUserProfile.invite_code) return currentUserProfile.invite_code;
+  const code = Math.random().toString(36).slice(2, 10);
+  await _supabase.from('profiles').upsert({ id: currentUserId, invite_code: code });
+  await loadCurrentProfile();
+  return code;
+}
+
+async function copyInviteLink() {
+  const code = await getOrCreateInviteCode();
+  const url = window.location.origin + window.location.pathname + '?invite=' + code;
+  await navigator.clipboard.writeText(url).catch(() => {});
+  const el = document.getElementById('invite-link-text');
+  if (el) el.textContent = url;
+  alert('링크 복사됐어! 📋\n파트너에게 보내줘요');
+}
+
+// ─── PARTNER SCREEN ──────────────────────────────────────
+async function loadPartnerScreen() {
+  if (!currentUserId) return;
+
+  // Get connected partner
+  const fres = await _supabase.from('follows')
+    .select('following_id').eq('follower_id', currentUserId).limit(1).single();
+
+  const heroArea = document.getElementById('partner-hero-area');
+  const connectArea = document.getElementById('partner-connect-area');
+  const feedArea = document.getElementById('partner-feed-area');
+
+  const code = await getOrCreateInviteCode();
+  const inviteUrl = window.location.origin + window.location.pathname + '?invite=' + code;
+
+  if (!fres.data) {
+    // No partner yet
+    heroArea.innerHTML = `
+      <div class="partner-hero">
+        <div class="partner-avatars">
+          <div class="p-av mom">🌸</div>
+          <div class="p-connector"></div>
+          <div class="p-av partner" style="opacity:0.4;border-style:dashed;">?</div>
+        </div>
+        <div style="font-size:22px;font-weight:700;color:#fff;margin-bottom:4px;">파트너를 초대해요</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.6);">링크를 보내면 공동 기록을 시작할 수 있어요</div>
+      </div>`;
+    connectArea.innerHTML = `
+      <div class="connect-card">
+        <div class="connect-card-hdr">
+          <div class="connect-card-title">💜 파트너 초대 링크</div>
+          <div class="connect-card-sub">파트너가 링크를 열면 자동으로 연결돼요</div>
+        </div>
+        <div class="connect-card-body">
+          <div class="invite-code-box" onclick="copyInviteLink()">
+            <div class="invite-code-text" id="invite-link-text">${inviteUrl}</div>
+            <div class="invite-copy-btn"><i class="ph ph-copy"></i></div>
+          </div>
+          <button class="save-btn" onclick="copyInviteLink()">링크 복사 & 공유 📋</button>
+        </div>
+      </div>
+      <div style="padding:16px;">
+        <div class="info-block">
+          <div class="block-title">파트너와 함께하면</div>
+          <div class="info-row"><div class="i-lbl">📷</div><div class="i-val" style="font-size:12px;">초음파 사진 실시간 공유</div></div>
+          <div class="info-row"><div class="i-lbl">💬</div><div class="i-val" style="font-size:12px;">기록마다 댓글 남기기</div></div>
+          <div class="info-row"><div class="i-lbl">📅</div><div class="i-val" style="font-size:12px;">진료 일정 함께 보기</div></div>
+          <div class="info-row" style="border:none;"><div class="i-lbl">🏥</div><div class="i-val" style="font-size:12px;">응급 정보 접근</div></div>
+        </div>
+      </div>`;
+    feedArea.innerHTML = '';
+    return;
+  }
+
+  // Has partner — load their profile
+  const partnerId = fres.data.following_id;
+  const ppRes = await _supabase.from('profiles').select('*').eq('id', partnerId).single();
+  const partnerProfile = ppRes.data || {};
+  const partnerName = partnerProfile.display_name || '파트너';
+  const myName = (currentUserProfile && currentUserProfile.display_name) || '나';
+
+  heroArea.innerHTML = `
+    <div class="partner-hero">
+      <div class="partner-avatars">
+        <div class="p-av mom">🌸</div>
+        <div class="p-connector"></div>
+        <div class="p-av partner">💙</div>
+      </div>
+      <div style="font-size:22px;font-weight:700;color:#fff;margin-bottom:4px;">${myName} & ${partnerName}</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.6);">임신 ${currentUserProfile?.current_week || '?'}주차</div>
+      <div style="margin-top:14px;">
+        <div class="partner-status-bar">
+          <div class="p-status-dot"></div>
+          <div class="p-status-txt"><strong>${partnerName}</strong>님과 연결됐어요 💜</div>
+        </div>
+      </div>
+    </div>`;
+
+  connectArea.innerHTML = `
+    <div style="padding:12px 16px 0;">
+      <div class="connect-card">
+        <div class="connect-card-hdr">
+          <div class="connect-card-title">초대 링크 (재공유용)</div>
+          <div class="connect-card-sub">다른 기기에서 다시 연결할 때 써요</div>
+        </div>
+        <div class="connect-card-body" style="padding:10px 18px 14px;">
+          <div class="invite-code-box" onclick="copyInviteLink()" style="margin-bottom:0;">
+            <div class="invite-code-text" id="invite-link-text" style="font-size:10px;">${inviteUrl}</div>
+            <div class="invite-copy-btn"><i class="ph ph-copy"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+  // Load shared entries (mine public + partner's public)
+  const [myRes, partnerRes] = await Promise.all([
+    _supabase.from('entries').select('*').eq('user_id', currentUserId).eq('is_public', true).order('created_at', { ascending: false }).limit(20),
+    _supabase.from('entries').select('*').eq('user_id', partnerId).eq('is_public', true).order('created_at', { ascending: false }).limit(20)
+  ]);
+
+  const allEntries = [
+    ...(myRes.data || []).map(e => ({...e, _owner: 'mine'})),
+    ...(partnerRes.data || []).map(e => ({...e, _owner: 'partner'}))
+  ].sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+
+  let feedHTML = `<div class="partner-feed-section">
+    <div class="pf-header">
+      <div class="pf-title">공유 기록 💜</div>
+      <div class="pf-badge">공개된 기록만 보여요</div>
+    </div>`;
+
+  if (allEntries.length === 0) {
+    feedHTML += `<div class="pf-empty">아직 공유된 기록이 없어요 🌱<br><span style="font-size:11px;">기록 저장 시 '파트너 공유'를 선택해봐요</span></div>`;
+  } else {
+    allEntries.forEach(entry => {
+      const isMine = entry._owner === 'mine';
+      const ownerName = isMine ? myName : partnerName;
+      feedHTML += buildFeedItemHTML(entry, ownerName, isMine);
+    });
+  }
+  feedHTML += '</div>';
+  feedArea.innerHTML = feedHTML;
+
+  // Load comments for all entries
+  allEntries.forEach(e => loadComments(e.id));
+}
+
+// ─── FEED BUILDER ────────────────────────────────────────
+function buildFeedItemHTML(entry, ownerName, isMine) {
+  const hasPhoto = !!entry.image_url;
+  const time = fmtTime(entry.created_at);
+  const moodEmoji = entry.mood ? entry.mood.split(' ')[0] : '';
+  const entryClass = isMine === true ? 'mine-entry' : isMine === false ? 'partner-entry' : '';
+
+  return `<div class="feed-item ${entryClass}" id="entry-${entry.id}">
+    ${hasPhoto ? `<img class="feed-photo" src="${entry.image_url}" alt="사진">` : ''}
+    ${ownerName ? `<div class="partner-badge">${isMine ? '🌸' : '💙'} ${ownerName}</div>` : ''}
+    <div class="feed-body">
+      <div class="feed-row1">
+        <span class="feed-date">${entry.date || ''}</span>
+        <span class="feed-time">${time}</span>
+      </div>
+      <div class="feed-type">${entry.type || '일기'}</div>
+      <div class="feed-text">${entry.content || ''}</div>
+      ${moodEmoji ? `<div class="feed-mood">${moodEmoji}</div>` : ''}
+    </div>
+    <div class="cmt-section">
+      <div class="cmt-toggle" onclick="toggleComments('${entry.id}')">
+        <i class="ph ph-chat-circle"></i>
+        <span>댓글</span>
+        <span class="cmt-count" id="cmt-count-${entry.id}">0</span>
+      </div>
+      <div id="cmt-list-${entry.id}" class="cmt-list" style="display:none;"></div>
+      <div class="cmt-input-area" id="cmt-input-area-${entry.id}" style="display:none;">
+        <div class="cmt-av-input">🌸</div>
+        <div class="cmt-input-wrap">
+          <input class="cmt-input" id="cmt-input-${entry.id}" placeholder="댓글을 남겨요..." 
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendComment('${entry.id}');}">
+          <button class="cmt-send-btn" onclick="sendComment('${entry.id}')">
+            <i class="ph ph-paper-plane-tilt"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ─── COMMENTS ────────────────────────────────────────────
+function toggleComments(entryId) {
+  const list = document.getElementById('cmt-list-' + entryId);
+  const inputArea = document.getElementById('cmt-input-area-' + entryId);
+  if (!list) return;
+  const isHidden = list.style.display === 'none';
+  list.style.display = isHidden ? 'flex' : 'none';
+  list.style.flexDirection = 'column';
+  if (inputArea) inputArea.style.display = isHidden ? 'flex' : 'none';
+  if (isHidden) loadComments(entryId);
+}
+
+async function loadComments(entryId) {
+  const countEl = document.getElementById('cmt-count-' + entryId);
+  const listEl = document.getElementById('cmt-list-' + entryId);
+  if (!listEl) return;
+
+  const res = await _supabase
+    .from('comments')
+    .select('*')
+    .eq('entry_id', entryId)
+    .order('created_at', { ascending: true });
+
+  if (res.error) { console.error('comments load error:', res.error); return; }
+  const comments = res.data || [];
+
+  if (countEl) countEl.textContent = comments.length;
+
+  if (listEl.style.display === 'none') return; // don't render if collapsed
+
+  if (comments.length === 0) {
+    listEl.innerHTML = '<div style="font-size:11px;color:var(--text-soft);padding:4px 0 8px;">첫 댓글을 남겨봐요 💜</div>';
+    return;
+  }
+
+  listEl.innerHTML = comments.map(c => {
+    const isMine = c.user_id === currentUserId;
+    const avClass = isMine ? 'mine' : 'partner';
+    const avEmoji = isMine ? '🌸' : '💙';
+    const bubbleClass = isMine ? 'mine' : 'partner';
+    const nameClass = isMine ? '' : 'partner-name';
+    return `<div class="cmt-row">
+      <div class="cmt-av ${avClass}">${avEmoji}</div>
+      <div class="cmt-bubble ${bubbleClass}">
+        <div class="cmt-name ${nameClass}">${c.display_name || '익명'}</div>
+        <div class="cmt-text">${c.content}</div>
+        <div class="cmt-time">${fmtRelTime(c.created_at)}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function sendComment(entryId) {
+  const input = document.getElementById('cmt-input-' + entryId);
+  const content = input ? input.value.trim() : '';
+  if (!content) return;
+
+  const ures = await _supabase.auth.getUser();
+  const user = ures.data && ures.data.user;
+  if (!user) { alert('로그인이 필요해요'); return; }
+
+  // Get display name
+  let displayName = user.email;
+  if (currentUserProfile && currentUserProfile.display_name) {
+    displayName = currentUserProfile.display_name;
+  }
+
+  // Optimistic UI — show immediately
+  const listEl = document.getElementById('cmt-list-' + entryId);
+  const countEl = document.getElementById('cmt-count-' + entryId);
+  if (input) input.value = '';
+
+  const ins = await _supabase.from('comments').insert({
+    entry_id: entryId,
+    user_id: user.id,
+    display_name: displayName,
+    content: content
   });
-  var sel = document.getElementById('opt-' + mode);
-  if (sel) { sel.style.borderColor = '#834D84'; sel.style.background = 'rgba(131,77,132,0.06)'; }
 
-  var q = document.getElementById('setup-step2-q');
-  var hint = document.getElementById('setup-step2-hint');
-  var weekRow = document.getElementById('setup-week-row');
-  var dateRow = document.getElementById('setup-date-row');
+  if (ins.error) {
+    console.error('comment insert error:', ins.error);
+    alert('댓글 저장 실패: ' + ins.error.message);
+    return;
+  }
 
-  if (mode === 'week') {
-    q.textContent = '현재 임신 주수를 입력해줘요';
-    hint.textContent = '예정일도 함께 입력하면 더 정확해요';
-    weekRow.style.display = 'flex';
-    dateRow.style.display = 'none';
-  } else if (mode === 'lmp') {
-    q.textContent = '마지막 생리 시작일을 입력해줘요';
-    hint.textContent = '날짜로 주수를 자동 계산해요';
-    weekRow.style.display = 'none';
-    dateRow.style.display = 'block';
-  } else {
-    q.textContent = '출산 예정일을 입력해줘요';
-    hint.textContent = '산부인과에서 받은 날짜예요';
-    weekRow.style.display = 'none';
-    dateRow.style.display = 'block';
-  }
-  document.getElementById('setup-calc-result').innerHTML = '입력하면 예정일을 계산해요 ✨';
-  document.getElementById('setup-step-1').classList.remove('on');
-  document.getElementById('setup-step-2').classList.add('on');
+  // Reload to get the real data with timestamp
+  await loadComments(entryId);
 }
-function calcWeekPreview() {
-  var result = document.getElementById('setup-calc-result');
-  var week, edd;
-  if (setupMode === 'week') {
-    var wVal = parseInt(document.getElementById('setup-week-input').value);
-    if (!wVal || wVal < 1 || wVal > 42) return;
-    week = wVal;
-    var today = new Date();
-    edd = new Date(today.getTime() + (40 - week) * 7 * 24 * 60 * 60 * 1000);
-  } else {
-    var dVal = document.getElementById('setup-date-input').value;
-    if (!dVal) return;
-    var inputDate = new Date(dVal);
-    var today2 = new Date();
-    if (setupMode === 'lmp') {
-      var diffDays = Math.floor((today2 - inputDate) / (1000 * 60 * 60 * 24));
-      week = Math.floor(diffDays / 7);
-      edd = new Date(inputDate.getTime() + 280 * 24 * 60 * 60 * 1000);
-    } else {
-      var daysLeft = Math.ceil((inputDate - today2) / (1000 * 60 * 60 * 24));
-      week = 40 - Math.round(daysLeft / 7);
-      edd = inputDate;
-    }
-  }
-  if (week < 1) week = 1;
-  if (week > 42) week = 42;
-  var eddStr = edd.getFullYear() + '년 ' + (edd.getMonth()+1) + '월 ' + edd.getDate() + '일';
-  result.innerHTML = '현재 임신 <strong>' + week + '주차</strong> &nbsp;·&nbsp; 예정일 ' + eddStr;
-}
-async function saveSetup() {
-  var week, edd;
-  if (setupMode === 'week') {
-    week = parseInt(document.getElementById('setup-week-input').value);
-    if (!week || week < 1 || week > 42) { alert('주수를 입력해주세요 (1~42)'); return; }
-    var today = new Date();
-    edd = new Date(today.getTime() + (40 - week) * 7 * 24 * 60 * 60 * 1000);
-  } else {
-    var dVal = document.getElementById('setup-date-input').value;
-    if (!dVal) { alert('날짜를 입력해주세요'); return; }
-    var inputDate = new Date(dVal);
-    var today2 = new Date();
-    if (setupMode === 'lmp') {
-      var diffDays = Math.floor((today2 - inputDate) / (1000 * 60 * 60 * 24));
-      week = Math.floor(diffDays / 7);
-      edd = new Date(inputDate.getTime() + 280 * 24 * 60 * 60 * 1000);
-    } else {
-      var daysLeft = Math.ceil((inputDate - today2) / (1000 * 60 * 60 * 24));
-      week = 40 - Math.round(daysLeft / 7);
-      edd = inputDate;
-    }
-  }
-  if (week < 1) week = 1;
-  if (week > 42) week = 42;
-  var eddStr = edd.toISOString().split('T')[0];
-  var ures = await _supabase.auth.getUser();
-  var user = ures.data && ures.data.user;
-  if (!user) return;
-  await _supabase.from('profiles').upsert({ id: user.id, current_week: week, edd: eddStr });
-  localStorage.setItem('nuri_current_week', week);
-  showHome();
-}
-function skipSetup() {
-  showHome();
-}
-var babyFacts = {
+
+// ─── ENTRIES ─────────────────────────────────────────────
+const babyFacts = {
   4:'씨앗 크기 🌱', 5:'참깨 크기', 6:'완두콩 크기', 7:'블루베리 크기',
   8:'강낭콩 크기', 9:'포도 크기', 10:'딸기 크기', 11:'라임 크기',
   12:'자두 크기', 13:'복숭아 크기', 14:'레몬 크기', 15:'오렌지 크기',
@@ -708,7 +933,7 @@ var babyFacts = {
   32:'네타 멜론 크기', 33:'파인애플 크기', 34:'칸탈루프 크기', 35:'허니듀 크기',
   36:'상추 크기', 37:'스위스 차드', 38:'미니 수박', 39:'수박 크기', 40:'호박 크기'
 };
-var babyDev = {
+const babyDev = {
   4:'심장 형성 중', 5:'뇌 발달 시작', 6:'팔다리 싹 발생', 7:'손가락 형성',
   8:'모든 주요 장기 형성', 9:'근육 발달', 10:'손톱 자라기 시작', 11:'생식기 발달',
   12:'반사 신경 발달', 13:'지문 형성 중', 14:'얼굴 근육 발달', 15:'청각 발달 시작',
@@ -719,333 +944,289 @@ var babyDev = {
   32:'피부 윤곽 잡히기 시작', 33:'뼈 완전히 발달', 34:'중추신경계 성숙', 35:'신장 완전 발달',
   36:'지방 축적 중', 37:'면역 체계 강화', 38:'출산 준비 완료', 39:'폐 완전히 성숙', 40:'출산 대기 중'
 };
-function buildFeedItemHTML(entry) {
-  var hasPhoto = !!entry.image_url;
-  var time = entry.created_at ? new Date(entry.created_at).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}) : '';
-  var moodEmoji = entry.mood ? entry.mood.split(' ')[0] : '';
-  return '<div class="feed-item">' +
-    (hasPhoto ? '<img class="feed-photo" src="' + entry.image_url + '" alt="사진">' : '') +
-    '<div class="feed-body">' +
-    '<div class="feed-row1"><span class="feed-date">' + (entry.date || '') + '</span><span class="feed-time">' + time + '</span></div>' +
-    '<div class="feed-type">' + (entry.type || '일기') + '</div>' +
-    '<div class="feed-text">' + (entry.content || '') + '</div>' +
-    (moodEmoji ? '<div class="feed-mood">' + moodEmoji + '</div>' : '') +
-    '</div>' +
-    '<div class="cmt-area" id="comments-' + entry.id + '"></div>' +
-    '<div class="cmt-input-row">' +
-    '<div class="cmt-av">🌸</div>' +
-    '<input class="cmt-input" placeholder="댓글..." id="cmt-input-' + entry.id + '">' +
-    '<button class="cmt-send" onclick="window.addComment(' + entry.id + ')">전송</button>' +
-    '</div></div>';
-}
-function buildWeekSectionHTML(week, entries, isFuture, isCurrentWeek) {
-  var fact = babyFacts[week] || '';
-  var dev = babyDev[week] || '';
-  var html = '<div class="week-section" data-week="' + week + '">';
-  html += '<div class="week-sticky">';
-  html += '<div class="dot-wrap"><div class="dot-inner"></div></div>';
-  html += '<div class="week-block">';
-  html += '<span class="week-num">' + week + '</span>';
-  html += '<div class="week-label-col">';
-  html += '<span class="week-lbl">week</span>';
-  if (isCurrentWeek) {
-    var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    var now = new Date();
-    var dateStr = days[now.getDay()] + '.' + now.getDate() + '.' + months[now.getMonth()] + '.' + now.getFullYear();
-    html += '<span class="week-date-lbl">' + dateStr + '</span>';
-  }
-  html += '</div></div></div>';
+
+function buildWeekSectionHTML(week, entries, isCurrent) {
+  const fact = babyFacts[week] || '';
+  const dev = babyDev[week] || '';
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const now = new Date();
+  const dateStr = days[now.getDay()] + '.' + now.getDate() + '.' + months[now.getMonth()] + '.' + now.getFullYear();
+
+  let html = `<div class="week-section" data-week="${week}">
+    <div class="week-sticky">
+      <div class="dot-wrap"><div class="dot-inner"></div></div>
+      <div class="week-block">
+        <span class="week-num">${week}</span>
+        <div class="week-label-col">
+          <span class="week-lbl">week</span>
+          ${isCurrent ? `<span class="week-date-lbl">${dateStr}</span>` : ''}
+        </div>
+      </div>
+    </div>`;
+
   if (fact) {
-    html += '<div class="week-fact"><div class="fact-bar">';
-    html += '<div class="fact-icon">💡</div>';
-    html += '<span class="fact-main">' + fact + '</span>';
-    html += '<span class="fact-sub">' + dev + '</span>';
-    html += '</div></div>';
+    html += `<div class="week-fact"><div class="fact-bar">
+      <div class="fact-icon">💡</div>
+      <span class="fact-main">${fact}</span>
+      <span class="fact-sub">${dev}</span>
+    </div></div>`;
   }
-  // 현재 주차에 진료 카드 추가
-  if (isCurrentWeek) {
-    html += '<div class="appt-scroll-row">';
-    html += '<div class="appt-card"><div class="appt-top"><div class="appt-badge">3일 후</div><div class="appt-type">초음파</div></div><div class="appt-info"><div class="appt-date">3월 6일 금요일 오전 10:30</div><div class="appt-place">서울 성모 병원 Dr. 박미연</div></div></div>';
-    html += '<div class="appt-card"><div class="appt-top"><div class="appt-badge">4일 후</div><div class="appt-type">초음파</div></div><div class="appt-info"><div class="appt-date">2월 7일 토요일 오전 10:30</div><div class="appt-place">서울 성모 병원 Dr. 박미연</div></div></div>';
-    html += '</div>';
+
+  if (isCurrent) {
+    html += `<div class="appt-scroll-row">
+      <div class="appt-card">
+        <div class="appt-top"><div class="appt-badge">3일 후</div><div class="appt-type">초음파</div></div>
+        <div class="appt-info"><div class="appt-date">3월 6일 금요일 오전 10:30</div><div class="appt-place">서울 성모 병원 Dr. 박미연</div></div>
+      </div>
+    </div>`;
   }
+
   if (entries.length > 0) {
-    html += '<div class="feed-section">';
-    entries.forEach(function(e) { html += buildFeedItemHTML(e); });
-    html += '</div>';
+    const myName = (currentUserProfile && currentUserProfile.display_name) || '나';
+    html += `<div class="feed-section">`;
+    entries.forEach(e => { html += buildFeedItemHTML(e, myName, true); });
+    html += `</div>`;
   }
+
   html += '</div>';
   return html;
 }
+
 async function loadEntries() {
-  var timeline = document.getElementById('home-timeline');
+  const timeline = document.getElementById('home-timeline');
   if (!timeline) return;
-  var res = await _supabase.from('entries').select('*').order('created_at', { ascending: false });
+
+  await loadCurrentProfile();
+
+  const res = await _supabase.from('entries').select('*')
+    .eq('user_id', currentUserId || '')
+    .order('created_at', { ascending: false });
+
   if (res.error) { console.error(res.error); return; }
-  var data = res.data || [];
+  const data = res.data || [];
 
-  var currentWeek = 24;
-  var maxWeek = 40;
-  try {
-    var ures = await _supabase.auth.getUser();
-    var user = ures.data && ures.data.user;
-    if (user) {
-      var pres = await _supabase.from('profiles').select('current_week,edd').eq('id', user.id).single();
-      if (pres.data && pres.data.current_week) currentWeek = parseInt(pres.data.current_week);
-      if (pres.data && pres.data.edd) {
-        var eddDate = new Date(pres.data.edd);
-        var nowDate = new Date();
-        var diffDays = Math.round((eddDate - nowDate) / (1000 * 60 * 60 * 24));
-        maxWeek = currentWeek + Math.round(diffDays / 7);
-        if (maxWeek > 42) maxWeek = 42;
-      }
+  let currentWeek = 24;
+  let maxWeek = 40;
+  if (currentUserProfile) {
+    if (currentUserProfile.current_week) currentWeek = parseInt(currentUserProfile.current_week);
+    if (currentUserProfile.edd) {
+      const eddDate = new Date(currentUserProfile.edd);
+      const diffDays = Math.round((eddDate - new Date()) / (1000*60*60*24));
+      maxWeek = Math.min(42, currentWeek + Math.round(diffDays/7));
     }
-  } catch(err) { console.log('profile error', err); }
+  }
 
-  var groups = {};
-  data.forEach(function(e) {
-    var wk = e.week || 0;
+  const groups = {};
+  data.forEach(e => {
+    const wk = e.week || 0;
     if (!groups[wk]) groups[wk] = [];
     groups[wk].push(e);
   });
 
   timeline.innerHTML = '';
-  var cw = currentWeek;
-  for (var i = 4; i <= maxWeek; i++) {
-    var wEntries = groups[i] || [];
-    var wIsFuture = i > cw;
-    var wIsCurrent = (i === cw);
-    var wDiv = document.createElement('div');
-    wDiv.innerHTML = buildWeekSectionHTML(i, wEntries, wIsFuture, wIsCurrent);
+  for (let i = 4; i <= Math.max(maxWeek, currentWeek); i++) {
+    const wEntries = groups[i] || [];
+    const wDiv = document.createElement('div');
+    wDiv.innerHTML = buildWeekSectionHTML(i, wEntries, i === currentWeek);
     timeline.appendChild(wDiv);
-    wEntries.forEach(function(e) { loadComments(e.id); });
+    wEntries.forEach(e => loadComments(e.id));
   }
 
-  var screen = document.getElementById('s-home');
+  const screen = document.getElementById('s-home');
   if (screen) {
-    screen.scrollTop = 0;
-
-    // A: 모든 섹션 초기 숨김 (이미 CSS로 opacity:0)
-    // C: 잠깐 후 현재주차로 스크롤 시작
-    setTimeout(function() {
-      var target = document.querySelector('[data-week="' + cw + '"]');
-      if (!target || !screen) return;
-
-      // 라인 드로우 애니메이션 시작
-      var wrap = document.getElementById('home-timeline');
+    setTimeout(() => {
+      const wrap = document.getElementById('home-timeline');
       if (wrap) wrap.classList.add('animating');
-
-      // 스크롤 전 보이는 섹션들 먼저 fade-up (4주~현재 앞)
-      var allSections = document.querySelectorAll('.week-section');
-      allSections.forEach(function(s, idx) {
-        setTimeout(function() {
-          s.classList.add('visible');
-        }, idx * 40);
+      document.querySelectorAll('.week-section').forEach((s, idx) => {
+        setTimeout(() => s.classList.add('visible'), idx * 40);
       });
-
-      // C: 현재주차로 부드럽게 스크롤
-      var top = target.getBoundingClientRect().top - screen.getBoundingClientRect().top + screen.scrollTop;
-      screen.scrollTo({ top: top - 10, behavior: 'smooth' });
-
+      const target = document.querySelector(`[data-week="${currentWeek}"]`);
+      if (target) {
+        const top = target.getBoundingClientRect().top - screen.getBoundingClientRect().top + screen.scrollTop;
+        screen.scrollTo({ top: top - 10, behavior: 'smooth' });
+      }
     }, 300);
   }
 }
-async function calcEntryWeek() {
-  var dateVal = document.getElementById('entry-date-input').value;
-  var hint = document.getElementById('entry-week-hint');
-  if (!dateVal || !hint) return;
-  var currentWeek = 13;
-  try {
-    var ures = await _supabase.auth.getUser();
-    var user = ures.data && ures.data.user;
-    if (user) {
-      var pres = await _supabase.from('profiles').select('current_week').eq('id', user.id).single();
-      if (pres.data && pres.data.current_week) currentWeek = parseInt(pres.data.current_week);
-    }
-  } catch(e) {}
-  var entryDate = new Date(dateVal);
-  var today = new Date();
-  var diffDays = Math.round((entryDate - today) / (1000 * 60 * 60 * 24));
-  var diffWeeks = Math.round(diffDays / 7);
-  var entryWeek = currentWeek + diffWeeks;
-  if (entryWeek < 1) entryWeek = 1;
-  if (entryWeek > 42) entryWeek = 42;
-  hint.textContent = '임신 ' + entryWeek + '주차 기록으로 저장돼요';
+
+// ─── SAVE ENTRY ──────────────────────────────────────────
+async function uploadPhoto() {
+  if (!selectedFile) return null;
+  const fileName = Date.now() + '_' + Math.random().toString(36).slice(2) + '.jpg';
+  const res = await _supabase.storage.from('photos').upload(fileName, selectedFile);
+  if (res.error) { console.error(res.error); return null; }
+  const pub = _supabase.storage.from('photos').getPublicUrl(fileName);
+  return pub.data && pub.data.publicUrl ? pub.data.publicUrl : null;
 }
+
 async function saveEntry() {
-  const content = document.getElementById('entry-content') ? document.getElementById('entry-content').value : '';
-  const dateInput = document.getElementById('entry-date-input');
-  const dateVal = dateInput ? dateInput.value : new Date().toISOString().split('T')[0];
-
-  // 현재 주수 Supabase에서 가져오기
-  var currentWeek = 13;
-  try {
-    var ures2 = await _supabase.auth.getUser();
-    var user2 = ures2.data && ures2.data.user;
-    if (user2) {
-      var pres2 = await _supabase.from('profiles').select('current_week').eq('id', user2.id).single();
-      if (pres2.data && pres2.data.current_week) currentWeek = parseInt(pres2.data.current_week);
-    }
-  } catch(e) {}
-
-  // 날짜 차이로 주수 계산
-  var entryDate = new Date(dateVal);
-  var today = new Date();
-  var diffDays = Math.round((entryDate - today) / (1000 * 60 * 60 * 24));
-  var diffWeeks = Math.round(diffDays / 7);
-  var week = currentWeek + diffWeeks;
-  if (week < 1) week = 1;
-  if (week > 42) week = 42;
+  const content = document.getElementById('entry-content').value;
+  const dateVal = document.getElementById('entry-date-input').value || new Date().toISOString().split('T')[0];
   const moodEl = document.querySelector('#mood-pills .pill.on');
   const mood = moodEl ? moodEl.textContent : '';
   const typeEl = document.querySelector('#s-new .type-tab.on');
   const type = typeEl ? typeEl.textContent.trim() : '일기';
-  const pubEl = document.getElementById('privacy-public');
-  const isPublic = pubEl ? pubEl.classList.contains('on') : false;
-  const ures = await _supabase.auth.getUser();
-  const user = ures.data && ures.data.user;
-  if (!user) { alert('로그인이 필요해요'); return; }
-  let image_url = null;
-  if (selectedFile) image_url = await uploadPhoto();
-  const ins = await _supabase.from('entries').insert({ type, content, week, mood, date: dateVal, image_url, user_id: user.id, is_public: isPublic });
-  if (ins.error) { alert('저장 실패'); console.error(ins.error); return; }
+  const isPublic = document.getElementById('privacy-public')?.classList.contains('on') || false;
+
+  if (!currentUserId) { alert('로그인이 필요해요'); return; }
+
+  let currentWeek = 13;
+  if (currentUserProfile && currentUserProfile.current_week) currentWeek = parseInt(currentUserProfile.current_week);
+  const diffDays = Math.round((new Date(dateVal) - new Date()) / (1000*60*60*24));
+  let week = currentWeek + Math.round(diffDays/7);
+  if (week < 1) week = 1;
+  if (week > 42) week = 42;
+
+  const image_url = selectedFile ? await uploadPhoto() : null;
+
+  const ins = await _supabase.from('entries').insert({
+    type, content, week, mood, date: dateVal, image_url,
+    user_id: currentUserId, is_public: isPublic
+  });
+
+  if (ins.error) { alert('저장 실패: ' + ins.error.message); return; }
+
   selectedFile = null;
   const preview = document.getElementById('photo-preview');
   if (preview) { preview.src = ''; preview.style.display = 'none'; }
   const camLbl = document.getElementById('cam-lbl');
   if (camLbl) camLbl.style.display = 'block';
-  const ec = document.getElementById('entry-content');
-  if (ec) ec.value = '';
+  document.getElementById('entry-content').value = '';
   alert('저장됐어! 🌸');
   goBack();
 }
-async function loadComments(entryId) {
-  const container = document.getElementById('comments-' + entryId);
-  if (!container) return;
-  const res = await _supabase.from('comments').select('*').eq('entry_id', entryId).order('created_at', { ascending: true });
-  if (res.error || !res.data || res.data.length === 0) { container.innerHTML = ''; return; }
-  container.innerHTML = res.data.map(function(c) {
-    return '<div class="cmt-row"><div class="cmt-av">💬</div><div class="cmt-bubble"><div class="cmt-name">' + (c.display_name || '익명') + '</div><div class="cmt-text">' + c.content + '</div></div></div>';
-  }).join('');
+
+async function calcEntryWeek() {
+  const dateVal = document.getElementById('entry-date-input').value;
+  const hint = document.getElementById('entry-week-hint');
+  if (!dateVal || !hint) return;
+  let currentWeek = 13;
+  if (currentUserProfile && currentUserProfile.current_week) currentWeek = parseInt(currentUserProfile.current_week);
+  const diffDays = Math.round((new Date(dateVal) - new Date()) / (1000*60*60*24));
+  let w = currentWeek + Math.round(diffDays/7);
+  if (w < 1) w = 1; if (w > 42) w = 42;
+  hint.textContent = '임신 ' + w + '주차 기록으로 저장돼요';
 }
-async function addComment(entryId) {
-  const input = document.getElementById('cmt-input-' + entryId);
-  const content = input && input.value ? input.value.trim() : '';
-  if (!content) return;
-  const ures = await _supabase.auth.getUser();
-  const user = ures.data && ures.data.user;
-  if (!user) { alert('로그인이 필요해요'); return; }
-  const pres = await _supabase.from('profiles').select('display_name').eq('id', user.id).single();
-  const display_name = (pres.data && pres.data.display_name) ? pres.data.display_name : user.email;
-  const ins = await _supabase.from('comments').insert({ entry_id: entryId, user_id: user.id, display_name, content });
-  if (ins.error) { console.error(ins.error); return; }
-  if (input) input.value = '';
-  loadComments(entryId);
-}
-async function loadPartnerFeed(inviteCode) {
-  const pres = await _supabase.from('profiles').select('*').eq('invite_code', inviteCode).single();
-  const profile = pres.data;
-  if (!profile) { alert('유효하지 않은 초대 링크예요'); return; }
-  const ures = await _supabase.auth.getUser();
-  const user = ures.data && ures.data.user;
-  await _supabase.from('follows').upsert({ follower_id: user.id, following_id: profile.id });
-  document.getElementById('partner-name').textContent = profile.display_name || '작성자';
-  document.getElementById('partner-week').textContent = '임신 ' + (profile.current_week || '?') + '주차 🤰';
-  const eres = await _supabase.from('entries').select('*').eq('user_id', profile.id).eq('is_public', true).order('created_at', { ascending: false });
-  const timeline = document.getElementById('partner-timeline');
-  timeline.innerHTML = '';
-  if (!eres.data || eres.data.length === 0) {
-    timeline.innerHTML = '<div style="text-align:center;color:#9B8E9D;padding:40px;font-size:13px;">아직 공개된 기록이 없어요 🌱</div>';
+
+// ─── SETUP ───────────────────────────────────────────────
+let setupMode = 'week';
+function selectSetupOpt(mode) {
+  setupMode = mode;
+  ['week','lmp','edd'].forEach(id => {
+    const el = document.getElementById('opt-' + id);
+    if (el) { el.style.borderColor = 'rgba(200,162,201,0.4)'; el.style.background = '#fff'; }
+  });
+  const sel = document.getElementById('opt-' + mode);
+  if (sel) { sel.style.borderColor = '#834D84'; sel.style.background = 'rgba(131,77,132,0.06)'; }
+  const q = document.getElementById('setup-step2-q');
+  const hint = document.getElementById('setup-step2-hint');
+  const weekRow = document.getElementById('setup-week-row');
+  const dateRow = document.getElementById('setup-date-row');
+  if (mode === 'week') {
+    q.textContent = '현재 임신 주수를 입력해줘요';
+    hint.textContent = '예정일도 함께 입력하면 더 정확해요';
+    weekRow.style.display = 'flex'; dateRow.style.display = 'none';
+  } else if (mode === 'lmp') {
+    q.textContent = '마지막 생리 시작일을 입력해줘요';
+    hint.textContent = '날짜로 주수를 자동 계산해요';
+    weekRow.style.display = 'none'; dateRow.style.display = 'block';
   } else {
-    eres.data.forEach(function(entry) {
-      const div = document.createElement('div');
-      div.innerHTML = buildEntryHTML(entry);
-      timeline.appendChild(div);
-    });
+    q.textContent = '출산 예정일을 입력해줘요';
+    hint.textContent = '산부인과에서 받은 날짜예요';
+    weekRow.style.display = 'none'; dateRow.style.display = 'block';
   }
-  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
-  document.getElementById('s-partner').classList.add('active');
-  hist = ['s-partner'];
+  document.getElementById('setup-calc-result').innerHTML = '입력하면 예정일을 계산해요 ✨';
+  document.getElementById('setup-step-1').classList.remove('on');
+  document.getElementById('setup-step-2').classList.add('on');
 }
+function calcWeekPreview() {
+  const result = document.getElementById('setup-calc-result');
+  let week, edd;
+  if (setupMode === 'week') {
+    week = parseInt(document.getElementById('setup-week-input').value);
+    if (!week || week < 1 || week > 42) return;
+    edd = new Date(Date.now() + (40-week)*7*24*60*60*1000);
+  } else {
+    const dVal = document.getElementById('setup-date-input').value;
+    if (!dVal) return;
+    const inputDate = new Date(dVal);
+    if (setupMode === 'lmp') {
+      const diff = Math.floor((Date.now()-inputDate)/(1000*60*60*24));
+      week = Math.floor(diff/7);
+      edd = new Date(inputDate.getTime() + 280*24*60*60*1000);
+    } else {
+      edd = inputDate;
+      week = 40 - Math.round((inputDate-Date.now())/(1000*60*60*24*7));
+    }
+  }
+  if (week < 1) week = 1; if (week > 42) week = 42;
+  const eddStr = edd.getFullYear()+'년 '+(edd.getMonth()+1)+'월 '+edd.getDate()+'일';
+  result.innerHTML = '현재 임신 <strong>'+week+'주차</strong>  ·  예정일 '+eddStr;
+}
+async function saveSetup() {
+  let week, edd;
+  if (setupMode === 'week') {
+    week = parseInt(document.getElementById('setup-week-input').value);
+    if (!week || week < 1 || week > 42) { alert('주수를 입력해주세요 (1~42)'); return; }
+    edd = new Date(Date.now() + (40-week)*7*24*60*60*1000);
+  } else {
+    const dVal = document.getElementById('setup-date-input').value;
+    if (!dVal) { alert('날짜를 입력해주세요'); return; }
+    const inputDate = new Date(dVal);
+    if (setupMode === 'lmp') {
+      week = Math.floor((Date.now()-inputDate)/(1000*60*60*24*7));
+      edd = new Date(inputDate.getTime()+280*24*60*60*1000);
+    } else {
+      edd = inputDate;
+      week = 40 - Math.round((inputDate-Date.now())/(1000*60*60*24*7));
+    }
+  }
+  if (week < 1) week = 1; if (week > 42) week = 42;
+  await _supabase.from('profiles').upsert({ id: currentUserId, current_week: week, edd: edd.toISOString().split('T')[0] });
+  await loadCurrentProfile();
+  showHome();
+}
+function skipSetup() { showHome(); }
+
+// ─── SETTINGS ────────────────────────────────────────────
 function autoCalcWeekFromEdd() {
-  var eddVal = document.getElementById('edd-input').value;
-  var hint = document.getElementById('settings-calc-hint');
+  const eddVal = document.getElementById('edd-input').value;
+  const hint = document.getElementById('settings-calc-hint');
   if (!eddVal) { if (hint) hint.textContent = ''; return; }
-  var edd = new Date(eddVal);
-  var today = new Date();
-  var daysLeft = Math.ceil((edd - today) / (1000 * 60 * 60 * 24));
-  var week = 40 - Math.round(daysLeft / 7);
-  if (week < 1) week = 1;
-  if (week > 42) week = 42;
-  var wi = document.getElementById('week-input');
-  if (wi) wi.value = week;
-  if (hint) hint.textContent = '예정일 기준으로 ' + week + '주차로 자동 계산됐어요';
+  const daysLeft = Math.ceil((new Date(eddVal)-Date.now())/(1000*60*60*24));
+  let week = 40 - Math.round(daysLeft/7);
+  if (week < 1) week = 1; if (week > 42) week = 42;
+  document.getElementById('week-input').value = week;
+  if (hint) hint.textContent = '예정일 기준으로 '+week+'주차로 자동 계산됐어요';
 }
 async function loadProfile() {
-  const ures = await _supabase.auth.getUser();
-  const user = ures.data && ures.data.user;
-  if (!user) return;
-  let pres = await _supabase.from('profiles').select('*').eq('id', user.id).single();
-  let profile = pres.data;
-  if (!profile) {
-    await _supabase.from('profiles').insert({ id: user.id, display_name: user.email });
-    pres = await _supabase.from('profiles').select('*').eq('id', user.id).single();
-    profile = pres.data;
-  }
+  if (!currentUserId) return;
+  await loadCurrentProfile();
+  const profile = currentUserProfile;
   if (!profile) return;
-  let code = profile.invite_code;
-  if (!code) {
-    code = Math.random().toString(36).slice(2, 10);
-    await _supabase.from('profiles').update({ invite_code: code }).eq('id', user.id);
+  if (!profile.invite_code) {
+    const code = Math.random().toString(36).slice(2,10);
+    await _supabase.from('profiles').update({ invite_code: code }).eq('id', currentUserId);
+    await loadCurrentProfile();
   }
   const wi = document.getElementById('week-input');
   const ei = document.getElementById('edd-input');
-  if (wi && profile.current_week) wi.value = profile.current_week;
-  if (ei && profile.edd) ei.value = profile.edd;
-  const il = document.getElementById('invite-link');
-  if (il) il.textContent = window.location.origin + '?invite=' + code;
+  if (wi && currentUserProfile?.current_week) wi.value = currentUserProfile.current_week;
+  if (ei && currentUserProfile?.edd) ei.value = currentUserProfile.edd;
 }
 async function saveProfile() {
-  const ures = await _supabase.auth.getUser();
-  const user = ures.data && ures.data.user;
-  if (!user) return;
-  const wi = document.getElementById('week-input');
-  const ei = document.getElementById('edd-input');
-  const week = wi ? parseInt(wi.value) : null;
-  const edd = ei ? ei.value : '';
-  await _supabase.from('profiles').update({ current_week: week, edd }).eq('id', user.id);
+  if (!currentUserId) return;
+  const week = parseInt(document.getElementById('week-input').value);
+  const edd = document.getElementById('edd-input').value;
+  await _supabase.from('profiles').update({ current_week: week, edd }).eq('id', currentUserId);
+  await loadCurrentProfile();
   alert('저장됐어! 🌸');
 }
-async function copyInviteLink() {
-  const il = document.getElementById('invite-link');
-  if (!il) return;
-  await navigator.clipboard.writeText(il.textContent);
-  alert('링크 복사됐어! 📋');
-}
-window.goTo = goTo;
-window.goBack = goBack;
-window.navTo = navTo;
-window.selTab = selTab;
-window.selPill = selPill;
-window.previewPhoto = previewPhoto;
-window.saveEntry = saveEntry;
-window.addComment = addComment;
-window.signIn = signIn;
-window.signUp = signUp;
-window.signOut = signOut;
-window.loadProfile = loadProfile;
-window.saveProfile = saveProfile;
-window.copyInviteLink = copyInviteLink;
-window.addEventListener('DOMContentLoaded', function() {
-  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const now = new Date();
-  const dateStr = days[now.getDay()] + '.' + now.getDate() + '.' + months[now.getMonth()] + '.' + now.getFullYear();
-  const el = document.getElementById('today-date');
-  if (el) el.textContent = dateStr;
-  checkAuth();
-});
+
+// ─── INIT ─────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => { checkAuth(); });
 </script>
+
 </body>
 </html>
