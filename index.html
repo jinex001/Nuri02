@@ -91,14 +91,10 @@ position: relative;
 /* Fixed line — lives outside #app, positioned via JS */
 #timeline-fixed-line {
   position: fixed;
-  top: 0;
-  left: 24px !important;
-  width: 4px;
-  height: 100vh;
-  background: red !important;
-  z-index: 9999;
+  width: 2px;
+  background: var(--lilac);
+  z-index: 998;
   pointer-events: none;
-  transform: none !important;
 }
 #timeline-fixed-line.animate {
 animation: lineGrow 1.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -913,12 +909,15 @@ async function loadEntries() {
         document.body.appendChild(fixedLine);
       }
       // Find dot position from the first week-section dot
-      const firstDot = document.querySelector('.dot-wrap');
-      if (firstDot) {
-        const rect = firstDot.getBoundingClientRect();
-        const dotCenterX = rect.left + rect.width / 2;
-        fixedLine.style.left = dotCenterX + 'px';
-      }
+      
+const firstDot = document.querySelector('.dot-wrap');
+if (firstDot) {
+  const rect = firstDot.getBoundingClientRect();
+  const dotCenterX = rect.left + rect.width / 2;
+  fixedLine.style.left = (dotCenterX + 10) + 'px';
+  fixedLine.style.top = rect.top + 'px';
+  fixedLine.style.height = (window.innerHeight - rect.top) + 'px';
+}
       requestAnimationFrame(() => fixedLine.classList.add('animate'));
 
       // Step 2 — sections fade in with stagger (gentle, 80ms apart)
