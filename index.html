@@ -160,13 +160,16 @@ margin:0 12px 6px;
 
 /* ─── COMMENTS ─── */
 .cmt-section { border-top:1px solid rgba(200,162,201,0.4); margin-top:8px; }
+/* .cmt-toggle 안에 i 스타일 추가 */
+.cmt-toggle i { font-size:27px; }
+
 .cmt-toggle {
 display:flex; align-items:center; gap:6px; padding:8px 12px;
 font-size:11px; font-weight:600; color:var(–text-soft); cursor:pointer;
 user-select:none;
 }
 .cmt-toggle:hover { color:var(–lilac-deep); }
-.cmt-toggle .cmt-count { background:rgba(200,162,201,0.2); border-radius:10px; padding:2px 7px; font-size:10px; font-weight:700; color:var(–lilac-deep); }
+.cmt-toggle .cmt-count { background:rgba(200,162,201,0.2); border-radius:20px; width:40px; height:25px; display:inline-flex; align-items:center; justify-content:center; font-size:12px; font-weight:400; font-family:'Outfit',sans-serif; color:#000000; }
 .cmt-list { padding:0 12px 4px; display:flex; flex-direction:column; gap:6px; }
 .cmt-row { display:flex; gap:7px; align-items:flex-start; }
 .cmt-av { width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0; }
@@ -850,8 +853,7 @@ function buildFeedItemHTML(entry, ownerName, isMine) {
     </div>
     <div class="cmt-section">
       <div class="cmt-toggle" onclick="toggleComments('${entry.id}')">
-        <i class="ph ph-chat-circle"></i>
-        <span>댓글</span>
+        <i class="ph-light ph-chat-circle-dots"></i>
         <span class="cmt-count" id="cmt-count-${entry.id}">0</span>
       </div>
       <div id="cmt-list-${entry.id}" class="cmt-list" style="display:none;"></div>
