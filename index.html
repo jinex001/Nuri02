@@ -913,10 +913,12 @@ async function loadEntries() {
 const firstDot = document.querySelector('.dot-wrap');
 if (firstDot) {
   const rect = firstDot.getBoundingClientRect();
+  const lineWidth = 2;
   const dotCenterX = rect.left + rect.width / 2;
-  fixedLine.style.left = (dotCenterX + 10) + 'px';
-  fixedLine.style.top = rect.top + 'px';
-  fixedLine.style.height = (window.innerHeight - rect.top) + 'px';
+
+  fixedLine.style.left = `${dotCenterX - lineWidth / 2}px`;
+  fixedLine.style.top = `${rect.top}px`;
+  fixedLine.style.height = `${window.innerHeight - rect.top}px`;
 }
       requestAnimationFrame(() => fixedLine.classList.add('animate'));
 
