@@ -33,7 +33,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans
 position:absolute; inset:0;
 overflow-y:auto; overflow-x:hidden;
 -webkit-overflow-scrolling:touch;
-padding-bottom:100px;
+padding-bottom:120px;
 transform:translateX(100%);
 transition:transform 0.32s cubic-bezier(0.4,0,0.2,1);
 background:var(–bg);
@@ -42,89 +42,130 @@ background:var(–bg);
 .screen.exit { transform:translateX(-28%); }
 .screen.plain { background:#fff; }
 
-/* BOTTOM NAV */
+/* ─── BOTTOM NAV — LARGER ─── */
 .bottom-nav {
-position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+position:fixed; bottom:28px; left:50%; transform:translateX(-50%);
 display:flex; align-items:center; justify-content:space-between;
-width:380px; z-index:999;
+width:calc(100% - 32px); max-width:398px; z-index:999;
+gap:12px;
 }
 .nav-left {
 display:flex; flex-direction:row; align-items:center;
-padding:4px 6px; gap:6px;
-background:rgba(95,158,136,0.5);
-backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
-border-radius:40px; height:52px;
+padding:6px 8px; gap:4px;
+background:rgba(95,158,136,0.55);
+backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+border-radius:50px; height:64px;
+flex:1;
+box-shadow: 0 8px 32px rgba(95,158,136,0.25);
 }
 .nav-item {
 display:flex; align-items:center; justify-content:center;
-width:48px; height:44px; border-radius:22px; cursor:pointer;
+flex:1; height:52px; border-radius:26px; cursor:pointer;
 transition:background 0.2s;
 }
-.nav-item i { font-size:24px; color:#ffffff; }
-.nav-item.active { background:rgba(95,158,136,0.72); }
+.nav-item i { font-size:28px; color:#ffffff; }
+.nav-item.active { background:rgba(255,255,255,0.22); }
 .nav-fab {
-width:52px; height:52px; border-radius:50%;
-background:rgba(95,158,136,0.5);
-backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
+width:64px; height:64px; border-radius:50%;
+background:rgba(95,158,136,0.55);
+backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
 display:flex; align-items:center; justify-content:center;
 cursor:pointer; flex-shrink:0; position:relative; overflow:hidden;
+box-shadow: 0 8px 32px rgba(95,158,136,0.25);
 }
 .nav-fab::before {
 content:’’; position:absolute;
-width:27px; height:26px; bottom:0; right:0;
-background:rgba(63,94,83,0.5); border-radius:3px 0 0 0;
+width:30px; height:28px; bottom:0; right:0;
+background:rgba(63,94,83,0.45); border-radius:4px 0 0 0;
 }
-.nav-fab i { font-size:24px; color:#ffffff; position:relative; z-index:1; }
+.nav-fab i { font-size:28px; color:#ffffff; position:relative; z-index:1; }
 
 /* HOME */
-.home-pad { padding:17px 0 0; display:flex; flex-direction:column; gap:20px; }
+.home-pad { padding:17px 0 0; display:flex; flex-direction:column; gap:0; }
 
-/* TIMELINE */
-.timeline-wrap::before {
-  content:''; position:absolute; left:15px; top:0; bottom:0; width:1px; background:#C8A2C9;
-  transform-origin:top; z-index:0;
+/* ─── TIMELINE LINE ─── */
+#home-timeline {
+position: relative;
 }
-.timeline-wrap.animating::before { animation:drawLine 1.5s cubic-bezier(0.4,0,0.2,1) forwards; }
-@keyframes drawLine { from{transform:scaleY(0)} to{transform:scaleY(1)} }
 
-.week-section { position:relative; opacity:0; transform:translateY(16px); transition:opacity 0.45s ease, transform 0.45s ease; }
-.week-section.visible { opacity:1; transform:translateY(0); }
+/* Fixed line — lives outside #app, positioned via JS */
+#timeline-fixed-line {
+position: fixed;
+top: 0;
+width: 1px;
+height: 100vh;
+background: var(–lilac);
+z-index: 998;
+pointer-events: none;
+transform-origin: top;
+transform: scaleY(0);
+}
+#timeline-fixed-line.animate {
+animation: lineGrow 1.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes lineGrow {
+from { transform: scaleY(0); }
+to   { transform: scaleY(1); }
+}
 
+/* Week sections — start invisible, fade in with stagger */
+.week-section {
+position: relative;
+opacity: 0;
+transition: opacity 0.6s ease;
+}
+.week-section.visible {
+opacity: 1;
+}
+
+/* Sticky week header row */
 .week-sticky {
-position:sticky; top:0; z-index:10; background:var(–bg);
-padding:14px 10px 10px 20px; display:flex; flex-direction:row; align-items:center; gap:7px;
-}
-.week-section[data-week].current-week .dot-wrap {
-  animation: heartbeat 2.4s ease-in-out infinite;
-}
-@keyframes innerGlow {
-  0%,100% { transform:scale(1); box-shadow:0 0 0 0 rgba(200,162,201,0.5); }
-  50%      { transform:scale(1.2); box-shadow:0 0 0 5px rgba(200,162,201,0); }
+position: sticky; top: 0; z-index: 10;
+background: var(–bg);
+padding: 12px 10px 10px 8px;
+display: flex; flex-direction: row; align-items: center; gap: 10px;
 }
 
-.week-sticky .dot-inner { width:10px; height:10px; background:#C8A2C9; border-radius:50%; box-shadow:0px 4px 4px -4px rgba(12,12,13,0.05); }
+/* Dot — Figma: 20x20, green-tinted glass bg, centered on line */
+.dot-wrap {
+width: 20px; height: 20px;
+display: flex; align-items: center; justify-content: center;
+flex-shrink: 0;
+position: relative; z-index: 2;
+background: rgba(95, 158, 136, 0.12);
+backdrop-filter: blur(2px);
+-webkit-backdrop-filter: blur(2px);
+border-radius: 40px;
+}
+.dot-inner {
+width: 8px; height: 8px;
+background: var(–lilac);
+border-radius: 50%;
+}
+
+/* Current week — purple dot with pulse */
+.week-section.current-week .dot-inner {
+background: var(–lilac-deep);
+animation: dotPulse 2s ease-in-out infinite;
+}
+@keyframes dotPulse {
+0%,100% { box-shadow: 0 0 0 0 rgba(131,77,132,0.4); }
+50%      { box-shadow: 0 0 0 5px rgba(131,77,132,0); }
+}
+
 .week-sticky .week-block { display:flex; flex-direction:row; align-items:flex-start; gap:10px; }
 .week-sticky .week-num { font-size:36px; font-weight:700; letter-spacing:-0.5px; line-height:1; color:var(–lilac-deep); }
 .week-sticky .week-label-col { display:flex; flex-direction:column; gap:2px; padding-top:2px; }
 .week-sticky .week-lbl { font-size:18px; font-weight:700; letter-spacing:-0.5px; color:var(–lilac-deep); line-height:100%; }
 .week-sticky .week-date-lbl { font-size:14px; font-weight:700; letter-spacing:-0.5px; color:#5F9E88; line-height:100%; }
 
-/* Inner glow pulse — 현재 주차만 */
-.week-section.current-week .dot-inner {
-animation: innerGlow 2s ease-in-out infinite;
-}
-@keyframes innerGlow {
-0%,100% { transform:scale(1); box-shadow:0 0 0 0 rgba(200,162,201,0.5); }
-50%      { transform:scale(1.2); box-shadow:0 0 0 5px rgba(200,162,201,0); }
-}
-
-.week-fact { padding:0 10px 12px 20px; }
+.week-fact { padding:0 10px 12px 46px; }
 .fact-bar { background:#C8A2C9; border-radius:10px; padding:15px 20px; display:flex; align-items:center; gap:5px; }
 .fact-icon { width:30px; height:30px; background:#B581B6; border-radius:50px; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
 .fact-main { font-size:14px; font-weight:700; color:var(–text-mid); }
 .fact-sub { font-size:14px; font-weight:400; color:#fff; margin-left:auto; }
 
-.appt-scroll-row { display:flex; flex-direction:row; gap:10px; padding:10px 20px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.appt-scroll-row { display:flex; flex-direction:row; gap:10px; padding:10px 20px 10px 46px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
 .appt-scroll-row::-webkit-scrollbar { display:none; }
 .appt-card {
 flex-shrink:0; width:227px; height:132px;
@@ -140,7 +181,7 @@ display:flex; flex-direction:column; justify-content:center; align-items:center;
 .appt-place { font-size:13px; font-weight:500; color:#5C4D5E; }
 
 /* FEED */
-.feed-section { padding:0 12px 20px 20px; display:flex; flex-direction:column; gap:10px; }
+.feed-section { padding:0 12px 20px 46px; display:flex; flex-direction:column; gap:10px; }
 .feed-item {
 background:#ffffff;
 box-shadow:0px 8px 22px rgba(30,21,32,0.06);
@@ -167,16 +208,14 @@ margin:0 12px 6px;
 
 /* ─── COMMENTS ─── */
 .cmt-section { border-top:1px solid rgba(200,162,201,0.4); margin-top:8px; }
-/* .cmt-toggle 안에 i 스타일 추가 */
 .cmt-toggle i { font-size:27px; }
-
 .cmt-toggle {
 display:flex; align-items:center; gap:6px; padding:8px 12px;
 font-size:11px; font-weight:600; color:var(–text-soft); cursor:pointer;
 user-select:none;
 }
 .cmt-toggle:hover { color:var(–lilac-deep); }
-.cmt-toggle .cmt-count { background:rgba(200,162,201,0.2); border-radius:20px; width:40px; height:25px; display:inline-flex; align-items:center; justify-content:center; font-size:12px; font-weight:400; font-family:'Outfit',sans-serif; color:#000000; }
+.cmt-toggle .cmt-count { background:rgba(200,162,201,0.2); border-radius:20px; width:40px; height:25px; display:inline-flex; align-items:center; justify-content:center; font-size:12px; font-weight:400; font-family:‘Outfit’,sans-serif; color:#000000; }
 .cmt-list { padding:0 12px 4px; display:flex; flex-direction:column; gap:6px; }
 .cmt-row { display:flex; gap:7px; align-items:flex-start; }
 .cmt-av { width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0; }
@@ -190,24 +229,14 @@ user-select:none;
 .cmt-name.partner-name { color:var(–green); }
 .cmt-text { font-size:12px; color:var(–text-mid); line-height:1.45; }
 .cmt-time { font-size:9px; color:var(–text-soft); margin-top:2px; }
-
-/* Comment input */
-.cmt-input-area {
-display:flex; align-items:center; gap:8px; padding:8px 12px 12px;
-border-top:1px solid rgba(200,162,201,0.12);
-}
+.cmt-input-area { display:flex; align-items:center; gap:8px; padding:8px 12px 12px; border-top:1px solid rgba(200,162,201,0.12); }
 .cmt-av-input { width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#C8A2C9,#834D84); display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; }
 .cmt-input-wrap { flex:1; display:flex; align-items:center; gap:6px; background:rgba(240,230,241,0.5); border:1px solid rgba(200,162,201,0.3); border-radius:20px; padding:6px 10px; }
 .cmt-input { flex:1; background:none; border:none; outline:none; font-size:12px; color:var(–text); font-family:‘Outfit’,sans-serif; }
 .cmt-input::placeholder { color:var(–text-soft); }
-.cmt-send-btn {
-width:28px; height:28px; border-radius:50%; background:var(–lilac-deep); border:none;
-display:flex; align-items:center; justify-content:center; cursor:pointer;
-flex-shrink:0; transition:transform 0.15s, background 0.15s;
-}
+.cmt-send-btn { width:28px; height:28px; border-radius:50%; background:var(–lilac-deep); border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; transition:transform 0.15s, background 0.15s; }
 .cmt-send-btn:hover { background:#5A2E5B; transform:scale(1.05); }
 .cmt-send-btn i { font-size:13px; color:white; }
-.cmt-loading { padding:8px 12px; font-size:11px; color:var(–text-soft); }
 
 /* NEW ENTRY */
 .screen-hdr { padding:16px 18px 12px; display:flex; align-items:center; gap:11px; background:#fff; border-bottom:1px solid rgba(200,162,201,0.2); }
@@ -249,10 +278,7 @@ flex-shrink:0; transition:transform 0.15s, background 0.15s;
 .chip-warn { background:#FFF3E0; color:#C35A00; border-radius:8px; padding:4px 10px; font-size:11px; font-weight:600; }
 
 /* ─── PARTNER SCREEN ─── */
-.partner-hero {
-background:linear-gradient(155deg,#1A2F28 0%,#2A4A3C 50%,#3A6B5A 100%);
-padding:48px 22px 26px; position:relative; overflow:hidden;
-}
+.partner-hero { background:linear-gradient(155deg,#1A2F28 0%,#2A4A3C 50%,#3A6B5A 100%); padding:48px 22px 26px; position:relative; overflow:hidden; }
 .partner-hero::before { content:’’; position:absolute; width:160px; height:160px; background:radial-gradient(circle,rgba(95,158,136,0.25) 0%,transparent 70%); top:-40px; right:-30px; border-radius:50%; }
 .partner-avatars { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
 .p-av { width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; border:2px solid rgba(255,255,255,0.2); }
@@ -260,43 +286,26 @@ padding:48px 22px 26px; position:relative; overflow:hidden;
 .p-av.partner { background:linear-gradient(135deg,#5F9E88,#3A7A65); }
 .p-connector { width:24px; height:2px; background:rgba(255,255,255,0.2); position:relative; }
 .p-connector::after { content:‘💜’; position:absolute; top:-10px; left:50%; transform:translateX(-50%); font-size:14px; }
-.partner-status-bar {
-background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14);
-border-radius:15px; padding:11px 14px; display:flex; align-items:center; gap:11px;
-}
+.partner-status-bar { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); border-radius:15px; padding:11px 14px; display:flex; align-items:center; gap:11px; }
 .p-status-dot { width:8px; height:8px; border-radius:50%; background:#5F9E88; flex-shrink:0; animation:pulse 2s infinite; }
 @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.2)} }
 .p-status-txt { font-size:12px; color:rgba(255,255,255,0.8); }
 .p-status-txt strong { color:white; font-weight:600; }
-
-/* ─── PARTNER CONNECT CARD ─── */
-.connect-card {
-margin:16px; background:#fff; border-radius:20px;
-box-shadow:0 8px 24px rgba(0,0,0,0.08); overflow:hidden;
-}
+.connect-card { margin:16px; background:#fff; border-radius:20px; box-shadow:0 8px 24px rgba(0,0,0,0.08); overflow:hidden; }
 .connect-card-hdr { background:linear-gradient(135deg,rgba(200,162,201,0.15),rgba(95,158,136,0.1)); padding:16px 18px 12px; border-bottom:1px solid rgba(200,162,201,0.15); }
 .connect-card-title { font-size:15px; font-weight:700; color:var(–text); margin-bottom:3px; }
 .connect-card-sub { font-size:11px; color:var(–text-soft); }
 .connect-card-body { padding:16px 18px; }
-.invite-code-box {
-background:linear-gradient(135deg,rgba(131,77,132,0.06),rgba(95,158,136,0.06));
-border:1px dashed rgba(200,162,201,0.5); border-radius:14px;
-padding:14px 16px; display:flex; align-items:center; justify-content:space-between;
-margin-bottom:12px; cursor:pointer; transition:all 0.2s;
-}
+.invite-code-box { background:linear-gradient(135deg,rgba(131,77,132,0.06),rgba(95,158,136,0.06)); border:1px dashed rgba(200,162,201,0.5); border-radius:14px; padding:14px 16px; display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; cursor:pointer; transition:all 0.2s; }
 .invite-code-box:hover { border-color:var(–lilac); background:rgba(200,162,201,0.1); }
 .invite-code-text { font-size:12px; color:var(–lilac-deep); font-weight:600; word-break:break-all; flex:1; }
 .invite-copy-btn { width:32px; height:32px; border-radius:10px; background:var(–lilac-deep); display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-left:10px; }
 .invite-copy-btn i { font-size:14px; color:white; }
-
-/* ─── PARTNER FEED (connected view) ─── */
 .partner-feed-section { padding:16px; }
 .pf-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
 .pf-title { font-size:15px; font-weight:700; color:var(–text); }
 .pf-badge { background:rgba(95,158,136,0.15); border:1px solid rgba(95,158,136,0.3); border-radius:20px; padding:3px 10px; font-size:10px; font-weight:700; color:var(–green); }
 .pf-empty { text-align:center; padding:40px 20px; color:var(–text-soft); font-size:13px; }
-
-/* ─── SHARED FEED ENTRY ─── */
 .feed-item.partner-entry { border-left:3px solid var(–green); }
 .feed-item.mine-entry { border-left:3px solid var(–lilac); }
 
@@ -349,7 +358,7 @@ margin-bottom:12px; cursor:pointer; transition:all 0.2s;
 
 <div class="screen" id="s-home">
   <div class="home-pad">
-    <div class="timeline-wrap" id="home-timeline"></div>
+    <div id="home-timeline"></div>
   </div>
 </div>
 
@@ -432,11 +441,8 @@ margin-bottom:12px; cursor:pointer; transition:all 0.2s;
 <!-- PARTNER -->
 
 <div class="screen" id="s-partner">
-  <!-- Hero: dynamic -->
   <div id="partner-hero-area"></div>
-  <!-- Connect card (shown when no partner yet) -->
   <div id="partner-connect-area"></div>
-  <!-- Partner feed -->
   <div id="partner-feed-area"></div>
 </div>
 
@@ -657,43 +663,32 @@ async function checkAuth() {
   const res = await _supabase.auth.getSession();
   const session = res.data && res.data.session;
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  if (inviteCode && !session) {
-    localStorage.setItem('pendingInvite', inviteCode);
-  }
+  if (inviteCode && !session) localStorage.setItem('pendingInvite', inviteCode);
   if (session) {
     currentUserId = session.user.id;
     await loadCurrentProfile();
-    if (inviteCode) {
-      await acceptInvite(inviteCode);
-      localStorage.removeItem('pendingInvite');
-    }
+    if (inviteCode) { await acceptInvite(inviteCode); localStorage.removeItem('pendingInvite'); }
     const pending = localStorage.getItem('pendingInvite');
     if (pending) { localStorage.removeItem('pendingInvite'); await acceptInvite(pending); }
     const needsSetup = !currentUserProfile || !currentUserProfile.current_week;
-    if (needsSetup) {
-      document.getElementById('s-setup').classList.add('active');
-      hist = ['s-setup'];
-    } else {
-      showHome();
-    }
+    if (needsSetup) { document.getElementById('s-setup').classList.add('active'); hist = ['s-setup']; }
+    else showHome();
   } else {
     document.getElementById('s-login').classList.add('active');
     hist = ['s-login'];
   }
 }
 
-// ─── PARTNER INVITE / ACCEPT ─────────────────────────────
+// ─── PARTNER ─────────────────────────────────────────────
 async function acceptInvite(inviteCode) {
   const pres = await _supabase.from('profiles').select('*').eq('invite_code', inviteCode).single();
   if (!pres.data || pres.data.id === currentUserId) return;
-  // Link both ways
   await _supabase.from('follows').upsert([
     { follower_id: currentUserId, following_id: pres.data.id },
     { follower_id: pres.data.id, following_id: currentUserId }
   ]);
   alert('💜 파트너와 연결됐어요! ' + (pres.data.display_name || '파트너'));
 }
-
 async function getOrCreateInviteCode() {
   await loadCurrentProfile();
   if (currentUserProfile && currentUserProfile.invite_code) return currentUserProfile.invite_code;
@@ -702,7 +697,6 @@ async function getOrCreateInviteCode() {
   await loadCurrentProfile();
   return code;
 }
-
 async function copyInviteLink() {
   const code = await getOrCreateInviteCode();
   const url = window.location.origin + window.location.pathname + '?invite=' + code;
@@ -711,131 +705,36 @@ async function copyInviteLink() {
   if (el) el.textContent = url;
   alert('링크 복사됐어! 📋\n파트너에게 보내줘요');
 }
-
-// ─── PARTNER SCREEN ──────────────────────────────────────
 async function loadPartnerScreen() {
   if (!currentUserId) return;
-
-  // Get connected partner
-  const fres = await _supabase.from('follows')
-    .select('following_id').eq('follower_id', currentUserId).limit(1).single();
-
+  const fres = await _supabase.from('follows').select('following_id').eq('follower_id', currentUserId).limit(1).single();
   const heroArea = document.getElementById('partner-hero-area');
   const connectArea = document.getElementById('partner-connect-area');
   const feedArea = document.getElementById('partner-feed-area');
-
   const code = await getOrCreateInviteCode();
   const inviteUrl = window.location.origin + window.location.pathname + '?invite=' + code;
-
   if (!fres.data) {
-    // No partner yet
-    heroArea.innerHTML = `
-      <div class="partner-hero">
-        <div class="partner-avatars">
-          <div class="p-av mom">🌸</div>
-          <div class="p-connector"></div>
-          <div class="p-av partner" style="opacity:0.4;border-style:dashed;">?</div>
-        </div>
-        <div style="font-size:22px;font-weight:700;color:#fff;margin-bottom:4px;">파트너를 초대해요</div>
-        <div style="font-size:13px;color:rgba(255,255,255,0.6);">링크를 보내면 공동 기록을 시작할 수 있어요</div>
-      </div>`;
-    connectArea.innerHTML = `
-      <div class="connect-card">
-        <div class="connect-card-hdr">
-          <div class="connect-card-title">💜 파트너 초대 링크</div>
-          <div class="connect-card-sub">파트너가 링크를 열면 자동으로 연결돼요</div>
-        </div>
-        <div class="connect-card-body">
-          <div class="invite-code-box" onclick="copyInviteLink()">
-            <div class="invite-code-text" id="invite-link-text">${inviteUrl}</div>
-            <div class="invite-copy-btn"><i class="ph ph-copy"></i></div>
-          </div>
-          <button class="save-btn" onclick="copyInviteLink()">링크 복사 & 공유 📋</button>
-        </div>
-      </div>
-      <div style="padding:16px;">
-        <div class="info-block">
-          <div class="block-title">파트너와 함께하면</div>
-          <div class="info-row"><div class="i-lbl">📷</div><div class="i-val" style="font-size:12px;">초음파 사진 실시간 공유</div></div>
-          <div class="info-row"><div class="i-lbl">💬</div><div class="i-val" style="font-size:12px;">기록마다 댓글 남기기</div></div>
-          <div class="info-row"><div class="i-lbl">📅</div><div class="i-val" style="font-size:12px;">진료 일정 함께 보기</div></div>
-          <div class="info-row" style="border:none;"><div class="i-lbl">🏥</div><div class="i-val" style="font-size:12px;">응급 정보 접근</div></div>
-        </div>
-      </div>`;
+    heroArea.innerHTML = `<div class="partner-hero"><div class="partner-avatars"><div class="p-av mom">🌸</div><div class="p-connector"></div><div class="p-av partner" style="opacity:0.4;border-style:dashed;">?</div></div><div style="font-size:22px;font-weight:700;color:#fff;margin-bottom:4px;">파트너를 초대해요</div><div style="font-size:13px;color:rgba(255,255,255,0.6);">링크를 보내면 공동 기록을 시작할 수 있어요</div></div>`;
+    connectArea.innerHTML = `<div class="connect-card"><div class="connect-card-hdr"><div class="connect-card-title">💜 파트너 초대 링크</div><div class="connect-card-sub">파트너가 링크를 열면 자동으로 연결돼요</div></div><div class="connect-card-body"><div class="invite-code-box" onclick="copyInviteLink()"><div class="invite-code-text" id="invite-link-text">${inviteUrl}</div><div class="invite-copy-btn"><i class="ph ph-copy"></i></div></div><button class="save-btn" onclick="copyInviteLink()">링크 복사 & 공유 📋</button></div></div>`;
     feedArea.innerHTML = '';
     return;
   }
-
-  // Has partner — load their profile
   const partnerId = fres.data.following_id;
   const ppRes = await _supabase.from('profiles').select('*').eq('id', partnerId).single();
   const partnerProfile = ppRes.data || {};
   const partnerName = partnerProfile.display_name || '파트너';
   const myName = (currentUserProfile && currentUserProfile.display_name) || '나';
-
-  heroArea.innerHTML = `
-    <div class="partner-hero">
-      <div class="partner-avatars">
-        <div class="p-av mom">🌸</div>
-        <div class="p-connector"></div>
-        <div class="p-av partner">💙</div>
-      </div>
-      <div style="font-size:22px;font-weight:700;color:#fff;margin-bottom:4px;">${myName} & ${partnerName}</div>
-      <div style="font-size:13px;color:rgba(255,255,255,0.6);">임신 ${currentUserProfile?.current_week || '?'}주차</div>
-      <div style="margin-top:14px;">
-        <div class="partner-status-bar">
-          <div class="p-status-dot"></div>
-          <div class="p-status-txt"><strong>${partnerName}</strong>님과 연결됐어요 💜</div>
-        </div>
-      </div>
-    </div>`;
-
-  connectArea.innerHTML = `
-    <div style="padding:12px 16px 0;">
-      <div class="connect-card">
-        <div class="connect-card-hdr">
-          <div class="connect-card-title">초대 링크 (재공유용)</div>
-          <div class="connect-card-sub">다른 기기에서 다시 연결할 때 써요</div>
-        </div>
-        <div class="connect-card-body" style="padding:10px 18px 14px;">
-          <div class="invite-code-box" onclick="copyInviteLink()" style="margin-bottom:0;">
-            <div class="invite-code-text" id="invite-link-text" style="font-size:10px;">${inviteUrl}</div>
-            <div class="invite-copy-btn"><i class="ph ph-copy"></i></div>
-          </div>
-        </div>
-      </div>
-    </div>`;
-
-  // Load shared entries (mine public + partner's public)
+  heroArea.innerHTML = `<div class="partner-hero"><div class="partner-avatars"><div class="p-av mom">🌸</div><div class="p-connector"></div><div class="p-av partner">💙</div></div><div style="font-size:22px;font-weight:700;color:#fff;margin-bottom:4px;">${myName} & ${partnerName}</div><div style="font-size:13px;color:rgba(255,255,255,0.6);">임신 ${currentUserProfile?.current_week || '?'}주차</div><div style="margin-top:14px;"><div class="partner-status-bar"><div class="p-status-dot"></div><div class="p-status-txt"><strong>${partnerName}</strong>님과 연결됐어요 💜</div></div></div></div>`;
   const [myRes, partnerRes] = await Promise.all([
     _supabase.from('entries').select('*').eq('user_id', currentUserId).eq('is_public', true).order('created_at', { ascending: false }).limit(20),
     _supabase.from('entries').select('*').eq('user_id', partnerId).eq('is_public', true).order('created_at', { ascending: false }).limit(20)
   ]);
-
-  const allEntries = [
-    ...(myRes.data || []).map(e => ({...e, _owner: 'mine'})),
-    ...(partnerRes.data || []).map(e => ({...e, _owner: 'partner'}))
-  ].sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
-
-  let feedHTML = `<div class="partner-feed-section">
-    <div class="pf-header">
-      <div class="pf-title">공유 기록 💜</div>
-      <div class="pf-badge">공개된 기록만 보여요</div>
-    </div>`;
-
-  if (allEntries.length === 0) {
-    feedHTML += `<div class="pf-empty">아직 공유된 기록이 없어요 🌱<br><span style="font-size:11px;">기록 저장 시 '파트너 공유'를 선택해봐요</span></div>`;
-  } else {
-    allEntries.forEach(entry => {
-      const isMine = entry._owner === 'mine';
-      const ownerName = isMine ? myName : partnerName;
-      feedHTML += buildFeedItemHTML(entry, ownerName, isMine);
-    });
-  }
+  const allEntries = [...(myRes.data||[]).map(e=>({...e,_owner:'mine'})), ...(partnerRes.data||[]).map(e=>({...e,_owner:'partner'}))].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+  let feedHTML = `<div class="partner-feed-section"><div class="pf-header"><div class="pf-title">공유 기록 💜</div><div class="pf-badge">공개된 기록만 보여요</div></div>`;
+  if (allEntries.length === 0) feedHTML += `<div class="pf-empty">아직 공유된 기록이 없어요 🌱</div>`;
+  else allEntries.forEach(e => { feedHTML += buildFeedItemHTML(e, e._owner==='mine'?myName:partnerName, e._owner==='mine'); });
   feedHTML += '</div>';
   feedArea.innerHTML = feedHTML;
-
-  // Load comments for all entries
   allEntries.forEach(e => loadComments(e.id));
 }
 
@@ -845,17 +744,13 @@ function buildFeedItemHTML(entry, ownerName, isMine) {
   const time = fmtTime(entry.created_at);
   const moodEmoji = entry.mood ? entry.mood.split(' ')[0] : '';
   const entryClass = isMine === true ? 'mine-entry' : isMine === false ? 'partner-entry' : '';
-
   return `<div class="feed-item ${entryClass}" id="entry-${entry.id}">
     ${hasPhoto ? `<img class="feed-photo" src="${entry.image_url}" alt="사진">` : ''}
-    ${ownerName ? `<div class="partner-badge">${isMine ? '🌸' : '💙'} ${ownerName}</div>` : ''}
+    ${ownerName ? `<div class="partner-badge">${isMine?'🌸':'💙'} ${ownerName}</div>` : ''}
     <div class="feed-body">
-      <div class="feed-row1">
-        <span class="feed-date">${entry.date || ''}</span>
-        <span class="feed-time">${time}</span>
-      </div>
-      <div class="feed-type">${entry.type || '일기'}</div>
-      <div class="feed-text">${entry.content || ''}</div>
+      <div class="feed-row1"><span class="feed-date">${entry.date||''}</span><span class="feed-time">${time}</span></div>
+      <div class="feed-type">${entry.type||'일기'}</div>
+      <div class="feed-text">${entry.content||''}</div>
       ${moodEmoji ? `<div class="feed-mood">${moodEmoji}</div>` : ''}
     </div>
     <div class="cmt-section">
@@ -867,11 +762,9 @@ function buildFeedItemHTML(entry, ownerName, isMine) {
       <div class="cmt-input-area" id="cmt-input-area-${entry.id}" style="display:none;">
         <div class="cmt-av-input">🌸</div>
         <div class="cmt-input-wrap">
-          <input class="cmt-input" id="cmt-input-${entry.id}" placeholder="댓글을 남겨요..." 
+          <input class="cmt-input" id="cmt-input-${entry.id}" placeholder="댓글을 남겨요..."
             onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendComment('${entry.id}');}">
-          <button class="cmt-send-btn" onclick="sendComment('${entry.id}')">
-            <i class="ph ph-paper-plane-tilt"></i>
-          </button>
+          <button class="cmt-send-btn" onclick="sendComment('${entry.id}')"><i class="ph ph-paper-plane-tilt"></i></button>
         </div>
       </div>
     </div>
@@ -889,106 +782,50 @@ function toggleComments(entryId) {
   if (inputArea) inputArea.style.display = isHidden ? 'flex' : 'none';
   if (isHidden) loadComments(entryId);
 }
-
 async function loadComments(entryId) {
   const countEl = document.getElementById('cmt-count-' + entryId);
   const listEl = document.getElementById('cmt-list-' + entryId);
   if (!listEl) return;
-
-  const res = await _supabase
-    .from('comments')
-    .select('*')
-    .eq('entry_id', entryId)
-    .order('created_at', { ascending: true });
-
-  if (res.error) { console.error('comments load error:', res.error); return; }
+  const res = await _supabase.from('comments').select('*').eq('entry_id', entryId).order('created_at', { ascending: true });
+  if (res.error) return;
   const comments = res.data || [];
-
   if (countEl) countEl.textContent = comments.length;
-
-  if (listEl.style.display === 'none') return; // don't render if collapsed
-
-  if (comments.length === 0) {
-    listEl.innerHTML = '<div style="font-size:11px;color:var(--text-soft);padding:4px 0 8px;">첫 댓글을 남겨봐요 💜</div>';
-    return;
-  }
-
+  if (listEl.style.display === 'none') return;
+  if (comments.length === 0) { listEl.innerHTML = ''; return; }
   listEl.innerHTML = comments.map(c => {
     const isMine = c.user_id === currentUserId;
-    const avClass = isMine ? 'mine' : 'partner';
-    const avEmoji = isMine ? '🌸' : '💙';
-    const bubbleClass = isMine ? 'mine' : 'partner';
-    const nameClass = isMine ? '' : 'partner-name';
-    return `<div class="cmt-row">
-      <div class="cmt-av ${avClass}">${avEmoji}</div>
-      <div class="cmt-bubble ${bubbleClass}">
-        <div class="cmt-name ${nameClass}">${c.display_name || '익명'}</div>
-        <div class="cmt-text">${c.content}</div>
-        <div class="cmt-time">${fmtRelTime(c.created_at)}</div>
-      </div>
-    </div>`;
+    return `<div class="cmt-row"><div class="cmt-av ${isMine?'mine':'partner'}">${isMine?'🌸':'💙'}</div><div class="cmt-bubble ${isMine?'mine':'partner'}"><div class="cmt-name ${isMine?'':'partner-name'}">${c.display_name||'익명'}</div><div class="cmt-text">${c.content}</div><div class="cmt-time">${fmtRelTime(c.created_at)}</div></div></div>`;
   }).join('');
 }
-
 async function sendComment(entryId) {
   const input = document.getElementById('cmt-input-' + entryId);
   const content = input ? input.value.trim() : '';
   if (!content) return;
-
   const ures = await _supabase.auth.getUser();
   const user = ures.data && ures.data.user;
   if (!user) { alert('로그인이 필요해요'); return; }
-
-  // Get display name
   let displayName = user.email;
-  if (currentUserProfile && currentUserProfile.display_name) {
-    displayName = currentUserProfile.display_name;
-  }
-
-  // Optimistic UI — show immediately
-  const listEl = document.getElementById('cmt-list-' + entryId);
-  const countEl = document.getElementById('cmt-count-' + entryId);
+  if (currentUserProfile && currentUserProfile.display_name) displayName = currentUserProfile.display_name;
   if (input) input.value = '';
-
-  const ins = await _supabase.from('comments').insert({
-    entry_id: entryId,
-    user_id: user.id,
-    display_name: displayName,
-    content: content
-  });
-
-  if (ins.error) {
-    console.error('comment insert error:', ins.error);
-    alert('댓글 저장 실패: ' + ins.error.message);
-    return;
-  }
-
-  // Reload to get the real data with timestamp
+  const ins = await _supabase.from('comments').insert({ entry_id: entryId, user_id: user.id, display_name: displayName, content });
+  if (ins.error) { alert('댓글 저장 실패: ' + ins.error.message); return; }
   await loadComments(entryId);
 }
 
 // ─── ENTRIES ─────────────────────────────────────────────
 const babyFacts = {
-  4:'씨앗 크기 🌱', 5:'참깨 크기', 6:'완두콩 크기', 7:'블루베리 크기',
-  8:'강낭콩 크기', 9:'포도 크기', 10:'딸기 크기', 11:'라임 크기',
-  12:'자두 크기', 13:'복숭아 크기', 14:'레몬 크기', 15:'오렌지 크기',
-  16:'아보카도 크기', 17:'배 크기', 18:'피망 크기', 19:'토마토 크기',
-  20:'바나나 크기', 21:'당근 크기', 22:'파파야 크기', 23:'망고 크기',
-  24:'옥수수 크기 🌽', 25:'순무 크기', 26:'양상추 크기', 27:'꽃양배추 크기',
-  28:'가지 크기', 29:'버터넛 스쿼시', 30:'양배추 크기', 31:'코코넛 크기',
-  32:'네타 멜론 크기', 33:'파인애플 크기', 34:'칸탈루프 크기', 35:'허니듀 크기',
-  36:'상추 크기', 37:'스위스 차드', 38:'미니 수박', 39:'수박 크기', 40:'호박 크기'
+  4:'씨앗 크기 🌱',5:'참깨 크기',6:'완두콩 크기',7:'블루베리 크기',8:'강낭콩 크기',9:'포도 크기',10:'딸기 크기',11:'라임 크기',
+  12:'자두 크기',13:'복숭아 크기',14:'레몬 크기',15:'오렌지 크기',16:'아보카도 크기',17:'배 크기',18:'피망 크기',19:'토마토 크기',
+  20:'바나나 크기',21:'당근 크기',22:'파파야 크기',23:'망고 크기',24:'옥수수 크기 🌽',25:'순무 크기',26:'양상추 크기',27:'꽃양배추 크기',
+  28:'가지 크기',29:'버터넛 스쿼시',30:'양배추 크기',31:'코코넛 크기',32:'네타 멜론 크기',33:'파인애플 크기',34:'칸탈루프 크기',35:'허니듀 크기',
+  36:'상추 크기',37:'스위스 차드',38:'미니 수박',39:'수박 크기',40:'호박 크기'
 };
 const babyDev = {
-  4:'심장 형성 중', 5:'뇌 발달 시작', 6:'팔다리 싹 발생', 7:'손가락 형성',
-  8:'모든 주요 장기 형성', 9:'근육 발달', 10:'손톱 자라기 시작', 11:'생식기 발달',
-  12:'반사 신경 발달', 13:'지문 형성 중', 14:'얼굴 근육 발달', 15:'청각 발달 시작',
-  16:'눈이 빛 감지', 17:'땀샘 발달', 18:'하품하고 기지개', 19:'신장 기능 시작',
-  20:'태동 느낄 수 있어요', 21:'눈썹 자라기 시작', 22:'입술 발달', 23:'폐 발달 중',
-  24:'청각이 발달 중이에요', 25:'손바닥 잡기 반사', 26:'눈 뜨기 시작', 27:'뇌 급속 성장',
-  28:'REM 수면 시작', 29:'뼈 굳어지기 시작', 30:'골수 적혈구 생성', 31:'모든 감각 활성화',
-  32:'피부 윤곽 잡히기 시작', 33:'뼈 완전히 발달', 34:'중추신경계 성숙', 35:'신장 완전 발달',
-  36:'지방 축적 중', 37:'면역 체계 강화', 38:'출산 준비 완료', 39:'폐 완전히 성숙', 40:'출산 대기 중'
+  4:'심장 형성 중',5:'뇌 발달 시작',6:'팔다리 싹 발생',7:'손가락 형성',8:'모든 주요 장기 형성',9:'근육 발달',10:'손톱 자라기 시작',11:'생식기 발달',
+  12:'반사 신경 발달',13:'지문 형성 중',14:'얼굴 근육 발달',15:'청각 발달 시작',16:'눈이 빛 감지',17:'땀샘 발달',18:'하품하고 기지개',19:'신장 기능 시작',
+  20:'태동 느낄 수 있어요',21:'눈썹 자라기 시작',22:'입술 발달',23:'폐 발달 중',24:'청각이 발달 중이에요',25:'손바닥 잡기 반사',26:'눈 뜨기 시작',27:'뇌 급속 성장',
+  28:'REM 수면 시작',29:'뼈 굳어지기 시작',30:'골수 적혈구 생성',31:'모든 감각 활성화',32:'피부 윤곽 잡히기 시작',33:'뼈 완전히 발달',34:'중추신경계 성숙',35:'신장 완전 발달',
+  36:'지방 축적 중',37:'면역 체계 강화',38:'출산 준비 완료',39:'폐 완전히 성숙',40:'출산 대기 중'
 };
 
 function buildWeekSectionHTML(week, entries, isCurrent) {
@@ -997,16 +834,16 @@ function buildWeekSectionHTML(week, entries, isCurrent) {
   const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const now = new Date();
-  const dateStr = days[now.getDay()] + '.' + now.getDate() + '.' + months[now.getMonth()] + '.' + now.getFullYear();
+  const dateStr = days[now.getDay()]+'.'+now.getDate()+'.'+months[now.getMonth()]+'.'+now.getFullYear();
 
-let html = `<div class="week-section ${isCurrent ? 'current-week' : ''}" data-week="${week}">
+  let html = `<div class="week-section${isCurrent?' current-week':''}" data-week="${week}">
     <div class="week-sticky">
       <div class="dot-wrap"><div class="dot-inner"></div></div>
       <div class="week-block">
         <span class="week-num">${week}</span>
         <div class="week-label-col">
           <span class="week-lbl">week</span>
-          ${isCurrent ? `<span class="week-date-lbl">${dateStr}</span>` : ''}
+          ${isCurrent?`<span class="week-date-lbl">${dateStr}</span>`:''}
         </div>
       </div>
     </div>`;
@@ -1018,7 +855,6 @@ let html = `<div class="week-section ${isCurrent ? 'current-week' : ''}" data-we
       <span class="fact-sub">${dev}</span>
     </div></div>`;
   }
-
   if (isCurrent) {
     html += `<div class="appt-scroll-row">
       <div class="appt-card">
@@ -1027,14 +863,12 @@ let html = `<div class="week-section ${isCurrent ? 'current-week' : ''}" data-we
       </div>
     </div>`;
   }
-
   if (entries.length > 0) {
     const myName = (currentUserProfile && currentUserProfile.display_name) || '나';
     html += `<div class="feed-section">`;
     entries.forEach(e => { html += buildFeedItemHTML(e, myName, true); });
     html += `</div>`;
   }
-
   html += '</div>';
   return html;
 }
@@ -1042,16 +876,10 @@ let html = `<div class="week-section ${isCurrent ? 'current-week' : ''}" data-we
 async function loadEntries() {
   const timeline = document.getElementById('home-timeline');
   if (!timeline) return;
-
   await loadCurrentProfile();
-
-  const res = await _supabase.from('entries').select('*')
-    .eq('user_id', currentUserId || '')
-    .order('created_at', { ascending: false });
-
+  const res = await _supabase.from('entries').select('*').eq('user_id', currentUserId || '').order('created_at', { ascending: false });
   if (res.error) { console.error(res.error); return; }
   const data = res.data || [];
-
   let currentWeek = 24;
   let maxWeek = 40;
   if (currentUserProfile) {
@@ -1062,37 +890,53 @@ async function loadEntries() {
       maxWeek = Math.min(42, currentWeek + Math.round(diffDays/7));
     }
   }
-
   const groups = {};
-  data.forEach(e => {
-    const wk = e.week || 0;
-    if (!groups[wk]) groups[wk] = [];
-    groups[wk].push(e);
-  });
-
-  timeline.innerHTML = '';
+  data.forEach(e => { const wk = e.week || 0; if (!groups[wk]) groups[wk] = []; groups[wk].push(e); });
+  let timelineHTML = '';
   for (let i = 4; i <= Math.max(maxWeek, currentWeek); i++) {
     const wEntries = groups[i] || [];
-    const wDiv = document.createElement('div');
-    wDiv.innerHTML = buildWeekSectionHTML(i, wEntries, i === currentWeek);
-    timeline.appendChild(wDiv);
-    wEntries.forEach(e => loadComments(e.id));
+    timelineHTML += buildWeekSectionHTML(i, wEntries, i === currentWeek);
   }
-
+  // Real DOM line element — reliable across all scroll contexts
+  timeline.innerHTML = timelineHTML;
+  data.forEach(e => loadComments(e.id));
   const screen = document.getElementById('s-home');
   if (screen) {
     setTimeout(() => {
-      const wrap = document.getElementById('home-timeline');
-      if (wrap) wrap.classList.add('animating');
-      document.querySelectorAll('.week-section').forEach((s, idx) => {
-        setTimeout(() => s.classList.add('visible'), idx * 40);
-      });
-      const target = document.querySelector(`[data-week="${currentWeek}"]`);
-      if (target) {
-        const top = target.getBoundingClientRect().top - screen.getBoundingClientRect().top + screen.scrollTop;
-        screen.scrollTo({ top: top - 10, behavior: 'smooth' });
+      const sections = Array.from(document.querySelectorAll('.week-section'));
+
+      // Step 1 — create/position fixed line based on dot position
+      let fixedLine = document.getElementById('timeline-fixed-line');
+      if (!fixedLine) {
+        fixedLine = document.createElement('div');
+        fixedLine.id = 'timeline-fixed-line';
+        document.body.appendChild(fixedLine);
       }
-    }, 300);
+      // Find dot position from the first week-section dot
+      const firstDot = document.querySelector('.dot-wrap');
+      if (firstDot) {
+        const rect = firstDot.getBoundingClientRect();
+        const dotCenterX = rect.left + rect.width / 2;
+        fixedLine.style.left = dotCenterX + 'px';
+      }
+      requestAnimationFrame(() => fixedLine.classList.add('animate'));
+
+      // Step 2 — sections fade in with stagger (gentle, 80ms apart)
+      sections.forEach((s, idx) => {
+        setTimeout(() => s.classList.add('visible'), 100 + idx * 80);
+      });
+
+      // Step 3 — after sections are visible, smooth scroll to current week
+      const totalFade = 100 + sections.length * 80 + 200;
+      setTimeout(() => {
+        const target = document.querySelector(`[data-week="${currentWeek}"]`);
+        if (target) {
+          const top = target.getBoundingClientRect().top - screen.getBoundingClientRect().top + screen.scrollTop;
+          screen.scrollTo({ top: top - 20, behavior: 'smooth' });
+        }
+      }, Math.min(totalFade, 1200));
+
+    }, 200);
   }
 }
 
@@ -1105,7 +949,6 @@ async function uploadPhoto() {
   const pub = _supabase.storage.from('photos').getPublicUrl(fileName);
   return pub.data && pub.data.publicUrl ? pub.data.publicUrl : null;
 }
-
 async function saveEntry() {
   const content = document.getElementById('entry-content').value;
   const dateVal = document.getElementById('entry-date-input').value || new Date().toISOString().split('T')[0];
@@ -1114,25 +957,15 @@ async function saveEntry() {
   const typeEl = document.querySelector('#s-new .type-tab.on');
   const type = typeEl ? typeEl.textContent.trim() : '일기';
   const isPublic = document.getElementById('privacy-public')?.classList.contains('on') || false;
-
   if (!currentUserId) { alert('로그인이 필요해요'); return; }
-
   let currentWeek = 13;
   if (currentUserProfile && currentUserProfile.current_week) currentWeek = parseInt(currentUserProfile.current_week);
   const diffDays = Math.round((new Date(dateVal) - new Date()) / (1000*60*60*24));
   let week = currentWeek + Math.round(diffDays/7);
-  if (week < 1) week = 1;
-  if (week > 42) week = 42;
-
+  if (week < 1) week = 1; if (week > 42) week = 42;
   const image_url = selectedFile ? await uploadPhoto() : null;
-
-  const ins = await _supabase.from('entries').insert({
-    type, content, week, mood, date: dateVal, image_url,
-    user_id: currentUserId, is_public: isPublic
-  });
-
+  const ins = await _supabase.from('entries').insert({ type, content, week, mood, date: dateVal, image_url, user_id: currentUserId, is_public: isPublic });
   if (ins.error) { alert('저장 실패: ' + ins.error.message); return; }
-
   selectedFile = null;
   const preview = document.getElementById('photo-preview');
   if (preview) { preview.src = ''; preview.style.display = 'none'; }
@@ -1142,7 +975,6 @@ async function saveEntry() {
   alert('저장됐어! 🌸');
   goBack();
 }
-
 async function calcEntryWeek() {
   const dateVal = document.getElementById('entry-date-input').value;
   const hint = document.getElementById('entry-week-hint');
@@ -1159,77 +991,53 @@ async function calcEntryWeek() {
 let setupMode = 'week';
 function selectSetupOpt(mode) {
   setupMode = mode;
-  ['week','lmp','edd'].forEach(id => {
-    const el = document.getElementById('opt-' + id);
-    if (el) { el.style.borderColor = 'rgba(200,162,201,0.4)'; el.style.background = '#fff'; }
-  });
-  const sel = document.getElementById('opt-' + mode);
-  if (sel) { sel.style.borderColor = '#834D84'; sel.style.background = 'rgba(131,77,132,0.06)'; }
+  ['week','lmp','edd'].forEach(id => { const el = document.getElementById('opt-'+id); if(el){el.style.borderColor='rgba(200,162,201,0.4)';el.style.background='#fff';} });
+  const sel = document.getElementById('opt-'+mode);
+  if (sel) { sel.style.borderColor='#834D84'; sel.style.background='rgba(131,77,132,0.06)'; }
   const q = document.getElementById('setup-step2-q');
   const hint = document.getElementById('setup-step2-hint');
   const weekRow = document.getElementById('setup-week-row');
   const dateRow = document.getElementById('setup-date-row');
-  if (mode === 'week') {
-    q.textContent = '현재 임신 주수를 입력해줘요';
-    hint.textContent = '예정일도 함께 입력하면 더 정확해요';
-    weekRow.style.display = 'flex'; dateRow.style.display = 'none';
-  } else if (mode === 'lmp') {
-    q.textContent = '마지막 생리 시작일을 입력해줘요';
-    hint.textContent = '날짜로 주수를 자동 계산해요';
-    weekRow.style.display = 'none'; dateRow.style.display = 'block';
-  } else {
-    q.textContent = '출산 예정일을 입력해줘요';
-    hint.textContent = '산부인과에서 받은 날짜예요';
-    weekRow.style.display = 'none'; dateRow.style.display = 'block';
-  }
-  document.getElementById('setup-calc-result').innerHTML = '입력하면 예정일을 계산해요 ✨';
+  if (mode==='week') { q.textContent='현재 임신 주수를 입력해줘요'; hint.textContent='예정일도 함께 입력하면 더 정확해요'; weekRow.style.display='flex'; dateRow.style.display='none'; }
+  else if (mode==='lmp') { q.textContent='마지막 생리 시작일을 입력해줘요'; hint.textContent='날짜로 주수를 자동 계산해요'; weekRow.style.display='none'; dateRow.style.display='block'; }
+  else { q.textContent='출산 예정일을 입력해줘요'; hint.textContent='산부인과에서 받은 날짜예요'; weekRow.style.display='none'; dateRow.style.display='block'; }
+  document.getElementById('setup-calc-result').innerHTML='입력하면 예정일을 계산해요 ✨';
   document.getElementById('setup-step-1').classList.remove('on');
   document.getElementById('setup-step-2').classList.add('on');
 }
 function calcWeekPreview() {
   const result = document.getElementById('setup-calc-result');
   let week, edd;
-  if (setupMode === 'week') {
+  if (setupMode==='week') {
     week = parseInt(document.getElementById('setup-week-input').value);
-    if (!week || week < 1 || week > 42) return;
-    edd = new Date(Date.now() + (40-week)*7*24*60*60*1000);
+    if (!week||week<1||week>42) return;
+    edd = new Date(Date.now()+(40-week)*7*24*60*60*1000);
   } else {
     const dVal = document.getElementById('setup-date-input').value;
     if (!dVal) return;
     const inputDate = new Date(dVal);
-    if (setupMode === 'lmp') {
-      const diff = Math.floor((Date.now()-inputDate)/(1000*60*60*24));
-      week = Math.floor(diff/7);
-      edd = new Date(inputDate.getTime() + 280*24*60*60*1000);
-    } else {
-      edd = inputDate;
-      week = 40 - Math.round((inputDate-Date.now())/(1000*60*60*24*7));
-    }
+    if (setupMode==='lmp') { week=Math.floor((Date.now()-inputDate)/(1000*60*60*24*7)); edd=new Date(inputDate.getTime()+280*24*60*60*1000); }
+    else { edd=inputDate; week=40-Math.round((inputDate-Date.now())/(1000*60*60*24*7)); }
   }
-  if (week < 1) week = 1; if (week > 42) week = 42;
-  const eddStr = edd.getFullYear()+'년 '+(edd.getMonth()+1)+'월 '+edd.getDate()+'일';
-  result.innerHTML = '현재 임신 <strong>'+week+'주차</strong>  ·  예정일 '+eddStr;
+  if (week<1) week=1; if (week>42) week=42;
+  const eddStr=edd.getFullYear()+'년 '+(edd.getMonth()+1)+'월 '+edd.getDate()+'일';
+  result.innerHTML='현재 임신 <strong>'+week+'주차</strong>  ·  예정일 '+eddStr;
 }
 async function saveSetup() {
   let week, edd;
-  if (setupMode === 'week') {
-    week = parseInt(document.getElementById('setup-week-input').value);
-    if (!week || week < 1 || week > 42) { alert('주수를 입력해주세요 (1~42)'); return; }
-    edd = new Date(Date.now() + (40-week)*7*24*60*60*1000);
+  if (setupMode==='week') {
+    week=parseInt(document.getElementById('setup-week-input').value);
+    if (!week||week<1||week>42){alert('주수를 입력해주세요 (1~42)');return;}
+    edd=new Date(Date.now()+(40-week)*7*24*60*60*1000);
   } else {
-    const dVal = document.getElementById('setup-date-input').value;
-    if (!dVal) { alert('날짜를 입력해주세요'); return; }
-    const inputDate = new Date(dVal);
-    if (setupMode === 'lmp') {
-      week = Math.floor((Date.now()-inputDate)/(1000*60*60*24*7));
-      edd = new Date(inputDate.getTime()+280*24*60*60*1000);
-    } else {
-      edd = inputDate;
-      week = 40 - Math.round((inputDate-Date.now())/(1000*60*60*24*7));
-    }
+    const dVal=document.getElementById('setup-date-input').value;
+    if (!dVal){alert('날짜를 입력해주세요');return;}
+    const inputDate=new Date(dVal);
+    if (setupMode==='lmp'){week=Math.floor((Date.now()-inputDate)/(1000*60*60*24*7));edd=new Date(inputDate.getTime()+280*24*60*60*1000);}
+    else {edd=inputDate;week=40-Math.round((inputDate-Date.now())/(1000*60*60*24*7));}
   }
-  if (week < 1) week = 1; if (week > 42) week = 42;
-  await _supabase.from('profiles').upsert({ id: currentUserId, current_week: week, edd: edd.toISOString().split('T')[0] });
+  if (week<1) week=1; if (week>42) week=42;
+  await _supabase.from('profiles').upsert({id:currentUserId,current_week:week,edd:edd.toISOString().split('T')[0]});
   await loadCurrentProfile();
   showHome();
 }
@@ -1239,21 +1047,20 @@ function skipSetup() { showHome(); }
 function autoCalcWeekFromEdd() {
   const eddVal = document.getElementById('edd-input').value;
   const hint = document.getElementById('settings-calc-hint');
-  if (!eddVal) { if (hint) hint.textContent = ''; return; }
+  if (!eddVal) { if(hint) hint.textContent=''; return; }
   const daysLeft = Math.ceil((new Date(eddVal)-Date.now())/(1000*60*60*24));
-  let week = 40 - Math.round(daysLeft/7);
-  if (week < 1) week = 1; if (week > 42) week = 42;
+  let week = 40-Math.round(daysLeft/7);
+  if (week<1) week=1; if (week>42) week=42;
   document.getElementById('week-input').value = week;
   if (hint) hint.textContent = '예정일 기준으로 '+week+'주차로 자동 계산됐어요';
 }
 async function loadProfile() {
   if (!currentUserId) return;
   await loadCurrentProfile();
-  const profile = currentUserProfile;
-  if (!profile) return;
-  if (!profile.invite_code) {
+  if (!currentUserProfile) return;
+  if (!currentUserProfile.invite_code) {
     const code = Math.random().toString(36).slice(2,10);
-    await _supabase.from('profiles').update({ invite_code: code }).eq('id', currentUserId);
+    await _supabase.from('profiles').update({invite_code:code}).eq('id',currentUserId);
     await loadCurrentProfile();
   }
   const wi = document.getElementById('week-input');
@@ -1265,7 +1072,7 @@ async function saveProfile() {
   if (!currentUserId) return;
   const week = parseInt(document.getElementById('week-input').value);
   const edd = document.getElementById('edd-input').value;
-  await _supabase.from('profiles').update({ current_week: week, edd }).eq('id', currentUserId);
+  await _supabase.from('profiles').update({current_week:week,edd}).eq('id',currentUserId);
   await loadCurrentProfile();
   alert('저장됐어! 🌸');
 }

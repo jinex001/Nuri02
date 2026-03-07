@@ -188,15 +188,35 @@
 .appt-badge { font-size:11px; font-weight:700; color:#4A9070; background:rgba(126,200,164,0.2); padding:4px 10px; border-radius:20px; flex-shrink:0; }
 
 /* TIMELINE */
-.timeline { padding:0 18px 20px; }
+.timeline {
+  padding: 0 18px 20px;
+  position: relative;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 21px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #D4B0D5;
+  border-radius: 999px;
+}
+
 .tl-date { font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(–text-soft); margin:16px 0 10px 2px; display:flex; align-items:center; gap:8px; }
 .tl-date::after { content:’’; flex:1; height:1px; background:var(–border); }
 .tl-row { display:flex; gap:10px; margin-bottom:10px; animation:up 0.35s ease both; }
-.tl-spine { display:flex; flex-direction:column; align-items:center; padding-top:13px; flex-shrink:0; width:18px; }
+.tl-spine {
+  position: relative;
+  z-index: 1;
+}
 .tl-dot { width:8px; height:8px; border-radius:50%; background:var(–lilac); flex-shrink:0; }
 .tl-dot.gold { background:var(–gold); }
 .tl-dot.green { background:var(–green); }
-.tl-line { flex:1; width:1px; background:var(–border); margin-top:3px; min-height:16px; }
+.tl-line {
+  display: none;
+}
 .card { flex:1; background:#FAF7FB; border:1px solid var(–border); border-radius:16px; overflow:hidden; }
 .card.appt-card { background-color:#F4FCF8; border-color:rgba(126,200,164,0.3); }
 .card-top { padding:11px 13px 8px; display:flex; align-items:center; gap:9px; }
