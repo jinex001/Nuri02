@@ -80,10 +80,9 @@ background:rgba(63,94,83,0.5); border-radius:3px 0 0 0;
 .home-pad { padding:17px 0 0; display:flex; flex-direction:column; gap:20px; }
 
 /* TIMELINE */
-.timeline-wrap { position:relative; padding-left:15px; }
 .timeline-wrap::before {
-content:’’; position:absolute; left:25px; top:0; bottom:0; width:1px; background:#C8A2C9;
-transform-origin:top; z-index:0;
+  content:''; position:absolute; left:15px; top:0; bottom:0; width:1px; background:#C8A2C9;
+  transform-origin:top; z-index:0;
 }
 .timeline-wrap.animating::before { animation:drawLine 1.5s cubic-bezier(0.4,0,0.2,1) forwards; }
 @keyframes drawLine { from{transform:scaleY(0)} to{transform:scaleY(1)} }
