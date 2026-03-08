@@ -1,1133 +1,2245 @@
 <!DOCTYPE html>
-
-<html lang="ko" style="color-scheme:light;">
+<html lang="ko" style="color-scheme: light;">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="color-scheme" content="light">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Nuri">
-<title>Nuri</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/light/style.css">
-<style>
-:root {
-  --lilac: #C8A2C9;
-  --lilac-deep: #834D84;
-  --lilac-pale: rgba(200,162,201,0.18);
-  --green: #5F9E88;
-  --text: #1E1520;
-  --text-mid: #5C4D5E;
-  --text-soft: #9B8E9D;
-  --card-bg: #ffffff;
-  --card-shadow: 0px 16px 16px -8px rgba(12,12,13,0.1), 0px 4px 4px -4px rgba(12,12,13,0.05);
-  --bg: #E9F1EE;
-}
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-html, body { width:100%; height:100%; overflow:hidden; font-family:'Outfit',sans-serif; color:var(--text); -webkit-font-smoothing:antialiased; background:var(--bg); }
-#app { width:100%; height:100%; max-width:430px; margin:0 auto; position:relative; overflow:hidden; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="color-scheme" content="light">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Nuri">
+  <title>Nuri</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/light/style.css">
+  <style>
+    :root {
+      --lilac: #C8A2C9;
+      --lilac-deep: #834D84;
+      --lilac-pale: rgba(200, 162, 201, 0.18);
+      --green: #5F9E88;
+      --text: #1E1520;
+      --text-mid: #5C4D5E;
+      --text-soft: #9B8E9D;
+      --card-bg: #ffffff;
+      --card-shadow: 0px 16px 16px -8px rgba(12, 12, 13, 0.1), 0px 4px 4px -4px rgba(12, 12, 13, 0.05);
+      --bg: #E9F1EE;
+    }
 
-.screen {
-position:absolute; inset:0;
-overflow-y:auto; overflow-x:hidden;
--webkit-overflow-scrolling:touch;
-padding-bottom:120px;
-transform:translateX(100%);
-transition:transform 0.32s cubic-bezier(0.4,0,0.2,1);
-background:var(–bg);
-}
-.screen.active { transform:translateX(0); }
-.screen.exit { transform:translateX(-28%); }
-.screen.plain { background:#fff; }
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-/* ─── BOTTOM NAV — LARGER ─── */
-.bottom-nav {
-position:fixed; bottom:28px; left:50%; transform:translateX(-50%);
-display:flex; align-items:center; justify-content:space-between;
-width:calc(100% - 32px); max-width:398px; z-index:999;
-gap:12px;
-}
-.nav-left {
-display:flex; flex-direction:row; align-items:center;
-padding:6px 8px; gap:4px;
-background:rgba(95,158,136,0.55);
-backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
-border-radius:50px; height:64px;
-flex:1;
-box-shadow: 0 8px 32px rgba(95,158,136,0.25);
-}
-.nav-item {
-display:flex; align-items:center; justify-content:center;
-flex:1; height:52px; border-radius:26px; cursor:pointer;
-transition:background 0.2s;
-}
-.nav-item i { font-size:28px; color:#ffffff; }
-.nav-item.active { background:rgba(255,255,255,0.22); }
-.nav-fab {
-width:64px; height:64px; border-radius:50%;
-background:rgba(95,158,136,0.55);
-backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
-display:flex; align-items:center; justify-content:center;
-cursor:pointer; flex-shrink:0; position:relative; overflow:hidden;
-box-shadow: 0 8px 32px rgba(95,158,136,0.25);
-}
-.nav-fab::before {
-content:’’; position:absolute;
-width:30px; height:28px; bottom:0; right:0;
-background:rgba(63,94,83,0.45); border-radius:4px 0 0 0;
-}
-.nav-fab i { font-size:28px; color:#ffffff; position:relative; z-index:1; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Outfit', sans-serif;
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      background: var(--bg);
+    }
 
-/* HOME */
-.home-pad { padding:17px 0 0; display:flex; flex-direction:column; gap:0; }
+    #app {
+      width: 100%;
+      height: 100%;
+      max-width: 430px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
 
-/* ─── TIMELINE LINE ─── */
-#home-timeline {
-position: relative;
-}
+    .screen {
+      position: absolute;
+      inset: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 120px;
+      transform: translateX(100%);
+      transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+      background: var(--bg);
+    }
 
-/* Fixed line — lives outside #app, positioned via JS */
-#app {
-  position: relative;
-}
+    .screen.active { transform: translateX(0); }
+    .screen.exit { transform: translateX(-28%); }
+    .screen.plain { background: #fff; }
 
-#timeline-fixed-line {
-  position: absolute;
-  width: 2px;
-  background: var(--lilac);
-  z-index: 1;
-  pointer-events: none;
-}
+    .bottom-nav {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: calc(100% - 32px);
+      max-width: 398px;
+      z-index: 999;
+      gap: 12px;
+    }
 
-.dot-wrap {
-  width: 20px;
-  height: 20px;
-  position: relative;
-  border-radius: 999px;
-  overflow: hidden;
-  z-index: 10;
-}
+    .nav-left {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 6px 8px;
+      gap: 4px;
+      background: rgba(95, 158, 136, 0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 50px;
+      height: 64px;
+      flex: 1;
+      box-shadow: 0 8px 32px rgba(95, 158, 136, 0.25);
+    }
 
-.dot-wrap::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(95, 158, 136, 0.10);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  z-index: 1;
-}
+    .nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      height: 52px;
+      border-radius: 26px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
 
-.dot-inner {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  background: var(--lilac);
-  z-index: 2;
-}
+    .nav-item i {
+      font-size: 28px;
+      color: #ffffff;
+    }
 
-#timeline-fixed-line.animate {
-animation: lineGrow 1.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-@keyframes lineGrow {
-from { transform: scaleY(0); }
-to   { transform: scaleY(1); }
-}
+    .nav-item.active { background: rgba(255, 255, 255, 0.22); }
 
-/* Week sections — start invisible, fade in with stagger */
-.week-section {
-position: relative;
-opacity: 0;
-transition: opacity 0.6s ease;
-}
-.week-section.visible {
-opacity: 1;
-}
+    .nav-fab {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(95, 158, 136, 0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(95, 158, 136, 0.25);
+    }
 
-/* Sticky week header row */
-.week-sticky {
-position: sticky; top: 0; z-index: 10;
-background: var(–bg);
-padding: 12px 10px 10px 8px;
-display: flex; flex-direction: row; align-items: center; gap: 10px;
-}
+    .nav-fab::before {
+      content: '';
+      position: absolute;
+      width: 30px;
+      height: 28px;
+      bottom: 0;
+      right: 0;
+      background: rgba(63, 94, 83, 0.45);
+      border-radius: 4px 0 0 0;
+    }
 
-/* Dot — Figma: 20x20, green-tinted glass bg, centered on line */
-.dot-wrap {
-width: 20px; height: 20px;
-display: flex; align-items: center; justify-content: center;
-flex-shrink: 0;
-position: relative; z-index: 2;
-background: rgba(95, 158, 136, 0.12);
-backdrop-filter: blur(2px);
--webkit-backdrop-filter: blur(2px);
-border-radius: 40px;
-}
-.dot-inner {
-width: 8px; height: 8px;
-background: var(–lilac);
-border-radius: 50%;
-}
+    .nav-fab i {
+      font-size: 28px;
+      color: #ffffff;
+      position: relative;
+      z-index: 1;
+    }
 
-/* Current week — purple dot with pulse */
-.week-section.current-week .dot-inner {
-background: var(–lilac-deep);
-animation: dotPulse 2s ease-in-out infinite;
-}
-@keyframes dotPulse {
-0%,100% { box-shadow: 0 0 0 0 rgba(131,77,132,0.4); }
-50%      { box-shadow: 0 0 0 5px rgba(131,77,132,0); }
-}
+    .home-pad {
+      padding: 17px 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
 
-.week-sticky .week-block { display:flex; flex-direction:row; align-items:flex-start; gap:10px; }
-.week-sticky .week-num { font-size:36px; font-weight:700; letter-spacing:-0.5px; line-height:1; color:var(–lilac-deep); }
-.week-sticky .week-label-col { display:flex; flex-direction:column; gap:2px; padding-top:2px; }
-.week-sticky .week-lbl { font-size:18px; font-weight:700; letter-spacing:-0.5px; color:var(–lilac-deep); line-height:100%; }
-.week-sticky .week-date-lbl { font-size:14px; font-weight:700; letter-spacing:-0.5px; color:#5F9E88; line-height:100%; }
+    #home-timeline {
+      position: relative;
+    }
 
-.week-fact { padding:0 10px 12px 46px; }
-.fact-bar { background:#C8A2C9; border-radius:10px; padding:15px 20px; display:flex; align-items:center; gap:5px; }
-.fact-icon { width:30px; height:30px; background:#B581B6; border-radius:50px; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
-.fact-main { font-size:14px; font-weight:700; color:var(–text-mid); }
-.fact-sub { font-size:14px; font-weight:400; color:#fff; margin-left:auto; }
+    #timeline-fixed-line {
+      position: absolute;
+      width: 2px;
+      background: var(--lilac);
+      z-index: 1;
+      pointer-events: none;
+      transform-origin: top;
+    }
 
-.appt-scroll-row { display:flex; flex-direction:row; gap:10px; padding:10px 20px 10px 46px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
-.appt-scroll-row::-webkit-scrollbar { display:none; }
-.appt-card {
-flex-shrink:0; width:227px; height:132px;
-background:linear-gradient(180deg, rgba(254,251,206,0.55) 0%, rgba(240,230,241,0.35) 100%);
-box-shadow:var(–card-shadow); border-radius:10px; padding:20px;
-display:flex; flex-direction:column; justify-content:center; align-items:center; gap:15px;
-}
-.appt-top { display:flex; flex-direction:row; align-items:center; gap:20px; width:187px; }
-.appt-badge { display:inline-flex; align-items:center; padding:5px 10px; background:rgba(200,162,201,0.18); border:1px solid rgba(200,162,201,0.45); border-radius:999px; font-size:12px; font-weight:800; color:#5C4D5E; white-space:nowrap; }
-.appt-type { font-size:12px; font-weight:800; color:#000; }
-.appt-info { display:flex; flex-direction:column; gap:4px; width:187px; }
-.appt-date { font-size:13px; font-weight:500; color:#5C4D5E; }
-.appt-place { font-size:13px; font-weight:500; color:#5C4D5E; }
+    #timeline-fixed-line.animate {
+      animation: lineGrow 1.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
 
-/* FEED */
-.feed-section { padding:0 12px 20px 46px; display:flex; flex-direction:column; gap:10px; }
-.feed-item {
-background:#ffffff;
-box-shadow:0px 8px 22px rgba(30,21,32,0.06);
-border-radius:10px; overflow:hidden; display:flex; flex-direction:column;
-}
-.feed-photo { width:100%; height:243px; object-fit:cover; display:block; border-radius:10px 10px 0 0; }
-.feed-body { padding:0 10px; display:flex; flex-direction:column; gap:6px; margin-top:8px; }
-.feed-row1 { display:flex; flex-direction:row; align-items:flex-start; gap:6px; }
-.feed-date { font-size:12px; font-weight:600; color:#9B8E9D; flex:1; line-height:15px; }
-.feed-time { font-size:12px; font-weight:600; color:#9B8E9D; line-height:15px; white-space:nowrap; }
-.feed-type { font-size:12px; font-weight:900; color:#5C4D5E; letter-spacing:0.2px; line-height:15px; }
-.feed-text { font-size:15px; font-weight:800; color:#1E1520; letter-spacing:-0.2px; line-height:19px; }
-.feed-mood { width:35px; height:35px; background:rgba(240,230,241,0.55); border-radius:999px; display:flex; align-items:center; justify-content:center; font-size:22px; padding-top:3px; }
-.feed-divider { height:1px; background:#C8A2C9; margin:4px 10px 0; opacity:0.4; }
+    @keyframes lineGrow {
+      from { transform: scaleY(0); }
+      to { transform: scaleY(1); }
+    }
 
-/* ─── PARTNER BADGE on feed ─── */
-.partner-badge {
-display:inline-flex; align-items:center; gap:5px;
-background:linear-gradient(135deg,rgba(200,162,201,0.15),rgba(95,158,136,0.1));
-border:1px solid rgba(200,162,201,0.35); border-radius:20px;
-padding:3px 9px; font-size:10px; font-weight:700; color:var(–lilac-deep);
-margin:0 12px 6px;
-}
+    .week-section {
+      position: relative;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
 
-/* ─── COMMENTS ─── */
-.cmt-section { border-top:1px solid rgba(200,162,201,0.4); margin-top:8px; }
-.cmt-toggle i { font-size:27px; }
-.cmt-toggle {
-display:flex; align-items:center; gap:6px; padding:8px 12px;
-font-size:11px; font-weight:600; color:var(–text-soft); cursor:pointer;
-user-select:none;
-}
-.cmt-toggle:hover { color:var(–lilac-deep); }
-.cmt-toggle .cmt-count { background:rgba(200,162,201,0.2); border-radius:20px; width:40px; height:25px; display:inline-flex; align-items:center; justify-content:center; font-size:12px; font-weight:400; font-family:‘Outfit’,sans-serif; color:#000000; }
-.cmt-list { padding:0 12px 4px; display:flex; flex-direction:column; gap:6px; }
-.cmt-row { display:flex; gap:7px; align-items:flex-start; }
-.cmt-av { width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0; }
-.cmt-av.mine { background:linear-gradient(135deg,#C8A2C9,#834D84); }
-.cmt-av.partner { background:linear-gradient(135deg,#5F9E88,#3A7A65); }
-.cmt-av.other { background:rgba(200,162,201,0.25); }
-.cmt-bubble { background:rgba(240,230,241,0.5); border-radius:4px 10px 10px 10px; padding:6px 10px; flex:1; }
-.cmt-bubble.mine { background:rgba(131,77,132,0.1); border-radius:10px 4px 10px 10px; }
-.cmt-bubble.partner { background:rgba(95,158,136,0.1); border-radius:4px 10px 10px 10px; }
-.cmt-name { font-size:9px; font-weight:700; color:var(–lilac-deep); margin-bottom:2px; }
-.cmt-name.partner-name { color:var(–green); }
-.cmt-text { font-size:12px; color:var(–text-mid); line-height:1.45; }
-.cmt-time { font-size:9px; color:var(–text-soft); margin-top:2px; }
-.cmt-input-area { display:flex; align-items:center; gap:8px; padding:8px 12px 12px; border-top:1px solid rgba(200,162,201,0.12); }
-.cmt-av-input { width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#C8A2C9,#834D84); display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; }
-.cmt-input-wrap { flex:1; display:flex; align-items:center; gap:6px; background:rgba(240,230,241,0.5); border:1px solid rgba(200,162,201,0.3); border-radius:20px; padding:6px 10px; }
-.cmt-input { flex:1; background:none; border:none; outline:none; font-size:12px; color:var(–text); font-family:‘Outfit’,sans-serif; }
-.cmt-input::placeholder { color:var(–text-soft); }
-.cmt-send-btn { width:28px; height:28px; border-radius:50%; background:var(–lilac-deep); border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; transition:transform 0.15s, background 0.15s; }
-.cmt-send-btn:hover { background:#5A2E5B; transform:scale(1.05); }
-.cmt-send-btn i { font-size:13px; color:white; }
+    .week-section.visible { opacity: 1; }
 
-/* NEW ENTRY */
-.screen-hdr { padding:16px 18px 12px; display:flex; align-items:center; gap:11px; background:#fff; border-bottom:1px solid rgba(200,162,201,0.2); }
-.back-btn { width:34px; height:34px; border-radius:10px; background:#F8F6FA; border:1px solid rgba(200,162,201,0.3); display:flex; align-items:center; justify-content:center; font-size:16px; color:var(–text-mid); cursor:pointer; }
-.screen-title { font-size:20px; font-weight:700; color:var(–text); }
-.type-tabs { display:flex; background:#F8F6FA; border:1px solid rgba(200,162,201,0.3); border-radius:14px; padding:4px; margin:14px 18px 0; }
-.type-tab { flex:1; padding:8px 4px; border-radius:10px; text-align:center; font-size:11px; font-weight:500; color:var(–text-soft); cursor:pointer; }
-.type-tab.on { background:#fff; color:var(–text); box-shadow:0 2px 8px rgba(0,0,0,0.07); }
-.form-pad { padding:14px 18px; }
-.cam-zone { border:1.5px dashed rgba(200,162,201,0.5); border-radius:20px; height:160px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; cursor:pointer; margin-bottom:16px; overflow:hidden; position:relative; }
-.fld { margin-bottom:14px; }
-.fld-lbl { font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(–text-soft); display:block; margin-bottom:7px; }
-.txt-in { width:100%; background:#F8F6FA; border:1px solid rgba(200,162,201,0.3); border-radius:13px; padding:11px 14px; font-size:13px; color:var(–text); font-family:‘Outfit’,sans-serif; outline:none; }
-.txt-in:focus { border-color:var(–lilac); background:#fff; }
-.pills { display:flex; gap:7px; flex-wrap:wrap; }
-.pill { padding:6px 13px; border-radius:20px; font-size:11px; font-weight:500; background:#F8F6FA; border:1px solid rgba(200,162,201,0.3); color:var(–text-soft); cursor:pointer; }
-.pill.on { background:rgba(200,162,201,0.15); border-color:var(–lilac); color:var(–lilac-deep); }
-.save-btn { width:100%; background:linear-gradient(135deg,#8B5E8C,#5A2E5B); color:white; border:none; border-radius:15px; padding:14px; font-family:‘Outfit’,sans-serif; font-size:14px; font-weight:600; cursor:pointer; box-shadow:0 5px 20px rgba(107,61,108,0.3); margin-top:6px; }
+    .week-sticky {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--bg);
+      padding: 12px 10px 10px 8px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+    }
 
-/* MEDICAL */
-.med-hero { background:linear-gradient(155deg,#1E1520 0%,#3A2B3C 55%,#5A3A5C 100%); padding:48px 22px 26px; position:relative; overflow:hidden; }
-.med-hero::before { content:’’; position:absolute; width:160px; height:160px; background:radial-gradient(circle,rgba(200,162,201,0.18) 0%,transparent 70%); top:-40px; right:-30px; border-radius:50%; }
-.med-lbl { font-size:9px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:rgba(255,255,255,0.4); margin-bottom:4px; }
-.med-name { font-size:26px; font-weight:700; color:#fff; margin-bottom:18px; line-height:1.2; }
-.sos-strip { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); border-radius:15px; padding:11px 14px; display:flex; align-items:center; gap:11px; }
-.sos-icon { width:34px; height:34px; border-radius:9px; background:rgba(220,50,50,0.25); border:1px solid rgba(220,50,50,0.35); display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
-.sos-txt { font-size:11px; color:rgba(255,255,255,0.65); line-height:1.5; }
-.sos-txt strong { color:white; font-weight:500; display:block; font-size:12px; }
-.sos-arrow { margin-left:auto; color:rgba(255,255,255,0.25); font-size:16px; }
-.med-body { padding:14px 16px 20px; background:#fff; }
-.info-block { background:#F8F6FA; border:1px solid rgba(200,162,201,0.25); border-radius:18px; overflow:hidden; margin-bottom:11px; }
-.block-title { padding:10px 16px 8px; font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(–text-soft); border-bottom:1px solid rgba(200,162,201,0.15); }
-.info-row { display:flex; justify-content:space-between; align-items:center; padding:10px 16px; border-bottom:1px solid rgba(200,162,201,0.12); }
-.info-row:last-child { border-bottom:none; }
-.i-lbl { font-size:12px; color:var(–text-soft); }
-.i-val { font-size:13px; font-weight:500; color:var(–text); text-align:right; }
-.chip-blood { background:linear-gradient(135deg,#8B5E8C,#6B3D6C); color:white; padding:4px 11px; border-radius:8px; font-size:14px; font-weight:700; }
-.chip-ok { background:#E6F4EA; color:#2D7A3A; border-radius:8px; padding:4px 10px; font-size:11px; font-weight:600; }
-.chip-warn { background:#FFF3E0; color:#C35A00; border-radius:8px; padding:4px 10px; font-size:11px; font-weight:600; }
+    .dot-wrap {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 10;
+      border-radius: 40px;
+      overflow: hidden;
+    }
 
-/* ─── PARTNER SCREEN ─── */
-.partner-hero { background:linear-gradient(155deg,#1A2F28 0%,#2A4A3C 50%,#3A6B5A 100%); padding:48px 22px 26px; position:relative; overflow:hidden; }
-.partner-hero::before { content:’’; position:absolute; width:160px; height:160px; background:radial-gradient(circle,rgba(95,158,136,0.25) 0%,transparent 70%); top:-40px; right:-30px; border-radius:50%; }
-.partner-avatars { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
-.p-av { width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; border:2px solid rgba(255,255,255,0.2); }
-.p-av.mom { background:linear-gradient(135deg,#C8A2C9,#8B5E8C); }
-.p-av.partner { background:linear-gradient(135deg,#5F9E88,#3A7A65); }
-.p-connector { width:24px; height:2px; background:rgba(255,255,255,0.2); position:relative; }
-.p-connector::after { content:‘💜’; position:absolute; top:-10px; left:50%; transform:translateX(-50%); font-size:14px; }
-.partner-status-bar { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); border-radius:15px; padding:11px 14px; display:flex; align-items:center; gap:11px; }
-.p-status-dot { width:8px; height:8px; border-radius:50%; background:#5F9E88; flex-shrink:0; animation:pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.2)} }
-.p-status-txt { font-size:12px; color:rgba(255,255,255,0.8); }
-.p-status-txt strong { color:white; font-weight:600; }
-.connect-card { margin:16px; background:#fff; border-radius:20px; box-shadow:0 8px 24px rgba(0,0,0,0.08); overflow:hidden; }
-.connect-card-hdr { background:linear-gradient(135deg,rgba(200,162,201,0.15),rgba(95,158,136,0.1)); padding:16px 18px 12px; border-bottom:1px solid rgba(200,162,201,0.15); }
-.connect-card-title { font-size:15px; font-weight:700; color:var(–text); margin-bottom:3px; }
-.connect-card-sub { font-size:11px; color:var(–text-soft); }
-.connect-card-body { padding:16px 18px; }
-.invite-code-box { background:linear-gradient(135deg,rgba(131,77,132,0.06),rgba(95,158,136,0.06)); border:1px dashed rgba(200,162,201,0.5); border-radius:14px; padding:14px 16px; display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; cursor:pointer; transition:all 0.2s; }
-.invite-code-box:hover { border-color:var(–lilac); background:rgba(200,162,201,0.1); }
-.invite-code-text { font-size:12px; color:var(–lilac-deep); font-weight:600; word-break:break-all; flex:1; }
-.invite-copy-btn { width:32px; height:32px; border-radius:10px; background:var(–lilac-deep); display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-left:10px; }
-.invite-copy-btn i { font-size:14px; color:white; }
-.partner-feed-section { padding:16px; }
-.pf-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
-.pf-title { font-size:15px; font-weight:700; color:var(–text); }
-.pf-badge { background:rgba(95,158,136,0.15); border:1px solid rgba(95,158,136,0.3); border-radius:20px; padding:3px 10px; font-size:10px; font-weight:700; color:var(–green); }
-.pf-empty { text-align:center; padding:40px 20px; color:var(–text-soft); font-size:13px; }
-.feed-item.partner-entry { border-left:3px solid var(–green); }
-.feed-item.mine-entry { border-left:3px solid var(–lilac); }
+    .dot-wrap::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(95, 158, 136, 0.10);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 1;
+    }
 
-/* LOGIN */
-.login-wrap { height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 32px; }
-.login-logo { font-size:52px; font-weight:800; color:var(–text); margin-bottom:8px; letter-spacing:-1px; }
-.login-sub { font-size:13px; color:var(–text-soft); margin-bottom:48px; }
-.login-fields { width:100%; display:flex; flex-direction:column; gap:12px; }
-.login-btn-sub { width:100%; background:rgba(200,162,201,0.15); color:var(–lilac-deep); border:none; border-radius:15px; padding:14px; font-family:‘Outfit’,sans-serif; font-size:14px; font-weight:600; cursor:pointer; }
+    .dot-inner {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 8px;
+      height: 8px;
+      transform: translate(-50%, -50%);
+      background: var(--lilac);
+      border-radius: 50%;
+      z-index: 2;
+    }
 
-/* SETUP */
-.setup-wrap { min-height:100%; display:flex; flex-direction:column; padding:60px 28px 40px; background:var(–bg); }
-.setup-logo { font-size:42px; font-weight:800; color:var(–lilac-deep); letter-spacing:-1px; margin-bottom:4px; }
-.setup-sub { font-size:14px; color:var(–text-soft); margin-bottom:48px; }
-.setup-step { display:none; flex-direction:column; gap:24px; }
-.setup-step.on { display:flex; }
-.setup-q { font-size:22px; font-weight:700; color:var(–text); line-height:1.3; }
-.setup-hint { font-size:13px; color:var(–text-soft); margin-top:-16px; }
-.setup-input { width:100%; background:#fff; border:1.5px solid rgba(200,162,201,0.4); border-radius:14px; padding:14px 16px; font-size:16px; font-weight:500; color:var(–text); font-family:‘Outfit’,sans-serif; outline:none; }
-.setup-input:focus { border-color:var(–lilac); }
-.setup-calc { background:rgba(200,162,201,0.12); border-radius:12px; padding:14px 16px; font-size:14px; color:var(–text-mid); min-height:48px; }
-.setup-calc strong { color:var(–lilac-deep); font-size:18px; }
-.setup-btn { width:100%; background:linear-gradient(135deg,#834D84,#5A2E5B); color:white; border:none; border-radius:15px; padding:16px; font-family:‘Outfit’,sans-serif; font-size:15px; font-weight:700; cursor:pointer; margin-top:8px; }
-.setup-skip { text-align:center; font-size:13px; color:var(–text-soft); cursor:pointer; padding:12px; text-decoration:underline; }
+    .week-section.current-week .dot-inner {
+      background: var(--lilac-deep);
+      animation: dotPulse 2s ease-in-out infinite;
+    }
 
-/* SETTINGS */
-.settings-scroll { padding:20px 18px; }
-</style>
+    @keyframes dotPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(131, 77, 132, 0.4); }
+      50% { box-shadow: 0 0 0 5px rgba(131, 77, 132, 0); }
+    }
 
+    .week-sticky .week-block {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .week-sticky .week-num {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      line-height: 1;
+      color: var(--lilac-deep);
+    }
+
+    .week-sticky .week-label-col {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding-top: 2px;
+    }
+
+    .week-sticky .week-lbl {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--lilac-deep);
+      line-height: 100%;
+    }
+
+    .week-sticky .week-date-lbl {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #5F9E88;
+      line-height: 100%;
+    }
+
+    .week-fact { padding: 0 10px 12px 46px; }
+
+    .fact-bar {
+      background: #C8A2C9;
+      border-radius: 10px;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .fact-icon {
+      width: 30px;
+      height: 30px;
+      background: #B581B6;
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .fact-main {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-mid);
+    }
+
+    .fact-sub {
+      font-size: 14px;
+      font-weight: 400;
+      color: #fff;
+      margin-left: auto;
+    }
+
+    .appt-scroll-row {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      padding: 10px 20px 10px 46px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .appt-scroll-row::-webkit-scrollbar { display: none; }
+
+    .appt-card {
+      flex-shrink: 0;
+      width: 227px;
+      height: 132px;
+      background: linear-gradient(180deg, rgba(254, 251, 206, 0.55) 0%, rgba(240, 230, 241, 0.35) 100%);
+      box-shadow: var(--card-shadow);
+      border-radius: 10px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .appt-top {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 20px;
+      width: 187px;
+    }
+
+    .appt-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 10px;
+      background: rgba(200, 162, 201, 0.18);
+      border: 1px solid rgba(200, 162, 201, 0.45);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #5C4D5E;
+      white-space: nowrap;
+    }
+
+    .appt-type {
+      font-size: 12px;
+      font-weight: 800;
+      color: #000;
+    }
+
+    .appt-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 187px;
+    }
+
+    .appt-date, .appt-place {
+      font-size: 13px;
+      font-weight: 500;
+      color: #5C4D5E;
+    }
+
+    .feed-section {
+      padding: 0 12px 20px 46px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .feed-item {
+      background: #ffffff;
+      box-shadow: 0px 8px 22px rgba(30, 21, 32, 0.06);
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .feed-photo {
+      width: 100%;
+      height: 243px;
+      object-fit: cover;
+      display: block;
+      border-radius: 10px 10px 0 0;
+    }
+
+    .feed-body {
+      padding: 0 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .feed-row1 {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .feed-date {
+      font-size: 12px;
+      font-weight: 600;
+      color: #9B8E9D;
+      flex: 1;
+      line-height: 15px;
+    }
+
+    .feed-time {
+      font-size: 12px;
+      font-weight: 600;
+      color: #9B8E9D;
+      line-height: 15px;
+      white-space: nowrap;
+    }
+
+    .feed-type {
+      font-size: 12px;
+      font-weight: 900;
+      color: #5C4D5E;
+      letter-spacing: 0.2px;
+      line-height: 15px;
+    }
+
+    .feed-text {
+      font-size: 15px;
+      font-weight: 800;
+      color: #1E1520;
+      letter-spacing: -0.2px;
+      line-height: 19px;
+    }
+
+    .feed-mood {
+      width: 35px;
+      height: 35px;
+      background: rgba(240, 230, 241, 0.55);
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      padding-top: 3px;
+    }
+
+    .feed-divider {
+      height: 1px;
+      background: #C8A2C9;
+      margin: 4px 10px 0;
+      opacity: 0.4;
+    }
+
+    .partner-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: linear-gradient(135deg, rgba(200, 162, 201, 0.15), rgba(95, 158, 136, 0.1));
+      border: 1px solid rgba(200, 162, 201, 0.35);
+      border-radius: 20px;
+      padding: 3px 9px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--lilac-deep);
+      margin: 0 12px 6px;
+    }
+
+    .cmt-section {
+      border-top: 1px solid rgba(200, 162, 201, 0.4);
+      margin-top: 8px;
+    }
+
+    .cmt-toggle i { font-size: 27px; }
+
+    .cmt-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-soft);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .cmt-toggle:hover { color: var(--lilac-deep); }
+
+    .cmt-toggle .cmt-count {
+      background: rgba(200, 162, 201, 0.2);
+      border-radius: 20px;
+      width: 40px;
+      height: 25px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 400;
+      font-family: 'Outfit', sans-serif;
+      color: #000000;
+    }
+
+    .cmt-list {
+      padding: 0 12px 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .cmt-row {
+      display: flex;
+      gap: 7px;
+      align-items: flex-start;
+    }
+
+    .cmt-av {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .cmt-av.mine { background: linear-gradient(135deg, #C8A2C9, #834D84); }
+    .cmt-av.partner { background: linear-gradient(135deg, #5F9E88, #3A7A65); }
+    .cmt-av.other { background: rgba(200, 162, 201, 0.25); }
+
+    .cmt-bubble {
+      background: rgba(240, 230, 241, 0.5);
+      border-radius: 4px 10px 10px 10px;
+      padding: 6px 10px;
+      flex: 1;
+    }
+
+    .cmt-bubble.mine {
+      background: rgba(131, 77, 132, 0.1);
+      border-radius: 10px 4px 10px 10px;
+    }
+
+    .cmt-bubble.partner {
+      background: rgba(95, 158, 136, 0.1);
+      border-radius: 4px 10px 10px 10px;
+    }
+
+    .cmt-name {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--lilac-deep);
+      margin-bottom: 2px;
+    }
+
+    .cmt-name.partner-name { color: var(--green); }
+
+    .cmt-text {
+      font-size: 12px;
+      color: var(--text-mid);
+      line-height: 1.45;
+    }
+
+    .cmt-time {
+      font-size: 9px;
+      color: var(--text-soft);
+      margin-top: 2px;
+    }
+
+    .cmt-input-area {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px 12px;
+      border-top: 1px solid rgba(200, 162, 201, 0.12);
+    }
+
+    .cmt-av-input {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #C8A2C9, #834D84);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .cmt-input-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(240, 230, 241, 0.5);
+      border: 1px solid rgba(200, 162, 201, 0.3);
+      border-radius: 20px;
+      padding: 6px 10px;
+    }
+
+    .cmt-input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      font-size: 12px;
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .cmt-input::placeholder { color: var(--text-soft); }
+
+    .cmt-send-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--lilac-deep);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: transform 0.15s, background 0.15s;
+    }
+
+    .cmt-send-btn:hover {
+      background: #5A2E5B;
+      transform: scale(1.05);
+    }
+
+    .cmt-send-btn i {
+      font-size: 13px;
+      color: white;
+    }
+
+    .screen-hdr {
+      padding: 16px 18px 12px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      background: #fff;
+      border-bottom: 1px solid rgba(200, 162, 201, 0.2);
+    }
+
+    .back-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: #F8F6FA;
+      border: 1px solid rgba(200, 162, 201, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: var(--text-mid);
+      cursor: pointer;
+    }
+
+    .screen-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .type-tabs {
+      display: flex;
+      background: #F8F6FA;
+      border: 1px solid rgba(200, 162, 201, 0.3);
+      border-radius: 14px;
+      padding: 4px;
+      margin: 14px 18px 0;
+    }
+
+    .type-tab {
+      flex: 1;
+      padding: 8px 4px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-soft);
+      cursor: pointer;
+    }
+
+    .type-tab.on {
+      background: #fff;
+      color: var(--text);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    }
+
+    .form-pad { padding: 14px 18px; }
+
+    .cam-zone {
+      border: 1.5px dashed rgba(200, 162, 201, 0.5);
+      border-radius: 20px;
+      height: 160px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      cursor: pointer;
+      margin-bottom: 16px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .fld { margin-bottom: 14px; }
+
+    .fld-lbl {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      display: block;
+      margin-bottom: 7px;
+    }
+
+    .txt-in {
+      width: 100%;
+      background: #F8F6FA;
+      border: 1px solid rgba(200, 162, 201, 0.3);
+      border-radius: 13px;
+      padding: 11px 14px;
+      font-size: 13px;
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      outline: none;
+    }
+
+    .txt-in:focus {
+      border-color: var(--lilac);
+      background: #fff;
+    }
+
+    .pills {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      padding: 6px 13px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 500;
+      background: #F8F6FA;
+      border: 1px solid rgba(200, 162, 201, 0.3);
+      color: var(--text-soft);
+      cursor: pointer;
+    }
+
+    .pill.on {
+      background: rgba(200, 162, 201, 0.15);
+      border-color: var(--lilac);
+      color: var(--lilac-deep);
+    }
+
+    .save-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #8B5E8C, #5A2E5B);
+      color: white;
+      border: none;
+      border-radius: 15px;
+      padding: 14px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 5px 20px rgba(107, 61, 108, 0.3);
+      margin-top: 6px;
+    }
+
+    .med-hero {
+      background: linear-gradient(155deg, #1E1520 0%, #3A2B3C 55%, #5A3A5C 100%);
+      padding: 48px 22px 26px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .med-hero::before {
+      content: '';
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      background: radial-gradient(circle, rgba(200, 162, 201, 0.18) 0%, transparent 70%);
+      top: -40px;
+      right: -30px;
+      border-radius: 50%;
+    }
+
+    .med-lbl {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.4);
+      margin-bottom: 4px;
+    }
+
+    .med-name {
+      font-size: 26px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 18px;
+      line-height: 1.2;
+    }
+
+    .sos-strip {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 15px;
+      padding: 11px 14px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .sos-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: rgba(220, 50, 50, 0.25);
+      border: 1px solid rgba(220, 50, 50, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    .sos-txt {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.65);
+      line-height: 1.5;
+    }
+
+    .sos-txt strong {
+      color: white;
+      font-weight: 500;
+      display: block;
+      font-size: 12px;
+    }
+
+    .sos-arrow {
+      margin-left: auto;
+      color: rgba(255, 255, 255, 0.25);
+      font-size: 16px;
+    }
+
+    .med-body {
+      padding: 14px 16px 20px;
+      background: #fff;
+    }
+
+    .info-block {
+      background: #F8F6FA;
+      border: 1px solid rgba(200, 162, 201, 0.25);
+      border-radius: 18px;
+      overflow: hidden;
+      margin-bottom: 11px;
+    }
+
+    .block-title {
+      padding: 10px 16px 8px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      border-bottom: 1px solid rgba(200, 162, 201, 0.15);
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(200, 162, 201, 0.12);
+    }
+
+    .info-row:last-child { border-bottom: none; }
+
+    .i-lbl {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .i-val {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      text-align: right;
+    }
+
+    .chip-blood {
+      background: linear-gradient(135deg, #8B5E8C, #6B3D6C);
+      color: white;
+      padding: 4px 11px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .chip-ok {
+      background: #E6F4EA;
+      color: #2D7A3A;
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .chip-warn {
+      background: #FFF3E0;
+      color: #C35A00;
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .partner-hero {
+      background: linear-gradient(155deg, #1A2F28 0%, #2A4A3C 50%, #3A6B5A 100%);
+      padding: 48px 22px 26px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .partner-hero::before {
+      content: '';
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      background: radial-gradient(circle, rgba(95, 158, 136, 0.25) 0%, transparent 70%);
+      top: -40px;
+      right: -30px;
+      border-radius: 50%;
+    }
+
+    .partner-avatars {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .p-av {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .p-av.mom { background: linear-gradient(135deg, #C8A2C9, #8B5E8C); }
+    .p-av.partner { background: linear-gradient(135deg, #5F9E88, #3A7A65); }
+
+    .p-connector {
+      width: 24px;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.2);
+      position: relative;
+    }
+
+    .p-connector::after {
+      content: '💜';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 14px;
+    }
+
+    .partner-status-bar {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 15px;
+      padding: 11px 14px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .p-status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #5F9E88;
+      flex-shrink: 0;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.2); }
+    }
+
+    .p-status-txt {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .p-status-txt strong {
+      color: white;
+      font-weight: 600;
+    }
+
+    .connect-card {
+      margin: 16px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+    }
+
+    .connect-card-hdr {
+      background: linear-gradient(135deg, rgba(200, 162, 201, 0.15), rgba(95, 158, 136, 0.1));
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid rgba(200, 162, 201, 0.15);
+    }
+
+    .connect-card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+
+    .connect-card-sub {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .connect-card-body { padding: 16px 18px; }
+
+    .invite-code-box {
+      background: linear-gradient(135deg, rgba(131, 77, 132, 0.06), rgba(95, 158, 136, 0.06));
+      border: 1px dashed rgba(200, 162, 201, 0.5);
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .invite-code-box:hover {
+      border-color: var(--lilac);
+      background: rgba(200, 162, 201, 0.1);
+    }
+
+    .invite-code-text {
+      font-size: 12px;
+      color: var(--lilac-deep);
+      font-weight: 600;
+      word-break: break-all;
+      flex: 1;
+    }
+
+    .invite-copy-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: var(--lilac-deep);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-left: 10px;
+    }
+
+    .invite-copy-btn i {
+      font-size: 14px;
+      color: white;
+    }
+
+    .partner-feed-section { padding: 16px; }
+
+    .pf-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .pf-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .pf-badge {
+      background: rgba(95, 158, 136, 0.15);
+      border: 1px solid rgba(95, 158, 136, 0.3);
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    .pf-empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-soft);
+      font-size: 13px;
+    }
+
+    .feed-item.partner-entry { border-left: 3px solid var(--green); }
+    .feed-item.mine-entry { border-left: 3px solid var(--lilac); }
+
+    .login-wrap {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 32px;
+    }
+
+    .login-logo {
+      font-size: 52px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 8px;
+      letter-spacing: -1px;
+    }
+
+    .login-sub {
+      font-size: 13px;
+      color: var(--text-soft);
+      margin-bottom: 48px;
+    }
+
+    .login-fields {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .login-btn-sub {
+      width: 100%;
+      background: rgba(200, 162, 201, 0.15);
+      color: var(--lilac-deep);
+      border: none;
+      border-radius: 15px;
+      padding: 14px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .setup-wrap {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 60px 28px 40px;
+      background: var(--bg);
+    }
+
+    .setup-logo {
+      font-size: 42px;
+      font-weight: 800;
+      color: var(--lilac-deep);
+      letter-spacing: -1px;
+      margin-bottom: 4px;
+    }
+
+    .setup-sub {
+      font-size: 14px;
+      color: var(--text-soft);
+      margin-bottom: 48px;
+    }
+
+    .setup-step {
+      display: none;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .setup-step.on { display: flex; }
+
+    .setup-q {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .setup-hint {
+      font-size: 13px;
+      color: var(--text-soft);
+      margin-top: -16px;
+    }
+
+    .setup-input {
+      width: 100%;
+      background: #fff;
+      border: 1.5px solid rgba(200, 162, 201, 0.4);
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      outline: none;
+    }
+
+    .setup-input:focus { border-color: var(--lilac); }
+
+    .setup-calc {
+      background: rgba(200, 162, 201, 0.12);
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 14px;
+      color: var(--text-mid);
+      min-height: 48px;
+    }
+
+    .setup-calc strong {
+      color: var(--lilac-deep);
+      font-size: 18px;
+    }
+
+    .setup-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #834D84, #5A2E5B);
+      color: white;
+      border: none;
+      border-radius: 15px;
+      padding: 16px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .setup-skip {
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-soft);
+      cursor: pointer;
+      padding: 12px;
+      text-decoration: underline;
+    }
+
+    .settings-scroll { padding: 20px 18px; }
+  </style>
 </head>
 <body>
-<div id="app">
-
-<!-- LOGIN -->
-
-<div class="screen" id="s-login">
-  <div class="login-wrap">
-    <div class="login-logo">nuri</div>
-    <div class="login-sub">임신 기록을 시작해요 🌸</div>
-    <div class="login-fields">
-      <input id="login-email" class="txt-in" type="email" placeholder="이메일">
-      <input id="login-pw" class="txt-in" type="password" placeholder="비밀번호">
-      <button class="save-btn" onclick="signIn()">로그인</button>
-      <button class="login-btn-sub" onclick="signUp()">회원가입</button>
-    </div>
-  </div>
-</div>
-
-<!-- HOME -->
-
-<div class="screen" id="s-home">
-  <div class="home-pad">
-    <div id="home-timeline"></div>
-  </div>
-</div>
-
-<!-- NEW ENTRY -->
-
-<div class="screen plain" id="s-new">
-  <div class="screen-hdr">
-    <div class="back-btn" onclick="goBack()">&#8592;</div>
-    <div class="screen-title">새로운 기록</div>
-  </div>
-  <div class="type-tabs">
-    <div class="type-tab on" onclick="selTab(this)">📷 초음파</div>
-    <div class="type-tab" onclick="selTab(this)">📝 일기</div>
-    <div class="type-tab" onclick="selTab(this)">🏥 진료</div>
-  </div>
-  <div class="form-pad">
-    <div class="cam-zone" onclick="document.getElementById('photo-input').click()">
-      <div style="font-size:28px;opacity:0.6;">📷</div>
-      <div style="font-size:13px;font-weight:500;color:var(--text-mid);" id="cam-lbl">사진 추가</div>
-      <div style="font-size:11px;color:var(--text-soft);">탭해서 촬영하거나 선택</div>
-      <img id="photo-preview" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
-    </div>
-    <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="previewPhoto(this)">
-    <div class="fld">
-      <label class="fld-lbl">날짜</label>
-      <input type="date" id="entry-date-input" class="txt-in" oninput="calcEntryWeek()">
-      <div style="font-size:12px;color:var(--text-soft);margin-top:6px;" id="entry-week-hint"></div>
-    </div>
-    <div class="fld">
-      <label class="fld-lbl">메모</label>
-      <input id="entry-content" class="txt-in" placeholder="오늘 기록...">
-    </div>
-    <div class="fld">
-      <label class="fld-lbl">감정</label>
-      <div class="pills" id="mood-pills">
-        <div class="pill on" onclick="selPill(this)">😊 행복</div>
-        <div class="pill" onclick="selPill(this)">🥹 감동</div>
-        <div class="pill" onclick="selPill(this)">😰 걱정</div>
-        <div class="pill" onclick="selPill(this)">😴 피곤</div>
-      </div>
-    </div>
-    <div class="fld">
-      <label class="fld-lbl">공개 범위</label>
-      <div class="pills" id="privacy-pills">
-        <div class="pill on" onclick="selPill(this)" id="privacy-private">🔒 나만 보기</div>
-        <div class="pill" onclick="selPill(this)" id="privacy-public">💜 파트너 공유</div>
-      </div>
-    </div>
-    <button class="save-btn" onclick="saveEntry()">저장하기</button>
-  </div>
-</div>
-
-<!-- MEDICAL -->
-
-<div class="screen" id="s-medical">
-  <div class="med-hero">
-    <div class="med-lbl">메디컬 프로필</div>
-    <div class="med-name">건강 기록</div>
-    <div class="sos-strip">
-      <div class="sos-icon">🆘</div>
-      <div class="sos-txt"><strong>응급 정보</strong>iPhone Health 앱에서 확인 가능</div>
-      <div class="sos-arrow">›</div>
-    </div>
-  </div>
-  <div class="med-body">
-    <div class="info-block">
-      <div class="block-title">의료 정보</div>
-      <div class="info-row"><div class="i-lbl">혈액형</div><div class="chip-blood">A+</div></div>
-      <div class="info-row"><div class="i-lbl">임신 상태</div><div class="chip-ok">✓ 정상 임신</div></div>
-      <div class="info-row"><div class="i-lbl">알레르기</div><div class="chip-warn">⚠ 페니실린</div></div>
-    </div>
-    <div class="info-block">
-      <div class="block-title">담당의</div>
-      <div class="info-row"><div class="i-lbl">병원</div><div class="i-val">서울 성모 병원</div></div>
-      <div class="info-row"><div class="i-lbl">담당의</div><div class="i-val">Dr. 박미연</div></div>
-    </div>
-  </div>
-</div>
-
-<!-- PARTNER -->
-
-<div class="screen" id="s-partner">
-  <div id="partner-hero-area"></div>
-  <div id="partner-connect-area"></div>
-  <div id="partner-feed-area"></div>
-</div>
-
-<!-- SETTINGS -->
-
-<div class="screen plain" id="s-settings">
-  <div class="screen-hdr">
-    <div class="back-btn" onclick="goBack()">&#8592;</div>
-    <div class="screen-title">설정</div>
-  </div>
-  <div class="settings-scroll">
-    <div class="info-block" style="margin-bottom:16px;">
-      <div class="block-title">내 프로필</div>
-      <div class="info-row">
-        <div class="i-lbl">임신 주수</div>
-        <input id="week-input" type="number" class="txt-in" style="width:80px;text-align:right;padding:6px 10px;" placeholder="24">
-      </div>
-      <div class="info-row">
-        <div class="i-lbl">출산 예정일</div>
-        <input id="edd-input" type="date" class="txt-in" style="width:150px;text-align:right;padding:6px 10px;" oninput="autoCalcWeekFromEdd()">
-      </div>
-      <div style="padding:4px 16px 12px;font-size:12px;color:var(--text-soft);" id="settings-calc-hint"></div>
-      <div style="padding:12px 16px;">
-        <button class="save-btn" onclick="saveProfile()">저장</button>
-      </div>
-    </div>
-    <button onclick="signOut()" style="width:100%;background:#F8F6FA;color:var(--text-soft);border:1px solid rgba(200,162,201,0.3);border-radius:15px;padding:14px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">로그아웃</button>
-  </div>
-</div>
-
-<!-- SETUP -->
-
-<div class="screen plain" id="s-setup">
-  <div class="setup-wrap">
-    <div class="setup-logo">nuri 🌸</div>
-    <div class="setup-sub">임신 정보를 입력해줘요</div>
-    <div class="setup-step on" id="setup-step-1">
-      <div class="setup-q">어떤 정보를 알고 있어요?</div>
-      <div style="display:flex;flex-direction:column;gap:12px;">
-        <div id="opt-week" onclick="selectSetupOpt('week')" style="border:1.5px solid rgba(200,162,201,0.4);border-radius:14px;padding:18px;cursor:pointer;background:#fff;">
-          <div style="font-size:15px;font-weight:700;color:var(--text);">현재 임신 주수</div>
-          <div style="font-size:12px;color:var(--text-soft);margin-top:4px;">지금 몇 주인지 알고 있어요</div>
-        </div>
-        <div id="opt-lmp" onclick="selectSetupOpt('lmp')" style="border:1.5px solid rgba(200,162,201,0.4);border-radius:14px;padding:18px;cursor:pointer;background:#fff;">
-          <div style="font-size:15px;font-weight:700;color:var(--text);">마지막 생리 시작일</div>
-          <div style="font-size:12px;color:var(--text-soft);margin-top:4px;">날짜로 자동 계산해요</div>
-        </div>
-        <div id="opt-edd" onclick="selectSetupOpt('edd')" style="border:1.5px solid rgba(200,162,201,0.4);border-radius:14px;padding:18px;cursor:pointer;background:#fff;">
-          <div style="font-size:15px;font-weight:700;color:var(--text);">출산 예정일 (EDD)</div>
-          <div style="font-size:12px;color:var(--text-soft);margin-top:4px;">산부인과에서 받은 날짜예요</div>
+  <div id="app">
+    <div class="screen" id="s-login">
+      <div class="login-wrap">
+        <div class="login-logo">nuri</div>
+        <div class="login-sub">임신 기록을 시작해요 🌸</div>
+        <div class="login-fields">
+          <input id="login-email" class="txt-in" type="email" placeholder="이메일">
+          <input id="login-pw" class="txt-in" type="password" placeholder="비밀번호">
+          <button class="save-btn" onclick="signIn()">로그인</button>
+          <button class="login-btn-sub" onclick="signUp()">회원가입</button>
         </div>
       </div>
     </div>
-    <div class="setup-step" id="setup-step-2">
-      <div class="setup-q" id="setup-step2-q">현재 임신 주수를 입력해줘요</div>
-      <div class="setup-hint" id="setup-step2-hint">예정일도 함께 입력하면 더 정확해요</div>
-      <div id="setup-week-row" style="display:flex;align-items:center;gap:10px;">
-        <input type="number" class="setup-input" id="setup-week-input" min="1" max="42" placeholder="24" style="font-size:28px;font-weight:800;text-align:center;width:120px;" oninput="calcWeekPreview()">
-        <span style="font-size:16px;color:var(--text-soft);">주차</span>
+
+    <div class="screen" id="s-home">
+      <div class="home-pad">
+        <div id="home-timeline"></div>
       </div>
-      <div id="setup-date-row">
-        <input type="date" class="setup-input" id="setup-date-input" oninput="calcWeekPreview()">
-      </div>
-      <div class="setup-calc" id="setup-calc-result">입력하면 예정일을 계산해요 ✨</div>
-      <button class="setup-btn" onclick="saveSetup()">시작하기 🌱</button>
-      <div class="setup-skip" onclick="skipSetup()">나중에 입력할게요</div>
     </div>
-  </div>
-</div>
 
-<!-- BOTTOM NAV -->
-
-<nav class="bottom-nav">
-  <div class="nav-left">
-    <div class="nav-item active" id="n-home" onclick="navTo('s-home','n-home')"><i class="ph ph-house"></i></div>
-    <div class="nav-item" id="n-cal" onclick="navTo('s-home','n-cal')"><i class="ph ph-calendar-dots"></i></div>
-    <div class="nav-item" id="n-profile" onclick="navTo('s-settings','n-profile');loadProfile()"><i class="ph ph-user"></i></div>
-  </div>
-  <div class="nav-fab" onclick="goTo('s-new')"><i class="ph ph-plus"></i></div>
-</nav>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-// ─── SUPABASE ───────────────────────────────────────────
-const _supabase = supabase.createClient(
-  'https://sctgioatjgudhtinvesf.supabase.co',
-  'sb_publishable_Fivp1MTaIYVnvTJkQDyvIw_wHrmQ5d-'
-);
-
-// ─── STATE ──────────────────────────────────────────────
-let selectedFile = null;
-let hist = [];
-let currentUserId = null;
-let currentUserProfile = null;
-
-// ─── NAVIGATION ─────────────────────────────────────────
-function goTo(id) {
-  const c = document.querySelector('.screen.active');
-  const n = document.getElementById(id);
-  if (!n || c === n) return;
-  if (c) c.classList.add('exit');
-  n.classList.add('active');
-  hist.push(id);
-  if (id === 's-new') {
-    const di = document.getElementById('entry-date-input');
-    if (di && !di.value) di.value = new Date().toISOString().split('T')[0];
-    calcEntryWeek();
-  }
-  setTimeout(() => { if (c) c.classList.remove('active','exit'); }, 340);
-}
-function goBack() {
-  if (hist.length <= 1) return;
-  hist.pop();
-  const prevId = hist[hist.length - 1];
-  const c = document.querySelector('.screen.active');
-  const p = document.getElementById(prevId);
-  if (!p || !c) return;
-  p.classList.add('active');
-  c.style.transition = 'transform 0.3s cubic-bezier(0.4,0,0.2,1)';
-  c.style.transform = 'translateX(100%)';
-  setTimeout(() => { c.classList.remove('active'); c.style.cssText = ''; }, 310);
-  if (prevId === 's-home') loadEntries();
-}
-function navTo(screenId, navId) {
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  const nav = document.getElementById(navId);
-  if (nav) nav.classList.add('active');
-  const c = document.querySelector('.screen.active');
-  const n = document.getElementById(screenId);
-  if (!n) return;
-  if (c) c.classList.remove('active');
-  n.classList.add('active');
-  hist = [screenId];
-  if (screenId === 's-home') loadEntries();
-  if (screenId === 's-settings') loadProfile();
-}
-
-// ─── UI HELPERS ──────────────────────────────────────────
-function selTab(el) {
-  el.closest('.type-tabs').querySelectorAll('.type-tab').forEach(t => t.classList.remove('on'));
-  el.classList.add('on');
-}
-function selPill(el) {
-  el.closest('.pills').querySelectorAll('.pill').forEach(p => p.classList.remove('on'));
-  el.classList.add('on');
-}
-function previewPhoto(input) {
-  const file = input.files && input.files[0];
-  if (!file) return;
-  selectedFile = file;
-  const reader = new FileReader();
-  reader.onload = e => {
-    const preview = document.getElementById('photo-preview');
-    if (preview) { preview.src = e.target.result; preview.style.display = 'block'; }
-    const lbl = document.getElementById('cam-lbl');
-    if (lbl) lbl.style.display = 'none';
-  };
-  reader.readAsDataURL(file);
-}
-function fmtTime(iso) {
-  if (!iso) return '';
-  return new Date(iso).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
-}
-function fmtRelTime(iso) {
-  if (!iso) return '';
-  const diff = Date.now() - new Date(iso).getTime();
-  const m = Math.floor(diff/60000);
-  if (m < 1) return '방금';
-  if (m < 60) return m + '분 전';
-  const h = Math.floor(m/60);
-  if (h < 24) return h + '시간 전';
-  return Math.floor(h/24) + '일 전';
-}
-
-// ─── AUTH ────────────────────────────────────────────────
-async function signIn() {
-  const email = document.getElementById('login-email').value.trim();
-  const pw = document.getElementById('login-pw').value;
-  const res = await _supabase.auth.signInWithPassword({ email, password: pw });
-  if (res.error) { alert('로그인 실패: ' + res.error.message); return; }
-  currentUserId = res.data.user.id;
-  await loadCurrentProfile();
-  showHome();
-}
-async function signUp() {
-  const email = document.getElementById('login-email').value.trim();
-  const pw = document.getElementById('login-pw').value;
-  const res = await _supabase.auth.signUp({ email, password: pw });
-  if (res.error) { alert('가입 실패: ' + res.error.message); return; }
-  currentUserId = res.data.user.id;
-  alert('가입 완료! 🌸');
-  showHome();
-}
-async function signOut() {
-  await _supabase.auth.signOut();
-  currentUserId = null; currentUserProfile = null;
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('s-login').classList.add('active');
-  hist = ['s-login'];
-}
-async function loadCurrentProfile() {
-  if (!currentUserId) return;
-  const res = await _supabase.from('profiles').select('*').eq('id', currentUserId).single();
-  currentUserProfile = res.data;
-}
-function showHome() {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('s-home').classList.add('active');
-  hist = ['s-home'];
-  loadEntries();
-}
-async function checkAuth() {
-  const params = new URLSearchParams(window.location.search);
-  const inviteCode = params.get('invite');
-  const res = await _supabase.auth.getSession();
-  const session = res.data && res.data.session;
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  if (inviteCode && !session) localStorage.setItem('pendingInvite', inviteCode);
-  if (session) {
-    currentUserId = session.user.id;
-    await loadCurrentProfile();
-    if (inviteCode) { await acceptInvite(inviteCode); localStorage.removeItem('pendingInvite'); }
-    const pending = localStorage.getItem('pendingInvite');
-    if (pending) { localStorage.removeItem('pendingInvite'); await acceptInvite(pending); }
-    const needsSetup = !currentUserProfile || !currentUserProfile.current_week;
-    if (needsSetup) { document.getElementById('s-setup').classList.add('active'); hist = ['s-setup']; }
-    else showHome();
-  } else {
-    document.getElementById('s-login').classList.add('active');
-    hist = ['s-login'];
-  }
-}
-
-// ─── PARTNER ─────────────────────────────────────────────
-async function acceptInvite(inviteCode) {
-  const pres = await _supabase.from('profiles').select('*').eq('invite_code', inviteCode).single();
-  if (!pres.data || pres.data.id === currentUserId) return;
-  await _supabase.from('follows').upsert([
-    { follower_id: currentUserId, following_id: pres.data.id },
-    { follower_id: pres.data.id, following_id: currentUserId }
-  ]);
-  alert('💜 파트너와 연결됐어요! ' + (pres.data.display_name || '파트너'));
-}
-async function getOrCreateInviteCode() {
-  await loadCurrentProfile();
-  if (currentUserProfile && currentUserProfile.invite_code) return currentUserProfile.invite_code;
-  const code = Math.random().toString(36).slice(2, 10);
-  await _supabase.from('profiles').upsert({ id: currentUserId, invite_code: code });
-  await loadCurrentProfile();
-  return code;
-}
-async function copyInviteLink() {
-  const code = await getOrCreateInviteCode();
-  const url = window.location.origin + window.location.pathname + '?invite=' + code;
-  await navigator.clipboard.writeText(url).catch(() => {});
-  const el = document.getElementById('invite-link-text');
-  if (el) el.textContent = url;
-  alert('링크 복사됐어! 📋\n파트너에게 보내줘요');
-}
-async function loadPartnerScreen() {
-  if (!currentUserId) return;
-  const fres = await _supabase.from('follows').select('following_id').eq('follower_id', currentUserId).limit(1).single();
-  const heroArea = document.getElementById('partner-hero-area');
-  const connectArea = document.getElementById('partner-connect-area');
-  const feedArea = document.getElementById('partner-feed-area');
-  const code = await getOrCreateInviteCode();
-  const inviteUrl = window.location.origin + window.location.pathname + '?invite=' + code;
-  if (!fres.data) {
-    heroArea.innerHTML = `<div class="partner-hero"><div class="partner-avatars"><div class="p-av mom">🌸</div><div class="p-connector"></div><div class="p-av partner" style="opacity:0.4;border-style:dashed;">?</div></div><div style="font-size:22px;font-weight:700;color:#fff;margin-bottom:4px;">파트너를 초대해요</div><div style="font-size:13px;color:rgba(255,255,255,0.6);">링크를 보내면 공동 기록을 시작할 수 있어요</div></div>`;
-    connectArea.innerHTML = `<div class="connect-card"><div class="connect-card-hdr"><div class="connect-card-title">💜 파트너 초대 링크</div><div class="connect-card-sub">파트너가 링크를 열면 자동으로 연결돼요</div></div><div class="connect-card-body"><div class="invite-code-box" onclick="copyInviteLink()"><div class="invite-code-text" id="invite-link-text">${inviteUrl}</div><div class="invite-copy-btn"><i class="ph ph-copy"></i></div></div><button class="save-btn" onclick="copyInviteLink()">링크 복사 & 공유 📋</button></div></div>`;
-    feedArea.innerHTML = '';
-    return;
-  }
-  const partnerId = fres.data.following_id;
-  const ppRes = await _supabase.from('profiles').select('*').eq('id', partnerId).single();
-  const partnerProfile = ppRes.data || {};
-  const partnerName = partnerProfile.display_name || '파트너';
-  const myName = (currentUserProfile && currentUserProfile.display_name) || '나';
-  heroArea.innerHTML = `<div class="partner-hero"><div class="partner-avatars"><div class="p-av mom">🌸</div><div class="p-connector"></div><div class="p-av partner">💙</div></div><div style="font-size:22px;font-weight:700;color:#fff;margin-bottom:4px;">${myName} & ${partnerName}</div><div style="font-size:13px;color:rgba(255,255,255,0.6);">임신 ${currentUserProfile?.current_week || '?'}주차</div><div style="margin-top:14px;"><div class="partner-status-bar"><div class="p-status-dot"></div><div class="p-status-txt"><strong>${partnerName}</strong>님과 연결됐어요 💜</div></div></div></div>`;
-  const [myRes, partnerRes] = await Promise.all([
-    _supabase.from('entries').select('*').eq('user_id', currentUserId).eq('is_public', true).order('created_at', { ascending: false }).limit(20),
-    _supabase.from('entries').select('*').eq('user_id', partnerId).eq('is_public', true).order('created_at', { ascending: false }).limit(20)
-  ]);
-  const allEntries = [...(myRes.data||[]).map(e=>({...e,_owner:'mine'})), ...(partnerRes.data||[]).map(e=>({...e,_owner:'partner'}))].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
-  let feedHTML = `<div class="partner-feed-section"><div class="pf-header"><div class="pf-title">공유 기록 💜</div><div class="pf-badge">공개된 기록만 보여요</div></div>`;
-  if (allEntries.length === 0) feedHTML += `<div class="pf-empty">아직 공유된 기록이 없어요 🌱</div>`;
-  else allEntries.forEach(e => { feedHTML += buildFeedItemHTML(e, e._owner==='mine'?myName:partnerName, e._owner==='mine'); });
-  feedHTML += '</div>';
-  feedArea.innerHTML = feedHTML;
-  allEntries.forEach(e => loadComments(e.id));
-}
-
-// ─── FEED BUILDER ────────────────────────────────────────
-function buildFeedItemHTML(entry, ownerName, isMine) {
-  const hasPhoto = !!entry.image_url;
-  const time = fmtTime(entry.created_at);
-  const moodEmoji = entry.mood ? entry.mood.split(' ')[0] : '';
-  const entryClass = isMine === true ? 'mine-entry' : isMine === false ? 'partner-entry' : '';
-  return `<div class="feed-item ${entryClass}" id="entry-${entry.id}">
-    ${hasPhoto ? `<img class="feed-photo" src="${entry.image_url}" alt="사진">` : ''}
-    ${ownerName ? `<div class="partner-badge">${isMine?'🌸':'💙'} ${ownerName}</div>` : ''}
-    <div class="feed-body">
-      <div class="feed-row1"><span class="feed-date">${entry.date||''}</span><span class="feed-time">${time}</span></div>
-      <div class="feed-type">${entry.type||'일기'}</div>
-      <div class="feed-text">${entry.content||''}</div>
-      ${moodEmoji ? `<div class="feed-mood">${moodEmoji}</div>` : ''}
-    </div>
-    <div class="cmt-section">
-      <div class="cmt-toggle" onclick="toggleComments('${entry.id}')">
-        <i class="ph-light ph-chat-circle-dots"></i>
-        <span class="cmt-count" id="cmt-count-${entry.id}">0</span>
+    <div class="screen plain" id="s-new">
+      <div class="screen-hdr">
+        <div class="back-btn" onclick="goBack()">&#8592;</div>
+        <div class="screen-title">새로운 기록</div>
       </div>
-      <div id="cmt-list-${entry.id}" class="cmt-list" style="display:none;"></div>
-      <div class="cmt-input-area" id="cmt-input-area-${entry.id}" style="display:none;">
-        <div class="cmt-av-input">🌸</div>
-        <div class="cmt-input-wrap">
-          <input class="cmt-input" id="cmt-input-${entry.id}" placeholder="댓글을 남겨요..."
-            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendComment('${entry.id}');}">
-          <button class="cmt-send-btn" onclick="sendComment('${entry.id}')"><i class="ph ph-paper-plane-tilt"></i></button>
+      <div class="type-tabs">
+        <div class="type-tab on" onclick="selTab(this)">📷 초음파</div>
+        <div class="type-tab" onclick="selTab(this)">📝 일기</div>
+        <div class="type-tab" onclick="selTab(this)">🏥 진료</div>
+      </div>
+      <div class="form-pad">
+        <div class="cam-zone" onclick="document.getElementById('photo-input').click()">
+          <div style="font-size:28px;opacity:0.6;">📷</div>
+          <div style="font-size:13px;font-weight:500;color:var(--text-mid);" id="cam-lbl">사진 추가</div>
+          <div style="font-size:11px;color:var(--text-soft);">탭해서 촬영하거나 선택</div>
+          <img id="photo-preview" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+        </div>
+        <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="previewPhoto(this)">
+        <div class="fld">
+          <label class="fld-lbl">날짜</label>
+          <input type="date" id="entry-date-input" class="txt-in" oninput="calcEntryWeek()">
+          <div style="font-size:12px;color:var(--text-soft);margin-top:6px;" id="entry-week-hint"></div>
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">메모</label>
+          <input id="entry-content" class="txt-in" placeholder="오늘 기록...">
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">감정</label>
+          <div class="pills" id="mood-pills">
+            <div class="pill on" onclick="selPill(this)">😊 행복</div>
+            <div class="pill" onclick="selPill(this)">🥹 감동</div>
+            <div class="pill" onclick="selPill(this)">😰 걱정</div>
+            <div class="pill" onclick="selPill(this)">😴 피곤</div>
+          </div>
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">공개 범위</label>
+          <div class="pills" id="privacy-pills">
+            <div class="pill on" onclick="selPill(this)" id="privacy-private">🔒 나만 보기</div>
+            <div class="pill" onclick="selPill(this)" id="privacy-public">💜 파트너 공유</div>
+          </div>
+        </div>
+        <button class="save-btn" onclick="saveEntry()">저장하기</button>
+      </div>
+    </div>
+
+    <div class="screen" id="s-medical">
+      <div class="med-hero">
+        <div class="med-lbl">메디컬 프로필</div>
+        <div class="med-name">건강 기록</div>
+        <div class="sos-strip">
+          <div class="sos-icon">🆘</div>
+          <div class="sos-txt"><strong>응급 정보</strong>iPhone Health 앱에서 확인 가능</div>
+          <div class="sos-arrow">›</div>
+        </div>
+      </div>
+      <div class="med-body">
+        <div class="info-block">
+          <div class="block-title">의료 정보</div>
+          <div class="info-row"><div class="i-lbl">혈액형</div><div class="chip-blood">A+</div></div>
+          <div class="info-row"><div class="i-lbl">임신 상태</div><div class="chip-ok">✓ 정상 임신</div></div>
+          <div class="info-row"><div class="i-lbl">알레르기</div><div class="chip-warn">⚠ 페니실린</div></div>
+        </div>
+        <div class="info-block">
+          <div class="block-title">담당의</div>
+          <div class="info-row"><div class="i-lbl">병원</div><div class="i-val">서울 성모 병원</div></div>
+          <div class="info-row"><div class="i-lbl">담당의</div><div class="i-val">Dr. 박미연</div></div>
         </div>
       </div>
     </div>
-  </div>`;
-}
 
-// ─── COMMENTS ────────────────────────────────────────────
-function toggleComments(entryId) {
-  const list = document.getElementById('cmt-list-' + entryId);
-  const inputArea = document.getElementById('cmt-input-area-' + entryId);
-  if (!list) return;
-  const isHidden = list.style.display === 'none';
-  list.style.display = isHidden ? 'flex' : 'none';
-  list.style.flexDirection = 'column';
-  if (inputArea) inputArea.style.display = isHidden ? 'flex' : 'none';
-  if (isHidden) loadComments(entryId);
-}
-async function loadComments(entryId) {
-  const countEl = document.getElementById('cmt-count-' + entryId);
-  const listEl = document.getElementById('cmt-list-' + entryId);
-  if (!listEl) return;
-  const res = await _supabase.from('comments').select('*').eq('entry_id', entryId).order('created_at', { ascending: true });
-  if (res.error) return;
-  const comments = res.data || [];
-  if (countEl) countEl.textContent = comments.length;
-  if (listEl.style.display === 'none') return;
-  if (comments.length === 0) { listEl.innerHTML = ''; return; }
-  listEl.innerHTML = comments.map(c => {
-    const isMine = c.user_id === currentUserId;
-    return `<div class="cmt-row"><div class="cmt-av ${isMine?'mine':'partner'}">${isMine?'🌸':'💙'}</div><div class="cmt-bubble ${isMine?'mine':'partner'}"><div class="cmt-name ${isMine?'':'partner-name'}">${c.display_name||'익명'}</div><div class="cmt-text">${c.content}</div><div class="cmt-time">${fmtRelTime(c.created_at)}</div></div></div>`;
-  }).join('');
-}
-async function sendComment(entryId) {
-  const input = document.getElementById('cmt-input-' + entryId);
-  const content = input ? input.value.trim() : '';
-  if (!content) return;
-  const ures = await _supabase.auth.getUser();
-  const user = ures.data && ures.data.user;
-  if (!user) { alert('로그인이 필요해요'); return; }
-  let displayName = user.email;
-  if (currentUserProfile && currentUserProfile.display_name) displayName = currentUserProfile.display_name;
-  if (input) input.value = '';
-  const ins = await _supabase.from('comments').insert({ entry_id: entryId, user_id: user.id, display_name: displayName, content });
-  if (ins.error) { alert('댓글 저장 실패: ' + ins.error.message); return; }
-  await loadComments(entryId);
-}
+    <div class="screen" id="s-partner">
+      <div id="partner-hero-area"></div>
+      <div id="partner-connect-area"></div>
+      <div id="partner-feed-area"></div>
+    </div>
 
-// ─── ENTRIES ─────────────────────────────────────────────
-const babyFacts = {
-  4:'씨앗 크기 🌱',5:'참깨 크기',6:'완두콩 크기',7:'블루베리 크기',8:'강낭콩 크기',9:'포도 크기',10:'딸기 크기',11:'라임 크기',
-  12:'자두 크기',13:'복숭아 크기',14:'레몬 크기',15:'오렌지 크기',16:'아보카도 크기',17:'배 크기',18:'피망 크기',19:'토마토 크기',
-  20:'바나나 크기',21:'당근 크기',22:'파파야 크기',23:'망고 크기',24:'옥수수 크기 🌽',25:'순무 크기',26:'양상추 크기',27:'꽃양배추 크기',
-  28:'가지 크기',29:'버터넛 스쿼시',30:'양배추 크기',31:'코코넛 크기',32:'네타 멜론 크기',33:'파인애플 크기',34:'칸탈루프 크기',35:'허니듀 크기',
-  36:'상추 크기',37:'스위스 차드',38:'미니 수박',39:'수박 크기',40:'호박 크기'
-};
-const babyDev = {
-  4:'심장 형성 중',5:'뇌 발달 시작',6:'팔다리 싹 발생',7:'손가락 형성',8:'모든 주요 장기 형성',9:'근육 발달',10:'손톱 자라기 시작',11:'생식기 발달',
-  12:'반사 신경 발달',13:'지문 형성 중',14:'얼굴 근육 발달',15:'청각 발달 시작',16:'눈이 빛 감지',17:'땀샘 발달',18:'하품하고 기지개',19:'신장 기능 시작',
-  20:'태동 느낄 수 있어요',21:'눈썹 자라기 시작',22:'입술 발달',23:'폐 발달 중',24:'청각이 발달 중이에요',25:'손바닥 잡기 반사',26:'눈 뜨기 시작',27:'뇌 급속 성장',
-  28:'REM 수면 시작',29:'뼈 굳어지기 시작',30:'골수 적혈구 생성',31:'모든 감각 활성화',32:'피부 윤곽 잡히기 시작',33:'뼈 완전히 발달',34:'중추신경계 성숙',35:'신장 완전 발달',
-  36:'지방 축적 중',37:'면역 체계 강화',38:'출산 준비 완료',39:'폐 완전히 성숙',40:'출산 대기 중'
-};
+    <div class="screen plain" id="s-settings">
+      <div class="screen-hdr">
+        <div class="back-btn" onclick="goBack()">&#8592;</div>
+        <div class="screen-title">설정</div>
+      </div>
+      <div class="settings-scroll">
+        <div class="info-block" style="margin-bottom:16px;">
+          <div class="block-title">내 프로필</div>
+          <div class="info-row">
+            <div class="i-lbl">임신 주수</div>
+            <input id="week-input" type="number" class="txt-in" style="width:80px;text-align:right;padding:6px 10px;" placeholder="24">
+          </div>
+          <div class="info-row">
+            <div class="i-lbl">출산 예정일</div>
+            <input id="edd-input" type="date" class="txt-in" style="width:150px;text-align:right;padding:6px 10px;" oninput="autoCalcWeekFromEdd()">
+          </div>
+          <div style="padding:4px 16px 12px;font-size:12px;color:var(--text-soft);" id="settings-calc-hint"></div>
+          <div style="padding:12px 16px;">
+            <button class="save-btn" onclick="saveProfile()">저장</button>
+          </div>
+        </div>
+        <button onclick="signOut()" style="width:100%;background:#F8F6FA;color:var(--text-soft);border:1px solid rgba(200,162,201,0.3);border-radius:15px;padding:14px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">로그아웃</button>
+      </div>
+    </div>
 
-function buildWeekSectionHTML(week, entries, isCurrent) {
-  const fact = babyFacts[week] || '';
-  const dev = babyDev[week] || '';
-  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const now = new Date();
-  const dateStr = days[now.getDay()]+'.'+now.getDate()+'.'+months[now.getMonth()]+'.'+now.getFullYear();
-
-  let html = `<div class="week-section${isCurrent?' current-week':''}" data-week="${week}">
-    <div class="week-sticky">
-      <div class="dot-wrap"><div class="dot-inner"></div></div>
-      <div class="week-block">
-        <span class="week-num">${week}</span>
-        <div class="week-label-col">
-          <span class="week-lbl">week</span>
-          ${isCurrent?`<span class="week-date-lbl">${dateStr}</span>`:''}
+    <div class="screen plain" id="s-setup">
+      <div class="setup-wrap">
+        <div class="setup-logo">nuri 🌸</div>
+        <div class="setup-sub">임신 정보를 입력해줘요</div>
+        <div class="setup-step on" id="setup-step-1">
+          <div class="setup-q">어떤 정보를 알고 있어요?</div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div id="opt-week" onclick="selectSetupOpt('week')" style="border:1.5px solid rgba(200,162,201,0.4);border-radius:14px;padding:18px;cursor:pointer;background:#fff;">
+              <div style="font-size:15px;font-weight:700;color:var(--text);">현재 임신 주수</div>
+              <div style="font-size:12px;color:var(--text-soft);margin-top:4px;">지금 몇 주인지 알고 있어요</div>
+            </div>
+            <div id="opt-lmp" onclick="selectSetupOpt('lmp')" style="border:1.5px solid rgba(200,162,201,0.4);border-radius:14px;padding:18px;cursor:pointer;background:#fff;">
+              <div style="font-size:15px;font-weight:700;color:var(--text);">마지막 생리 시작일</div>
+              <div style="font-size:12px;color:var(--text-soft);margin-top:4px;">날짜로 자동 계산해요</div>
+            </div>
+            <div id="opt-edd" onclick="selectSetupOpt('edd')" style="border:1.5px solid rgba(200,162,201,0.4);border-radius:14px;padding:18px;cursor:pointer;background:#fff;">
+              <div style="font-size:15px;font-weight:700;color:var(--text);">출산 예정일 (EDD)</div>
+              <div style="font-size:12px;color:var(--text-soft);margin-top:4px;">산부인과에서 받은 날짜예요</div>
+            </div>
+          </div>
+        </div>
+        <div class="setup-step" id="setup-step-2">
+          <div class="setup-q" id="setup-step2-q">현재 임신 주수를 입력해줘요</div>
+          <div class="setup-hint" id="setup-step2-hint">예정일도 함께 입력하면 더 정확해요</div>
+          <div id="setup-week-row" style="display:flex;align-items:center;gap:10px;">
+            <input type="number" class="setup-input" id="setup-week-input" min="1" max="42" placeholder="24" style="font-size:28px;font-weight:800;text-align:center;width:120px;" oninput="calcWeekPreview()">
+            <span style="font-size:16px;color:var(--text-soft);">주차</span>
+          </div>
+          <div id="setup-date-row">
+            <input type="date" class="setup-input" id="setup-date-input" oninput="calcWeekPreview()">
+          </div>
+          <div class="setup-calc" id="setup-calc-result">입력하면 예정일을 계산해요 ✨</div>
+          <button class="setup-btn" onclick="saveSetup()">시작하기 🌱</button>
+          <div class="setup-skip" onclick="skipSetup()">나중에 입력할게요</div>
         </div>
       </div>
-    </div>`;
+    </div>
 
-  if (fact) {
-    html += `<div class="week-fact"><div class="fact-bar">
-      <div class="fact-icon">💡</div>
-      <span class="fact-main">${fact}</span>
-      <span class="fact-sub">${dev}</span>
-    </div></div>`;
-  }
-  if (isCurrent) {
-    html += `<div class="appt-scroll-row">
-      <div class="appt-card">
-        <div class="appt-top"><div class="appt-badge">3일 후</div><div class="appt-type">초음파</div></div>
-        <div class="appt-info"><div class="appt-date">3월 6일 금요일 오전 10:30</div><div class="appt-place">서울 성모 병원 Dr. 박미연</div></div>
+    <nav class="bottom-nav">
+      <div class="nav-left liquid-glass">
+        <div class="nav-item active" id="n-home" onclick="navTo('s-home','n-home')">
+          <i class="ph ph-house"></i><span class="nav-label">홈</span>
+        </div>
+        <div class="nav-item" id="n-appt" onclick="navTo('s-medical','n-appt')">
+          <i class="ph ph-calendar-check"></i><span class="nav-label">진료예약</span>
+        </div>
+        <div class="nav-item" id="n-profile" onclick="navTo('s-settings','n-profile');loadProfile()">
+          <i class="ph ph-user"></i><span class="nav-label">프로필</span>
+        </div>
       </div>
-    </div>`;
-  }
-  if (entries.length > 0) {
-    const myName = (currentUserProfile && currentUserProfile.display_name) || '나';
-    html += `<div class="feed-section">`;
-    entries.forEach(e => { html += buildFeedItemHTML(e, myName, true); });
-    html += `</div>`;
-  }
-  html += '</div>';
-  return html;
-}
+      <button class="nav-fab liquid-glass" id="composer-fab" type="button" aria-label="작성하기 열기" aria-expanded="false" onclick="toggleComposer()">
+        <span class="fab-icon fab-plus"><i class="ph ph-plus"></i></span>
+        <span class="fab-icon fab-close"><i class="ph ph-x"></i></span>
+      </button>
+    </nav>
+  </div>
 
-async function loadEntries() {
-  const timeline = document.getElementById('home-timeline');
-  if (!timeline) return;
-  await loadCurrentProfile();
-  const res = await _supabase.from('entries').select('*').eq('user_id', currentUserId || '').order('created_at', { ascending: false });
-  if (res.error) { console.error(res.error); return; }
-  const data = res.data || [];
-  let currentWeek = 24;
-  let maxWeek = 40;
-  if (currentUserProfile) {
-    if (currentUserProfile.current_week) currentWeek = parseInt(currentUserProfile.current_week);
-    if (currentUserProfile.edd) {
-      const eddDate = new Date(currentUserProfile.edd);
-      const diffDays = Math.round((eddDate - new Date()) / (1000*60*60*24));
-      maxWeek = Math.min(42, currentWeek + Math.round(diffDays/7));
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const _supabase = supabase.createClient(
+      'https://sctgioatjgudhtinvesf.supabase.co',
+      'sb_publishable_Fivp1MTaIYVnvTJkQDyvIw_wHrmQ5d-'
+    );
+
+    let selectedFile = null;
+    let hist = [];
+    let currentUserId = null;
+    let currentUserProfile = null;
+
+    function isComposerOpen() {
+      return document.getElementById('s-new')?.classList.contains('active');
     }
-  }
-  const groups = {};
-  data.forEach(e => { const wk = e.week || 0; if (!groups[wk]) groups[wk] = []; groups[wk].push(e); });
-  let timelineHTML = '';
-  for (let i = 4; i <= Math.max(maxWeek, currentWeek); i++) {
-    const wEntries = groups[i] || [];
-    timelineHTML += buildWeekSectionHTML(i, wEntries, i === currentWeek);
-  }
-  // Real DOM line element — reliable across all scroll contexts
-  timeline.innerHTML = timelineHTML;
-  data.forEach(e => loadComments(e.id));
-  const screen = document.getElementById('s-home');
-  if (screen) {
-    setTimeout(() => {
-      const sections = Array.from(document.querySelectorAll('.week-section'));
 
-      // Step 1 — create/position fixed line based on dot position
-      let fixedLine = document.getElementById('timeline-fixed-line');
-      if (!fixedLine) {
-        fixedLine = document.createElement('div');
-        fixedLine.id = 'timeline-fixed-line';
-        document.body.appendChild(fixedLine);
+    function syncComposerState() {
+      const fab = document.getElementById('composer-fab');
+      if (!fab) return;
+      const open = isComposerOpen();
+      fab.classList.toggle('is-open', open);
+      fab.setAttribute('aria-expanded', open ? 'true' : 'false');
+      fab.setAttribute('aria-label', open ? '작성하기 닫기' : '작성하기 열기');
+    }
+
+    function toggleComposer() {
+      if (isComposerOpen()) goBack();
+      else goTo('s-new');
+    }
+
+
+    function goTo(id) {
+      const c = document.querySelector('.screen.active');
+      const n = document.getElementById(id);
+      if (!n || c === n) return;
+      if (c) c.classList.add('exit');
+      n.classList.add('active');
+      hist.push(id);
+      if (id === 's-new') {
+        const di = document.getElementById('entry-date-input');
+        if (di && !di.value) di.value = new Date().toISOString().split('T')[0];
+        calcEntryWeek();
       }
-      // Find dot position from the first week-section dot
-      
-const app = document.getElementById('app');
-const firstDot = document.querySelector('.dot-wrap');
+      setTimeout(() => {
+        if (c) c.classList.remove('active', 'exit');
+        syncComposerState();
+      }, 340);
+      syncComposerState();
+    }
 
-if (app && firstDot) {
-  let fixedLine = document.getElementById('timeline-fixed-line');
-  if (!fixedLine) {
-    fixedLine = document.createElement('div');
-    fixedLine.id = 'timeline-fixed-line';
-    app.appendChild(fixedLine);
-  }
+    function goBack() {
+      if (hist.length <= 1) return;
+      hist.pop();
+      const prevId = hist[hist.length - 1];
+      const c = document.querySelector('.screen.active');
+      const p = document.getElementById(prevId);
+      if (!p || !c) return;
+      p.classList.add('active');
+      c.style.transition = 'transform 0.3s cubic-bezier(0.4,0,0.2,1)';
+      c.style.transform = 'translateX(100%)';
+      setTimeout(() => {
+        c.classList.remove('active');
+        c.style.cssText = '';
+      }, 310);
+      if (prevId === 's-home') loadEntries();
+      syncComposerState();
+    }
 
-  const appRect = app.getBoundingClientRect();
-  const rect = firstDot.getBoundingClientRect();
-  const lineWidth = 2;
-  const dotCenterX = rect.left + rect.width / 2 - appRect.left;
-  const startY = rect.bottom - appRect.top;
+    function navTo(screenId, navId) {
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      const nav = document.getElementById(navId);
+      if (nav) nav.classList.add('active');
+      const c = document.querySelector('.screen.active');
+      const n = document.getElementById(screenId);
+      if (!n) return;
+      if (c) c.classList.remove('active');
+      n.classList.add('active');
+      hist = [screenId];
+      if (screenId === 's-home') loadEntries();
+      if (screenId === 's-settings') loadProfile();
+      syncComposerState();
+    }
 
-  fixedLine.style.left = `${dotCenterX - lineWidth / 2}px`;
-  fixedLine.style.top = `${startY}px`;
-  fixedLine.style.height = `${app.scrollHeight - startY}px`;
-}
-      requestAnimationFrame(() => fixedLine.classList.add('animate'));
+    function selTab(el) {
+      el.closest('.type-tabs').querySelectorAll('.type-tab').forEach(t => t.classList.remove('on'));
+      el.classList.add('on');
+    }
 
-      // Step 2 — sections fade in with stagger (gentle, 80ms apart)
-      sections.forEach((s, idx) => {
-        setTimeout(() => s.classList.add('visible'), 100 + idx * 80);
+    function selPill(el) {
+      el.closest('.pills').querySelectorAll('.pill').forEach(p => p.classList.remove('on'));
+      el.classList.add('on');
+    }
+
+    function previewPhoto(input) {
+      const file = input.files && input.files[0];
+      if (!file) return;
+      selectedFile = file;
+      const reader = new FileReader();
+      reader.onload = e => {
+        const preview = document.getElementById('photo-preview');
+        if (preview) {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+        }
+        const lbl = document.getElementById('cam-lbl');
+        if (lbl) lbl.style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function fmtTime(iso) {
+      if (!iso) return '';
+      return new Date(iso).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function fmtRelTime(iso) {
+      if (!iso) return '';
+      const diff = Date.now() - new Date(iso).getTime();
+      const m = Math.floor(diff / 60000);
+      if (m < 1) return '방금';
+      if (m < 60) return m + '분 전';
+      const h = Math.floor(m / 60);
+      if (h < 24) return h + '시간 전';
+      return Math.floor(h / 24) + '일 전';
+    }
+
+    async function signIn() {
+      const email = document.getElementById('login-email').value.trim();
+      const pw = document.getElementById('login-pw').value;
+      const res = await _supabase.auth.signInWithPassword({ email, password: pw });
+      if (res.error) {
+        alert('로그인 실패: ' + res.error.message);
+        return;
+      }
+      currentUserId = res.data.user.id;
+      await loadCurrentProfile();
+      showHome();
+    }
+
+    async function signUp() {
+      const email = document.getElementById('login-email').value.trim();
+      const pw = document.getElementById('login-pw').value;
+      const res = await _supabase.auth.signUp({ email, password: pw });
+      if (res.error) {
+        alert('가입 실패: ' + res.error.message);
+        return;
+      }
+      currentUserId = res.data.user.id;
+      alert('가입 완료! 🌸');
+      showHome();
+    }
+
+    async function signOut() {
+      await _supabase.auth.signOut();
+      currentUserId = null;
+      currentUserProfile = null;
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('s-login').classList.add('active');
+      hist = ['s-login'];
+      syncComposerState();
+    }
+
+    async function loadCurrentProfile() {
+      if (!currentUserId) return;
+      const res = await _supabase.from('profiles').select('*').eq('id', currentUserId).single();
+      currentUserProfile = res.data;
+    }
+
+    function showHome() {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('s-home').classList.add('active');
+      hist = ['s-home'];
+      loadEntries();
+      syncComposerState();
+    }
+
+    async function checkAuth() {
+      const params = new URLSearchParams(window.location.search);
+      const inviteCode = params.get('invite');
+      const res = await _supabase.auth.getSession();
+      const session = res.data && res.data.session;
+
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+
+      if (inviteCode && !session) localStorage.setItem('pendingInvite', inviteCode);
+
+      if (session) {
+        currentUserId = session.user.id;
+        await loadCurrentProfile();
+        if (inviteCode) {
+          await acceptInvite(inviteCode);
+          localStorage.removeItem('pendingInvite');
+        }
+        const pending = localStorage.getItem('pendingInvite');
+        if (pending) {
+          localStorage.removeItem('pendingInvite');
+          await acceptInvite(pending);
+        }
+        const needsSetup = !currentUserProfile || !currentUserProfile.current_week;
+        if (needsSetup) {
+          document.getElementById('s-setup').classList.add('active');
+          hist = ['s-setup'];
+        } else {
+          showHome();
+        }
+      } else {
+        document.getElementById('s-login').classList.add('active');
+        hist = ['s-login'];
+        syncComposerState();
+      }
+    }
+
+    async function acceptInvite(inviteCode) {
+      const pres = await _supabase.from('profiles').select('*').eq('invite_code', inviteCode).single();
+      if (!pres.data || pres.data.id === currentUserId) return;
+      await _supabase.from('follows').upsert([
+        { follower_id: currentUserId, following_id: pres.data.id },
+        { follower_id: pres.data.id, following_id: currentUserId }
+      ]);
+      alert('💜 파트너와 연결됐어요! ' + (pres.data.display_name || '파트너'));
+    }
+
+    async function getOrCreateInviteCode() {
+      await loadCurrentProfile();
+      if (currentUserProfile && currentUserProfile.invite_code) return currentUserProfile.invite_code;
+      const code = Math.random().toString(36).slice(2, 10);
+      await _supabase.from('profiles').upsert({ id: currentUserId, invite_code: code });
+      await loadCurrentProfile();
+      return code;
+    }
+
+    async function copyInviteLink() {
+      const code = await getOrCreateInviteCode();
+      const url = window.location.origin + window.location.pathname + '?invite=' + code;
+      await navigator.clipboard.writeText(url).catch(() => {});
+      const el = document.getElementById('invite-link-text');
+      if (el) el.textContent = url;
+      alert('링크 복사됐어! 📋\n파트너에게 보내줘요');
+    }
+
+    async function loadPartnerScreen() {
+      if (!currentUserId) return;
+      const fres = await _supabase.from('follows').select('following_id').eq('follower_id', currentUserId).limit(1).single();
+      const heroArea = document.getElementById('partner-hero-area');
+      const connectArea = document.getElementById('partner-connect-area');
+      const feedArea = document.getElementById('partner-feed-area');
+      const code = await getOrCreateInviteCode();
+      const inviteUrl = window.location.origin + window.location.pathname + '?invite=' + code;
+
+      if (!fres.data) {
+        heroArea.innerHTML = `<div class="partner-hero"><div class="partner-avatars"><div class="p-av mom">🌸</div><div class="p-connector"></div><div class="p-av partner" style="opacity:0.4;border-style:dashed;">?</div></div><div style="font-size:22px;font-weight:700;color:#fff;margin-bottom:4px;">파트너를 초대해요</div><div style="font-size:13px;color:rgba(255,255,255,0.6);">링크를 보내면 공동 기록을 시작할 수 있어요</div></div>`;
+        connectArea.innerHTML = `<div class="connect-card"><div class="connect-card-hdr"><div class="connect-card-title">💜 파트너 초대 링크</div><div class="connect-card-sub">파트너가 링크를 열면 자동으로 연결돼요</div></div><div class="connect-card-body"><div class="invite-code-box" onclick="copyInviteLink()"><div class="invite-code-text" id="invite-link-text">${inviteUrl}</div><div class="invite-copy-btn"><i class="ph ph-copy"></i></div></div><button class="save-btn" onclick="copyInviteLink()">링크 복사 & 공유 📋</button></div></div>`;
+        feedArea.innerHTML = '';
+        return;
+      }
+
+      const partnerId = fres.data.following_id;
+      const ppRes = await _supabase.from('profiles').select('*').eq('id', partnerId).single();
+      const partnerProfile = ppRes.data || {};
+      const partnerName = partnerProfile.display_name || '파트너';
+      const myName = (currentUserProfile && currentUserProfile.display_name) || '나';
+
+      heroArea.innerHTML = `<div class="partner-hero"><div class="partner-avatars"><div class="p-av mom">🌸</div><div class="p-connector"></div><div class="p-av partner">💙</div></div><div style="font-size:22px;font-weight:700;color:#fff;margin-bottom:4px;">${myName} & ${partnerName}</div><div style="font-size:13px;color:rgba(255,255,255,0.6);">임신 ${currentUserProfile?.current_week || '?'}주차</div><div style="margin-top:14px;"><div class="partner-status-bar"><div class="p-status-dot"></div><div class="p-status-txt"><strong>${partnerName}</strong>님과 연결됐어요 💜</div></div></div></div>`;
+
+      const [myRes, partnerRes] = await Promise.all([
+        _supabase.from('entries').select('*').eq('user_id', currentUserId).eq('is_public', true).order('created_at', { ascending: false }).limit(20),
+        _supabase.from('entries').select('*').eq('user_id', partnerId).eq('is_public', true).order('created_at', { ascending: false }).limit(20)
+      ]);
+
+      const allEntries = [
+        ...(myRes.data || []).map(e => ({ ...e, _owner: 'mine' })),
+        ...(partnerRes.data || []).map(e => ({ ...e, _owner: 'partner' }))
+      ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+      let feedHTML = `<div class="partner-feed-section"><div class="pf-header"><div class="pf-title">공유 기록 💜</div><div class="pf-badge">공개된 기록만 보여요</div></div>`;
+      if (allEntries.length === 0) {
+        feedHTML += `<div class="pf-empty">아직 공유된 기록이 없어요 🌱</div>`;
+      } else {
+        allEntries.forEach(e => {
+          feedHTML += buildFeedItemHTML(e, e._owner === 'mine' ? myName : partnerName, e._owner === 'mine');
+        });
+      }
+      feedHTML += '</div>';
+      feedArea.innerHTML = feedHTML;
+      allEntries.forEach(e => loadComments(e.id));
+    }
+
+    function buildFeedItemHTML(entry, ownerName, isMine) {
+      const hasPhoto = !!entry.image_url;
+      const time = fmtTime(entry.created_at);
+      const moodEmoji = entry.mood ? entry.mood.split(' ')[0] : '';
+      const entryClass = isMine === true ? 'mine-entry' : isMine === false ? 'partner-entry' : '';
+
+      return `<div class="feed-item ${entryClass}" id="entry-${entry.id}">
+        ${hasPhoto ? `<img class="feed-photo" src="${entry.image_url}" alt="사진">` : ''}
+        ${ownerName ? `<div class="partner-badge">${isMine ? '🌸' : '💙'} ${ownerName}</div>` : ''}
+        <div class="feed-body">
+          <div class="feed-row1"><span class="feed-date">${entry.date || ''}</span><span class="feed-time">${time}</span></div>
+          <div class="feed-type">${entry.type || '일기'}</div>
+          <div class="feed-text">${entry.content || ''}</div>
+          ${moodEmoji ? `<div class="feed-mood">${moodEmoji}</div>` : ''}
+        </div>
+        <div class="cmt-section">
+          <div class="cmt-toggle" onclick="toggleComments('${entry.id}')">
+            <i class="ph-light ph-chat-circle-dots"></i>
+            <span class="cmt-count" id="cmt-count-${entry.id}">0</span>
+          </div>
+          <div id="cmt-list-${entry.id}" class="cmt-list" style="display:none;"></div>
+          <div class="cmt-input-area" id="cmt-input-area-${entry.id}" style="display:none;">
+            <div class="cmt-av-input">🌸</div>
+            <div class="cmt-input-wrap">
+              <input class="cmt-input" id="cmt-input-${entry.id}" placeholder="댓글을 남겨요..."
+                onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendComment('${entry.id}');}">
+              <button class="cmt-send-btn" onclick="sendComment('${entry.id}')"><i class="ph ph-paper-plane-tilt"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    function toggleComments(entryId) {
+      const list = document.getElementById('cmt-list-' + entryId);
+      const inputArea = document.getElementById('cmt-input-area-' + entryId);
+      if (!list) return;
+      const isHidden = list.style.display === 'none';
+      list.style.display = isHidden ? 'flex' : 'none';
+      list.style.flexDirection = 'column';
+      if (inputArea) inputArea.style.display = isHidden ? 'flex' : 'none';
+      if (isHidden) loadComments(entryId);
+    }
+
+    async function loadComments(entryId) {
+      const countEl = document.getElementById('cmt-count-' + entryId);
+      const listEl = document.getElementById('cmt-list-' + entryId);
+      if (!listEl) return;
+
+      const res = await _supabase.from('comments').select('*').eq('entry_id', entryId).order('created_at', { ascending: true });
+      if (res.error) return;
+
+      const comments = res.data || [];
+      if (countEl) countEl.textContent = comments.length;
+      if (listEl.style.display === 'none') return;
+      if (comments.length === 0) {
+        listEl.innerHTML = '';
+        return;
+      }
+
+      listEl.innerHTML = comments.map(c => {
+        const isMine = c.user_id === currentUserId;
+        return `<div class="cmt-row"><div class="cmt-av ${isMine ? 'mine' : 'partner'}">${isMine ? '🌸' : '💙'}</div><div class="cmt-bubble ${isMine ? 'mine' : 'partner'}"><div class="cmt-name ${isMine ? '' : 'partner-name'}">${c.display_name || '익명'}</div><div class="cmt-text">${c.content}</div><div class="cmt-time">${fmtRelTime(c.created_at)}</div></div></div>`;
+      }).join('');
+    }
+
+    async function sendComment(entryId) {
+      const input = document.getElementById('cmt-input-' + entryId);
+      const content = input ? input.value.trim() : '';
+      if (!content) return;
+
+      const ures = await _supabase.auth.getUser();
+      const user = ures.data && ures.data.user;
+      if (!user) {
+        alert('로그인이 필요해요');
+        return;
+      }
+
+      let displayName = user.email;
+      if (currentUserProfile && currentUserProfile.display_name) displayName = currentUserProfile.display_name;
+      if (input) input.value = '';
+
+      const ins = await _supabase.from('comments').insert({
+        entry_id: entryId,
+        user_id: user.id,
+        display_name: displayName,
+        content
       });
 
-      // Step 3 — after sections are visible, smooth scroll to current week
-      const totalFade = 100 + sections.length * 80 + 200;
-      setTimeout(() => {
-        const target = document.querySelector(`[data-week="${currentWeek}"]`);
-        if (target) {
-          const top = target.getBoundingClientRect().top - screen.getBoundingClientRect().top + screen.scrollTop;
-          screen.scrollTo({ top: top - 20, behavior: 'smooth' });
+      if (ins.error) {
+        alert('댓글 저장 실패: ' + ins.error.message);
+        return;
+      }
+
+      await loadComments(entryId);
+    }
+
+    const babyFacts = {
+      4: '씨앗 크기 🌱', 5: '참깨 크기', 6: '완두콩 크기', 7: '블루베리 크기', 8: '강낭콩 크기', 9: '포도 크기', 10: '딸기 크기', 11: '라임 크기',
+      12: '자두 크기', 13: '복숭아 크기', 14: '레몬 크기', 15: '오렌지 크기', 16: '아보카도 크기', 17: '배 크기', 18: '피망 크기', 19: '토마토 크기',
+      20: '바나나 크기', 21: '당근 크기', 22: '파파야 크기', 23: '망고 크기', 24: '옥수수 크기 🌽', 25: '순무 크기', 26: '양상추 크기', 27: '꽃양배추 크기',
+      28: '가지 크기', 29: '버터넛 스쿼시', 30: '양배추 크기', 31: '코코넛 크기', 32: '네타 멜론 크기', 33: '파인애플 크기', 34: '칸탈루프 크기', 35: '허니듀 크기',
+      36: '상추 크기', 37: '스위스 차드', 38: '미니 수박', 39: '수박 크기', 40: '호박 크기'
+    };
+
+    const babyDev = {
+      4: '심장 형성 중', 5: '뇌 발달 시작', 6: '팔다리 싹 발생', 7: '손가락 형성', 8: '모든 주요 장기 형성', 9: '근육 발달', 10: '손톱 자라기 시작', 11: '생식기 발달',
+      12: '반사 신경 발달', 13: '지문 형성 중', 14: '얼굴 근육 발달', 15: '청각 발달 시작', 16: '눈이 빛 감지', 17: '땀샘 발달', 18: '하품하고 기지개', 19: '신장 기능 시작',
+      20: '태동 느낄 수 있어요', 21: '눈썹 자라기 시작', 22: '입술 발달', 23: '폐 발달 중', 24: '청각이 발달 중이에요', 25: '손바닥 잡기 반사', 26: '눈 뜨기 시작', 27: '뇌 급속 성장',
+      28: 'REM 수면 시작', 29: '뼈 굳어지기 시작', 30: '골수 적혈구 생성', 31: '모든 감각 활성화', 32: '피부 윤곽 잡히기 시작', 33: '뼈 완전히 발달', 34: '중추신경계 성숙', 35: '신장 완전 발달',
+      36: '지방 축적 중', 37: '면역 체계 강화', 38: '출산 준비 완료', 39: '폐 완전히 성숙', 40: '출산 대기 중'
+    };
+
+    function buildWeekSectionHTML(week, entries, isCurrent) {
+      const fact = babyFacts[week] || '';
+      const dev = babyDev[week] || '';
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const now = new Date();
+      const dateStr = days[now.getDay()] + '.' + now.getDate() + '.' + months[now.getMonth()] + '.' + now.getFullYear();
+
+      let html = `<div class="week-section${isCurrent ? ' current-week' : ''}" data-week="${week}">
+        <div class="week-sticky">
+          <div class="dot-wrap"><div class="dot-inner"></div></div>
+          <div class="week-block">
+            <span class="week-num">${week}</span>
+            <div class="week-label-col">
+              <span class="week-lbl">week</span>
+              ${isCurrent ? `<span class="week-date-lbl">${dateStr}</span>` : ''}
+            </div>
+          </div>
+        </div>`;
+
+      if (fact) {
+        html += `<div class="week-fact"><div class="fact-bar">
+          <div class="fact-icon">💡</div>
+          <span class="fact-main">${fact}</span>
+          <span class="fact-sub">${dev}</span>
+        </div></div>`;
+      }
+
+      if (isCurrent) {
+        html += `<div class="appt-scroll-row">
+          <div class="appt-card">
+            <div class="appt-top"><div class="appt-badge">3일 후</div><div class="appt-type">초음파</div></div>
+            <div class="appt-info"><div class="appt-date">3월 6일 금요일 오전 10:30</div><div class="appt-place">서울 성모 병원 Dr. 박미연</div></div>
+          </div>
+        </div>`;
+      }
+
+      if (entries.length > 0) {
+        const myName = (currentUserProfile && currentUserProfile.display_name) || '나';
+        html += `<div class="feed-section">`;
+        entries.forEach(e => { html += buildFeedItemHTML(e, myName, true); });
+        html += `</div>`;
+      }
+
+      html += '</div>';
+      return html;
+    }
+
+    function ensureTimelineLine() {
+      const app = document.getElementById('app');
+      let line = document.getElementById('timeline-fixed-line');
+      if (!app) return null;
+      if (!line) {
+        line = document.createElement('div');
+        line.id = 'timeline-fixed-line';
+        app.appendChild(line);
+      }
+      return line;
+    }
+
+    function positionTimelineLine() {
+      const app = document.getElementById('app');
+      const screen = document.getElementById('s-home');
+      const firstDot = document.querySelector('.dot-wrap');
+      const line = ensureTimelineLine();
+
+      if (!app || !screen || !firstDot || !line) return;
+
+      const appRect = app.getBoundingClientRect();
+      const rect = firstDot.getBoundingClientRect();
+      const lineWidth = 2;
+      const dotCenterX = rect.left + rect.width / 2 - appRect.left;
+      const startY = rect.bottom - appRect.top + screen.scrollTop;
+
+      line.style.left = `${dotCenterX - lineWidth / 2}px`;
+      line.style.top = `${startY}px`;
+      line.style.height = `${Math.max(screen.scrollHeight - startY, 0)}px`;
+    }
+
+    async function loadEntries() {
+      const timeline = document.getElementById('home-timeline');
+      if (!timeline) return;
+
+      await loadCurrentProfile();
+
+      const res = await _supabase.from('entries').select('*').eq('user_id', currentUserId || '').order('created_at', { ascending: false });
+      if (res.error) {
+        console.error(res.error);
+        return;
+      }
+
+      const data = res.data || [];
+      let currentWeek = 24;
+      let maxWeek = 40;
+
+      if (currentUserProfile) {
+        if (currentUserProfile.current_week) currentWeek = parseInt(currentUserProfile.current_week, 10);
+        if (currentUserProfile.edd) {
+          const eddDate = new Date(currentUserProfile.edd);
+          const diffDays = Math.round((eddDate - new Date()) / (1000 * 60 * 60 * 24));
+          maxWeek = Math.min(42, currentWeek + Math.round(diffDays / 7));
         }
-      }, Math.min(totalFade, 1200));
+      }
 
-    }, 200);
-  }
-}
+      const groups = {};
+      data.forEach(e => {
+        const wk = e.week || 0;
+        if (!groups[wk]) groups[wk] = [];
+        groups[wk].push(e);
+      });
 
-// ─── SAVE ENTRY ──────────────────────────────────────────
-async function uploadPhoto() {
-  if (!selectedFile) return null;
-  const fileName = Date.now() + '_' + Math.random().toString(36).slice(2) + '.jpg';
-  const res = await _supabase.storage.from('photos').upload(fileName, selectedFile);
-  if (res.error) { console.error(res.error); return null; }
-  const pub = _supabase.storage.from('photos').getPublicUrl(fileName);
-  return pub.data && pub.data.publicUrl ? pub.data.publicUrl : null;
-}
-async function saveEntry() {
-  const content = document.getElementById('entry-content').value;
-  const dateVal = document.getElementById('entry-date-input').value || new Date().toISOString().split('T')[0];
-  const moodEl = document.querySelector('#mood-pills .pill.on');
-  const mood = moodEl ? moodEl.textContent : '';
-  const typeEl = document.querySelector('#s-new .type-tab.on');
-  const type = typeEl ? typeEl.textContent.trim() : '일기';
-  const isPublic = document.getElementById('privacy-public')?.classList.contains('on') || false;
-  if (!currentUserId) { alert('로그인이 필요해요'); return; }
-  let currentWeek = 13;
-  if (currentUserProfile && currentUserProfile.current_week) currentWeek = parseInt(currentUserProfile.current_week);
-  const diffDays = Math.round((new Date(dateVal) - new Date()) / (1000*60*60*24));
-  let week = currentWeek + Math.round(diffDays/7);
-  if (week < 1) week = 1; if (week > 42) week = 42;
-  const image_url = selectedFile ? await uploadPhoto() : null;
-  const ins = await _supabase.from('entries').insert({ type, content, week, mood, date: dateVal, image_url, user_id: currentUserId, is_public: isPublic });
-  if (ins.error) { alert('저장 실패: ' + ins.error.message); return; }
-  selectedFile = null;
-  const preview = document.getElementById('photo-preview');
-  if (preview) { preview.src = ''; preview.style.display = 'none'; }
-  const camLbl = document.getElementById('cam-lbl');
-  if (camLbl) camLbl.style.display = 'block';
-  document.getElementById('entry-content').value = '';
-  alert('저장됐어! 🌸');
-  goBack();
-}
-async function calcEntryWeek() {
-  const dateVal = document.getElementById('entry-date-input').value;
-  const hint = document.getElementById('entry-week-hint');
-  if (!dateVal || !hint) return;
-  let currentWeek = 13;
-  if (currentUserProfile && currentUserProfile.current_week) currentWeek = parseInt(currentUserProfile.current_week);
-  const diffDays = Math.round((new Date(dateVal) - new Date()) / (1000*60*60*24));
-  let w = currentWeek + Math.round(diffDays/7);
-  if (w < 1) w = 1; if (w > 42) w = 42;
-  hint.textContent = '임신 ' + w + '주차 기록으로 저장돼요';
-}
+      let timelineHTML = '';
+      for (let i = 4; i <= Math.max(maxWeek, currentWeek); i++) {
+        const wEntries = groups[i] || [];
+        timelineHTML += buildWeekSectionHTML(i, wEntries, i === currentWeek);
+      }
 
-// ─── SETUP ───────────────────────────────────────────────
-let setupMode = 'week';
-function selectSetupOpt(mode) {
-  setupMode = mode;
-  ['week','lmp','edd'].forEach(id => { const el = document.getElementById('opt-'+id); if(el){el.style.borderColor='rgba(200,162,201,0.4)';el.style.background='#fff';} });
-  const sel = document.getElementById('opt-'+mode);
-  if (sel) { sel.style.borderColor='#834D84'; sel.style.background='rgba(131,77,132,0.06)'; }
-  const q = document.getElementById('setup-step2-q');
-  const hint = document.getElementById('setup-step2-hint');
-  const weekRow = document.getElementById('setup-week-row');
-  const dateRow = document.getElementById('setup-date-row');
-  if (mode==='week') { q.textContent='현재 임신 주수를 입력해줘요'; hint.textContent='예정일도 함께 입력하면 더 정확해요'; weekRow.style.display='flex'; dateRow.style.display='none'; }
-  else if (mode==='lmp') { q.textContent='마지막 생리 시작일을 입력해줘요'; hint.textContent='날짜로 주수를 자동 계산해요'; weekRow.style.display='none'; dateRow.style.display='block'; }
-  else { q.textContent='출산 예정일을 입력해줘요'; hint.textContent='산부인과에서 받은 날짜예요'; weekRow.style.display='none'; dateRow.style.display='block'; }
-  document.getElementById('setup-calc-result').innerHTML='입력하면 예정일을 계산해요 ✨';
-  document.getElementById('setup-step-1').classList.remove('on');
-  document.getElementById('setup-step-2').classList.add('on');
-}
-function calcWeekPreview() {
-  const result = document.getElementById('setup-calc-result');
-  let week, edd;
-  if (setupMode==='week') {
-    week = parseInt(document.getElementById('setup-week-input').value);
-    if (!week||week<1||week>42) return;
-    edd = new Date(Date.now()+(40-week)*7*24*60*60*1000);
-  } else {
-    const dVal = document.getElementById('setup-date-input').value;
-    if (!dVal) return;
-    const inputDate = new Date(dVal);
-    if (setupMode==='lmp') { week=Math.floor((Date.now()-inputDate)/(1000*60*60*24*7)); edd=new Date(inputDate.getTime()+280*24*60*60*1000); }
-    else { edd=inputDate; week=40-Math.round((inputDate-Date.now())/(1000*60*60*24*7)); }
-  }
-  if (week<1) week=1; if (week>42) week=42;
-  const eddStr=edd.getFullYear()+'년 '+(edd.getMonth()+1)+'월 '+edd.getDate()+'일';
-  result.innerHTML='현재 임신 <strong>'+week+'주차</strong>  ·  예정일 '+eddStr;
-}
-async function saveSetup() {
-  let week, edd;
-  if (setupMode==='week') {
-    week=parseInt(document.getElementById('setup-week-input').value);
-    if (!week||week<1||week>42){alert('주수를 입력해주세요 (1~42)');return;}
-    edd=new Date(Date.now()+(40-week)*7*24*60*60*1000);
-  } else {
-    const dVal=document.getElementById('setup-date-input').value;
-    if (!dVal){alert('날짜를 입력해주세요');return;}
-    const inputDate=new Date(dVal);
-    if (setupMode==='lmp'){week=Math.floor((Date.now()-inputDate)/(1000*60*60*24*7));edd=new Date(inputDate.getTime()+280*24*60*60*1000);}
-    else {edd=inputDate;week=40-Math.round((inputDate-Date.now())/(1000*60*60*24*7));}
-  }
-  if (week<1) week=1; if (week>42) week=42;
-  await _supabase.from('profiles').upsert({id:currentUserId,current_week:week,edd:edd.toISOString().split('T')[0]});
-  await loadCurrentProfile();
-  showHome();
-}
-function skipSetup() { showHome(); }
+      timeline.innerHTML = timelineHTML;
+      data.forEach(e => loadComments(e.id));
 
-// ─── SETTINGS ────────────────────────────────────────────
-function autoCalcWeekFromEdd() {
-  const eddVal = document.getElementById('edd-input').value;
-  const hint = document.getElementById('settings-calc-hint');
-  if (!eddVal) { if(hint) hint.textContent=''; return; }
-  const daysLeft = Math.ceil((new Date(eddVal)-Date.now())/(1000*60*60*24));
-  let week = 40-Math.round(daysLeft/7);
-  if (week<1) week=1; if (week>42) week=42;
-  document.getElementById('week-input').value = week;
-  if (hint) hint.textContent = '예정일 기준으로 '+week+'주차로 자동 계산됐어요';
-}
-async function loadProfile() {
-  if (!currentUserId) return;
-  await loadCurrentProfile();
-  if (!currentUserProfile) return;
-  if (!currentUserProfile.invite_code) {
-    const code = Math.random().toString(36).slice(2,10);
-    await _supabase.from('profiles').update({invite_code:code}).eq('id',currentUserId);
-    await loadCurrentProfile();
-  }
-  const wi = document.getElementById('week-input');
-  const ei = document.getElementById('edd-input');
-  if (wi && currentUserProfile?.current_week) wi.value = currentUserProfile.current_week;
-  if (ei && currentUserProfile?.edd) ei.value = currentUserProfile.edd;
-}
-async function saveProfile() {
-  if (!currentUserId) return;
-  const week = parseInt(document.getElementById('week-input').value);
-  const edd = document.getElementById('edd-input').value;
-  await _supabase.from('profiles').update({current_week:week,edd}).eq('id',currentUserId);
-  await loadCurrentProfile();
-  alert('저장됐어! 🌸');
-}
+      const screen = document.getElementById('s-home');
+      if (!screen) return;
 
-// ─── INIT ─────────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', () => { checkAuth(); });
-</script>
+      setTimeout(() => {
+        const sections = Array.from(document.querySelectorAll('.week-section'));
+        const line = ensureTimelineLine();
 
+        positionTimelineLine();
+        if (line) {
+          line.classList.remove('animate');
+          void line.offsetWidth;
+          requestAnimationFrame(() => line.classList.add('animate'));
+        }
+
+        sections.forEach((s, idx) => {
+          setTimeout(() => s.classList.add('visible'), 100 + idx * 80);
+        });
+
+        const totalFade = 100 + sections.length * 80 + 200;
+        setTimeout(() => {
+          const target = document.querySelector(`[data-week="${currentWeek}"]`);
+          if (target) {
+            const top = target.getBoundingClientRect().top - screen.getBoundingClientRect().top + screen.scrollTop;
+            screen.scrollTo({ top: top - 20, behavior: 'smooth' });
+            setTimeout(positionTimelineLine, 450);
+          }
+        }, Math.min(totalFade, 1200));
+      }, 200);
+    }
+
+    async function uploadPhoto() {
+      if (!selectedFile) return null;
+      const fileName = Date.now() + '_' + Math.random().toString(36).slice(2) + '.jpg';
+      const res = await _supabase.storage.from('photos').upload(fileName, selectedFile);
+      if (res.error) {
+        console.error(res.error);
+        return null;
+      }
+      const pub = _supabase.storage.from('photos').getPublicUrl(fileName);
+      return pub.data && pub.data.publicUrl ? pub.data.publicUrl : null;
+    }
+
+    async function saveEntry() {
+      const content = document.getElementById('entry-content').value;
+      const dateVal = document.getElementById('entry-date-input').value || new Date().toISOString().split('T')[0];
+      const moodEl = document.querySelector('#mood-pills .pill.on');
+      const mood = moodEl ? moodEl.textContent : '';
+      const typeEl = document.querySelector('#s-new .type-tab.on');
+      const type = typeEl ? typeEl.textContent.trim() : '일기';
+      const isPublic = document.getElementById('privacy-public')?.classList.contains('on') || false;
+
+      if (!currentUserId) {
+        alert('로그인이 필요해요');
+        return;
+      }
+
+      let currentWeek = 13;
+      if (currentUserProfile && currentUserProfile.current_week) currentWeek = parseInt(currentUserProfile.current_week, 10);
+
+      const diffDays = Math.round((new Date(dateVal) - new Date()) / (1000 * 60 * 60 * 24));
+      let week = currentWeek + Math.round(diffDays / 7);
+      if (week < 1) week = 1;
+      if (week > 42) week = 42;
+
+      const image_url = selectedFile ? await uploadPhoto() : null;
+      const ins = await _supabase.from('entries').insert({ type, content, week, mood, date: dateVal, image_url, user_id: currentUserId, is_public: isPublic });
+
+      if (ins.error) {
+        alert('저장 실패: ' + ins.error.message);
+        return;
+      }
+
+      selectedFile = null;
+      const preview = document.getElementById('photo-preview');
+      if (preview) {
+        preview.src = '';
+        preview.style.display = 'none';
+      }
+
+      const camLbl = document.getElementById('cam-lbl');
+      if (camLbl) camLbl.style.display = 'block';
+
+      document.getElementById('entry-content').value = '';
+      alert('저장됐어! 🌸');
+      goBack();
+    }
+
+    async function calcEntryWeek() {
+      const dateVal = document.getElementById('entry-date-input').value;
+      const hint = document.getElementById('entry-week-hint');
+      if (!dateVal || !hint) return;
+      let currentWeek = 13;
+      if (currentUserProfile && currentUserProfile.current_week) currentWeek = parseInt(currentUserProfile.current_week, 10);
+      const diffDays = Math.round((new Date(dateVal) - new Date()) / (1000 * 60 * 60 * 24));
+      let w = currentWeek + Math.round(diffDays / 7);
+      if (w < 1) w = 1;
+      if (w > 42) w = 42;
+      hint.textContent = '임신 ' + w + '주차 기록으로 저장돼요';
+    }
+
+    let setupMode = 'week';
+
+    function selectSetupOpt(mode) {
+      setupMode = mode;
+      ['week', 'lmp', 'edd'].forEach(id => {
+        const el = document.getElementById('opt-' + id);
+        if (el) {
+          el.style.borderColor = 'rgba(200,162,201,0.4)';
+          el.style.background = '#fff';
+        }
+      });
+
+      const sel = document.getElementById('opt-' + mode);
+      if (sel) {
+        sel.style.borderColor = '#834D84';
+        sel.style.background = 'rgba(131,77,132,0.06)';
+      }
+
+      const q = document.getElementById('setup-step2-q');
+      const hint = document.getElementById('setup-step2-hint');
+      const weekRow = document.getElementById('setup-week-row');
+      const dateRow = document.getElementById('setup-date-row');
+
+      if (mode === 'week') {
+        q.textContent = '현재 임신 주수를 입력해줘요';
+        hint.textContent = '예정일도 함께 입력하면 더 정확해요';
+        weekRow.style.display = 'flex';
+        dateRow.style.display = 'none';
+      } else if (mode === 'lmp') {
+        q.textContent = '마지막 생리 시작일을 입력해줘요';
+        hint.textContent = '날짜로 주수를 자동 계산해요';
+        weekRow.style.display = 'none';
+        dateRow.style.display = 'block';
+      } else {
+        q.textContent = '출산 예정일을 입력해줘요';
+        hint.textContent = '산부인과에서 받은 날짜예요';
+        weekRow.style.display = 'none';
+        dateRow.style.display = 'block';
+      }
+
+      document.getElementById('setup-calc-result').innerHTML = '입력하면 예정일을 계산해요 ✨';
+      document.getElementById('setup-step-1').classList.remove('on');
+      document.getElementById('setup-step-2').classList.add('on');
+    }
+
+    function calcWeekPreview() {
+      const result = document.getElementById('setup-calc-result');
+      let week, edd;
+
+      if (setupMode === 'week') {
+        week = parseInt(document.getElementById('setup-week-input').value, 10);
+        if (!week || week < 1 || week > 42) return;
+        edd = new Date(Date.now() + (40 - week) * 7 * 24 * 60 * 60 * 1000);
+      } else {
+        const dVal = document.getElementById('setup-date-input').value;
+        if (!dVal) return;
+        const inputDate = new Date(dVal);
+        if (setupMode === 'lmp') {
+          week = Math.floor((Date.now() - inputDate) / (1000 * 60 * 60 * 24 * 7));
+          edd = new Date(inputDate.getTime() + 280 * 24 * 60 * 60 * 1000);
+        } else {
+          edd = inputDate;
+          week = 40 - Math.round((inputDate - Date.now()) / (1000 * 60 * 60 * 24 * 7));
+        }
+      }
+
+      if (week < 1) week = 1;
+      if (week > 42) week = 42;
+
+      const eddStr = edd.getFullYear() + '년 ' + (edd.getMonth() + 1) + '월 ' + edd.getDate() + '일';
+      result.innerHTML = '현재 임신 <strong>' + week + '주차</strong>  ·  예정일 ' + eddStr;
+    }
+
+    async function saveSetup() {
+      let week, edd;
+
+      if (setupMode === 'week') {
+        week = parseInt(document.getElementById('setup-week-input').value, 10);
+        if (!week || week < 1 || week > 42) {
+          alert('주수를 입력해주세요 (1~42)');
+          return;
+        }
+        edd = new Date(Date.now() + (40 - week) * 7 * 24 * 60 * 60 * 1000);
+      } else {
+        const dVal = document.getElementById('setup-date-input').value;
+        if (!dVal) {
+          alert('날짜를 입력해주세요');
+          return;
+        }
+        const inputDate = new Date(dVal);
+        if (setupMode === 'lmp') {
+          week = Math.floor((Date.now() - inputDate) / (1000 * 60 * 60 * 24 * 7));
+          edd = new Date(inputDate.getTime() + 280 * 24 * 60 * 60 * 1000);
+        } else {
+          edd = inputDate;
+          week = 40 - Math.round((inputDate - Date.now()) / (1000 * 60 * 60 * 24 * 7));
+        }
+      }
+
+      if (week < 1) week = 1;
+      if (week > 42) week = 42;
+
+      await _supabase.from('profiles').upsert({
+        id: currentUserId,
+        current_week: week,
+        edd: edd.toISOString().split('T')[0]
+      });
+
+      await loadCurrentProfile();
+      showHome();
+    }
+
+    function skipSetup() { showHome(); }
+
+    function autoCalcWeekFromEdd() {
+      const eddVal = document.getElementById('edd-input').value;
+      const hint = document.getElementById('settings-calc-hint');
+
+      if (!eddVal) {
+        if (hint) hint.textContent = '';
+        return;
+      }
+
+      const daysLeft = Math.ceil((new Date(eddVal) - Date.now()) / (1000 * 60 * 60 * 24));
+      let week = 40 - Math.round(daysLeft / 7);
+      if (week < 1) week = 1;
+      if (week > 42) week = 42;
+
+      document.getElementById('week-input').value = week;
+      if (hint) hint.textContent = '예정일 기준으로 ' + week + '주차로 자동 계산됐어요';
+    }
+
+    async function loadProfile() {
+      if (!currentUserId) return;
+      await loadCurrentProfile();
+      if (!currentUserProfile) return;
+
+      if (!currentUserProfile.invite_code) {
+        const code = Math.random().toString(36).slice(2, 10);
+        await _supabase.from('profiles').update({ invite_code: code }).eq('id', currentUserId);
+        await loadCurrentProfile();
+      }
+
+      const wi = document.getElementById('week-input');
+      const ei = document.getElementById('edd-input');
+      if (wi && currentUserProfile?.current_week) wi.value = currentUserProfile.current_week;
+      if (ei && currentUserProfile?.edd) ei.value = currentUserProfile.edd;
+    }
+
+    async function saveProfile() {
+      if (!currentUserId) return;
+      const week = parseInt(document.getElementById('week-input').value, 10);
+      const edd = document.getElementById('edd-input').value;
+      await _supabase.from('profiles').update({ current_week: week, edd }).eq('id', currentUserId);
+      await loadCurrentProfile();
+      alert('저장됐어! 🌸');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => { syncComposerState(); checkAuth(); });
+    window.addEventListener('resize', positionTimelineLine);
+  </script>
 </body>
 </html>
