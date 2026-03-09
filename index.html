@@ -651,7 +651,7 @@
       cursor: pointer;
       position: relative;
       overflow: hidden;
-      background: #FAFAFA;
+      background: #F8F6FA;
     }
 
     .new-cam-placeholder {
@@ -663,7 +663,7 @@
 
     /* 날짜/노트 필드 */
     .new-field {
-      background: #F5F5F7;
+      background: #F8F6FA;
       border-radius: 50px;
       padding: 14px 20px;
       display: flex;
@@ -767,15 +767,17 @@
       font-size: 13px;
       font-weight: 600;
       color: var(--text-soft);
-      background: #F5F5F7;
+      background: #F8F6FA;
       cursor: pointer;
       transition: all 0.2s;
+      border: none;
+      outline: none;
     }
 
     .new-privacy-pill.on {
-      background: rgba(131,77,132,0.1);
-      color: var(--lilac-deep);
-      outline: 1.5px solid rgba(131,77,132,0.3);
+      background: #7E477B;
+      color: #ffffff;
+      outline: none;
     }
 
     /* 저장 버튼 */
@@ -822,12 +824,7 @@
     <div class="screen plain" id="s-new">
       <!-- 새 기록 폼 카드 -->
       <div class="new-card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-          <div class="new-card-title" style="margin-bottom:0;">뭐에대하여 기록하고싶어?</div>
-          <div onclick="goBack()" style="width:32px;height:32px;border-radius:50%;background:#F0ECF2;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
-            <i class="ph ph-x" style="font-size:16px;color:var(--text-mid);"></i>
-          </div>
-        </div>
+        <div class="new-card-title">뭐에대하여 기록하고싶어?</div>
 
         <!-- 타입 탭 -->
         <div class="new-type-tabs">
