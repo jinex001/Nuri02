@@ -585,17 +585,6 @@
     .setup-btn  { width: 100%; background: linear-gradient(135deg,#834D84,#5A2E5B); color: white; border: none; border-radius: 15px; padding: 16px; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 8px; }
     .setup-skip { text-align: center; font-size: 13px; color: var(--text-soft); cursor: pointer; padding: 12px; text-decoration: underline; }
 
-    /* ── s-new 화면일 때 네브바 숨김 ── */
-    .nav-hidden {
-      opacity: 0;
-      pointer-events: none;
-      transform: translateX(-50%) translateY(20px);
-      transition: opacity 0.25s, transform 0.25s;
-    }
-    .bottom-nav {
-      transition: opacity 0.25s, transform 0.25s;
-    }
-
     /* ── 새 기록 폼 ── */
     #s-new {
       background: var(--bg);
@@ -833,7 +822,12 @@
     <div class="screen plain" id="s-new">
       <!-- 새 기록 폼 카드 -->
       <div class="new-card">
-        <div class="new-card-title">뭐에대하여 기록하고싶어?</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+          <div class="new-card-title" style="margin-bottom:0;">뭐에대하여 기록하고싶어?</div>
+          <div onclick="goBack()" style="width:32px;height:32px;border-radius:50%;background:#F0ECF2;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
+            <i class="ph ph-x" style="font-size:16px;color:var(--text-mid);"></i>
+          </div>
+        </div>
 
         <!-- 타입 탭 -->
         <div class="new-type-tabs">
@@ -1046,14 +1040,12 @@
 
     function syncComposerState() {
       const fab = document.getElementById('composer-fab');
-      const nav = document.querySelector('.bottom-nav');
       const line = document.getElementById('timeline-fixed-line');
       if (!fab) return;
       const open = isComposerOpen();
       fab.classList.toggle('is-open', open);
       fab.setAttribute('aria-expanded', open ? 'true' : 'false');
       fab.setAttribute('aria-label', open ? '작성하기 닫기' : '작성하기 열기');
-      if (nav) nav.classList.toggle('nav-hidden', open);
       // 타임라인 라인은 홈 화면에서만 보임
       if (line) line.style.display = document.getElementById('s-home')?.classList.contains('active') ? '' : 'none';
     }
@@ -1095,7 +1087,6 @@
         if (c) c.classList.remove('active', 'exit');
         syncComposerState();
       }, 340);
-      syncComposerState();
     }
 
     function goBack() {
@@ -1111,9 +1102,9 @@
       setTimeout(() => {
         c.classList.remove('active');
         c.style.cssText = '';
-      }, 310);
+        syncComposerState();
+      }, 320);
       if (prevId === 's-home') loadEntries();
-      syncComposerState();
     }
 
     function navTo(screenId, navId) {
