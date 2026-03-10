@@ -590,7 +590,7 @@ html, body {
 /* ── 새 기록 폼 ── */
 #s-new {
   background: var(--bg);
-  padding-bottom: 140px;
+  padding: 0 16px 140px;   /* 좌우 패딩 추가 */
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
@@ -600,10 +600,10 @@ html, body {
 .new-card {
   background: #fff;
   border-radius: 20px;
-  margin: 19px auto 20px;
+  margin: 19px 0 20px;     /* auto 제거 */
   padding: 16px;
   box-sizing: border-box;
-  width: calc(100% - 32px);
+  width: 100%;             /* 부모 기준 꽉 차게 */
   max-width: 398px;
   box-shadow: 0px 16px 16px -8px rgba(12,12,13,0.1), 0px 4px 4px -4px rgba(12,12,13,0.05);
   display: flex;
