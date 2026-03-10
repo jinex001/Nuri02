@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="ko" style="color-scheme: light;">
 <head>
   <meta charset="UTF-8">
@@ -25,778 +26,803 @@
       --bg: #E9F1EE;
     }
 
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      font-family: 'Outfit', sans-serif;
-      color: var(--text);
-      -webkit-font-smoothing: antialiased;
-      background: var(--bg);
-    }
-
-    #app {
-      width: 100%;
-      height: 100%;
-      max-width: 430px;
-      margin: 0 auto;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .screen {
-      position: absolute;
-      inset: 0;
-      overflow-y: auto;
-      overflow-x: hidden;
-      -webkit-overflow-scrolling: touch;
-      padding-bottom: 120px;
-      transform: translateX(100%);
-      transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-      background: var(--bg);
-    }
-
-    .screen.active { transform: translateX(0); }
-    .screen.exit { transform: translateX(-28%); }
-    .screen.plain { background: #fff; }
-
-    /* ── Bottom Nav ── */
-    .bottom-nav {
-      position: fixed;
-      bottom: 28px;
-      left: 50%;
-      transform: translateX(-50%);
-
-      /* 피그마: width 353px, height 45px, gap 121px, space-between */
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      width: 353px;
-      height: 45px;
-      gap: 121px;
-      z-index: 999;
-    }
-
-    /* 왼쪽 pill — 아이콘 3개 */
-    .nav-left {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      padding: 6px 10px;
-      gap: 0;
-      background: rgba(95, 158, 136, 0.55);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-radius: 50px;
-      height: 45px;
-      flex: 1;
-      box-shadow: 0 4px 20px rgba(95, 158, 136, 0.22);
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex: 1;
-      height: 33px;
-      border-radius: 50px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .nav-item i {
-      font-size: 22px;
-      color: #ffffff;
-    }
-
-    .nav-item.active {
-      background: rgba(255, 255, 255, 0.22);
-    }
-
-    /* SVG Union shape용 defs — 숨김 */
-    .nav-fab-svg-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
-
-    /* 오른쪽 pill — + 버튼 (Union.svg 모양) */
-    .nav-fab {
-      width: 45px;
-      height: 45px;
-      background: rgba(95, 158, 136, 0.55);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      flex-shrink: 0;
-      position: relative;
-      border: none;
-      padding: 0;
-      /* Union.svg path를 clip-path로 적용 */
-      clip-path: url(#union-clip);
-      -webkit-clip-path: url(#union-clip);
-      box-shadow: 0 4px 20px rgba(95, 158, 136, 0.22);
-    }
-
-    .nav-fab i {
-      font-size: 22px;
-      color: #ffffff;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* FAB open/close icon toggle */
-    .nav-fab .fab-icon { display: flex; align-items: center; justify-content: center; position: absolute; transition: opacity 0.2s, transform 0.2s; }
-    .nav-fab .fab-close { opacity: 0; transform: rotate(-90deg); }
-    .nav-fab.is-open .fab-plus { opacity: 0; transform: rotate(90deg); }
-    .nav-fab.is-open .fab-close { opacity: 1; transform: rotate(0); }
-
-    /* ── Home ── */
-    .home-pad {
-      padding: 17px 0 0;
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-
-    #home-timeline { position: relative; }
-
-    #timeline-fixed-line {
-      position: absolute;
-      width: 2px;
-      background: var(--lilac);
-      z-index: 1;
-      pointer-events: none;
-      transform-origin: top;
-    }
-
-    /* 홈 화면이 active 아닐 때 라인 숨김 */
-    #s-home:not(.active) ~ * #timeline-fixed-line,
-    #app:not(:has(#s-home.active)) #timeline-fixed-line {
-      display: none;
-    }
-
-    #timeline-fixed-line.animate {
-      animation: lineGrow 1.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    }
-
-    @keyframes lineGrow {
-      from { transform: scaleY(0); }
-      to   { transform: scaleY(1); }
-    }
-
-    .week-section {
-      position: relative;
-      opacity: 0;
-      transition: opacity 0.6s ease;
-    }
-    .week-section.visible { opacity: 1; }
-
-    .week-sticky {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: var(--bg);
-      padding: 12px 10px 10px 8px;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .dot-wrap {
-      width: 20px;
-      height: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      position: relative;
-      z-index: 10;
-      border-radius: 40px;
-      overflow: hidden;
-    }
-
-    .dot-wrap::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: rgba(95, 158, 136, 0.10);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      z-index: 1;
-    }
-
-    .dot-inner {
-      position: absolute;
-      left: 50%; top: 50%;
-      width: 8px; height: 8px;
-      transform: translate(-50%, -50%);
-      background: var(--lilac);
-      border-radius: 50%;
-      z-index: 2;
-    }
-
-    .week-section.current-week .dot-inner {
-      background: var(--lilac-deep);
-      animation: dotPulse 2s ease-in-out infinite;
-    }
-
-    @keyframes dotPulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(131, 77, 132, 0.4); }
-      50%       { box-shadow: 0 0 0 5px rgba(131, 77, 132, 0); }
-    }
-
-    .week-sticky .week-block {
-      display: flex;
-      flex-direction: row;
-      align-items: flex-start;
-      gap: 10px;
-    }
-
-    .week-sticky .week-num {
-      font-size: 36px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      line-height: 1;
-      color: var(--lilac-deep);
-    }
-
-    .week-sticky .week-label-col {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      padding-top: 2px;
-    }
-
-    .week-sticky .week-lbl {
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      color: var(--lilac-deep);
-      line-height: 100%;
-    }
-
-    .week-sticky .week-date-lbl {
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      color: #5F9E88;
-      line-height: 100%;
-    }
-
-    .week-fact { padding: 0 10px 12px 46px; }
-
-    .fact-bar {
-      background: #C8A2C9;
-      border-radius: 10px;
-      padding: 15px 20px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .fact-icon {
-      width: 30px; height: 30px;
-      background: #B581B6;
-      border-radius: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      flex-shrink: 0;
-    }
-
-    .fact-main { font-size: 14px; font-weight: 700; color: var(--text-mid); }
-    .fact-sub  { font-size: 14px; font-weight: 400; color: #fff; margin-left: auto; }
-
-    .appt-scroll-row {
-      display: flex;
-      flex-direction: row;
-      gap: 10px;
-      padding: 10px 20px 10px 46px;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-    .appt-scroll-row::-webkit-scrollbar { display: none; }
-
-    .appt-card {
-      flex-shrink: 0;
-      width: 227px; height: 132px;
-      background: linear-gradient(180deg, rgba(254,251,206,0.55) 0%, rgba(240,230,241,0.35) 100%);
-      box-shadow: var(--card-shadow);
-      border-radius: 10px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .appt-top {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 20px;
-      width: 187px;
-    }
-
-    .appt-badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 5px 10px;
-      background: rgba(200,162,201,0.18);
-      border: 1px solid rgba(200,162,201,0.45);
-      border-radius: 999px;
-      font-size: 12px; font-weight: 800;
-      color: #5C4D5E;
-      white-space: nowrap;
-    }
-
-    .appt-type { font-size: 12px; font-weight: 800; color: #000; }
-
-    .appt-info {
-      display: flex; flex-direction: column; gap: 4px;
-      width: 187px;
-    }
-
-    .appt-date, .appt-place { font-size: 13px; font-weight: 500; color: #5C4D5E; }
-
-    .feed-section {
-      padding: 0 12px 20px 46px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .feed-item {
-      background: #ffffff;
-      box-shadow: 0px 8px 22px rgba(30,21,32,0.06);
-      border-radius: 10px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .feed-photo {
-      width: 100%; height: 243px;
-      object-fit: cover;
-      display: block;
-      border-radius: 10px 10px 0 0;
-    }
-
-    .feed-body {
-      padding: 0 10px;
-      display: flex; flex-direction: column; gap: 6px;
-      margin-top: 8px;
-    }
-
-    .feed-row1 { display: flex; flex-direction: row; align-items: flex-start; gap: 6px; }
-    .feed-date { font-size: 12px; font-weight: 600; color: #9B8E9D; flex: 1; line-height: 15px; }
-    .feed-time { font-size: 12px; font-weight: 600; color: #9B8E9D; line-height: 15px; white-space: nowrap; }
-    .feed-type { font-size: 12px; font-weight: 900; color: #5C4D5E; letter-spacing: 0.2px; line-height: 15px; }
-    .feed-text { font-size: 15px; font-weight: 800; color: #1E1520; letter-spacing: -0.2px; line-height: 19px; }
-
-    .feed-mood {
-      width: 35px; height: 35px;
-      background: rgba(240,230,241,0.55);
-      border-radius: 999px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 22px;
-      padding-top: 3px;
-    }
-
-    .feed-divider { height: 1px; background: #C8A2C9; margin: 4px 10px 0; opacity: 0.4; }
-
-    .partner-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      background: linear-gradient(135deg, rgba(200,162,201,0.15), rgba(95,158,136,0.1));
-      border: 1px solid rgba(200,162,201,0.35);
-      border-radius: 20px;
-      padding: 3px 9px;
-      font-size: 10px; font-weight: 700;
-      color: var(--lilac-deep);
-      margin: 0 12px 6px;
-    }
-
-    .cmt-section { border-top: 1px solid rgba(200,162,201,0.4); margin-top: 8px; }
-    .cmt-toggle i { font-size: 27px; }
-    .cmt-toggle {
-      display: flex; align-items: center; gap: 6px;
-      padding: 8px 12px;
-      font-size: 11px; font-weight: 600; color: var(--text-soft);
-      cursor: pointer; user-select: none;
-    }
-    .cmt-toggle:hover { color: var(--lilac-deep); }
-    .cmt-toggle .cmt-count {
-      background: rgba(200,162,201,0.2);
-      border-radius: 20px;
-      width: 40px; height: 25px;
-      display: inline-flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 400;
-      font-family: 'Outfit', sans-serif;
-      color: #000000;
-    }
-
-    .cmt-list { padding: 0 12px 4px; display: flex; flex-direction: column; gap: 6px; }
-    .cmt-row { display: flex; gap: 7px; align-items: flex-start; }
-    .cmt-av { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
-    .cmt-av.mine    { background: linear-gradient(135deg, #C8A2C9, #834D84); }
-    .cmt-av.partner { background: linear-gradient(135deg, #5F9E88, #3A7A65); }
-    .cmt-av.other   { background: rgba(200,162,201,0.25); }
-
-    .cmt-bubble { background: rgba(240,230,241,0.5); border-radius: 4px 10px 10px 10px; padding: 6px 10px; flex: 1; }
-    .cmt-bubble.mine    { background: rgba(131,77,132,0.1); border-radius: 10px 4px 10px 10px; }
-    .cmt-bubble.partner { background: rgba(95,158,136,0.1); border-radius: 4px 10px 10px 10px; }
-    .cmt-name { font-size: 9px; font-weight: 700; color: var(--lilac-deep); margin-bottom: 2px; }
-    .cmt-name.partner-name { color: var(--green); }
-    .cmt-text { font-size: 12px; color: var(--text-mid); line-height: 1.45; }
-    .cmt-time { font-size: 9px; color: var(--text-soft); margin-top: 2px; }
-
-    .cmt-input-area { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px; border-top: 1px solid rgba(200,162,201,0.12); }
-    .cmt-av-input { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg,#C8A2C9,#834D84); display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
-    .cmt-input-wrap { flex: 1; display: flex; align-items: center; gap: 6px; background: rgba(240,230,241,0.5); border: 1px solid rgba(200,162,201,0.3); border-radius: 20px; padding: 6px 10px; }
-    .cmt-input { flex: 1; background: none; border: none; outline: none; font-size: 12px; color: var(--text); font-family: 'Outfit', sans-serif; }
-    .cmt-input::placeholder { color: var(--text-soft); }
-    .cmt-send-btn { width: 28px; height: 28px; border-radius: 50%; background: var(--lilac-deep); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: transform 0.15s, background 0.15s; }
-    .cmt-send-btn:hover { background: #5A2E5B; transform: scale(1.05); }
-    .cmt-send-btn i { font-size: 13px; color: white; }
-
-    .screen-hdr {
-      padding: 16px 18px 12px;
-      display: flex; align-items: center; gap: 11px;
-      background: #fff;
-      border-bottom: 1px solid rgba(200,162,201,0.2);
-    }
-    .back-btn { width: 34px; height: 34px; border-radius: 10px; background: #F8F6FA; border: 1px solid rgba(200,162,201,0.3); display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--text-mid); cursor: pointer; }
-    .screen-title { font-size: 20px; font-weight: 700; color: var(--text); }
-
-    .type-tabs { display: flex; background: #F8F6FA; border: 1px solid rgba(200,162,201,0.3); border-radius: 14px; padding: 4px; margin: 14px 18px 0; }
-    .type-tab { flex: 1; padding: 8px 4px; border-radius: 10px; text-align: center; font-size: 11px; font-weight: 500; color: var(--text-soft); cursor: pointer; }
-    .type-tab.on { background: #fff; color: var(--text); box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
-
-    .form-pad { padding: 14px 18px; }
-
-    .cam-zone {
-      border: 1.5px dashed rgba(200,162,201,0.5);
-      border-radius: 20px;
-      height: 160px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px;
-      cursor: pointer;
-      margin-bottom: 16px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .fld { margin-bottom: 14px; }
-    .fld-lbl { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-soft); display: block; margin-bottom: 7px; }
-
-    .txt-in { width: 100%; background: #F8F6FA; border: 1px solid rgba(200,162,201,0.3); border-radius: 13px; padding: 11px 14px; font-size: 13px; color: var(--text); font-family: 'Outfit', sans-serif; outline: none; }
-    .txt-in:focus { border-color: var(--lilac); background: #fff; }
-
-    .pills { display: flex; gap: 7px; flex-wrap: wrap; }
-    .pill { padding: 6px 13px; border-radius: 20px; font-size: 11px; font-weight: 500; background: #F8F6FA; border: 1px solid rgba(200,162,201,0.3); color: var(--text-soft); cursor: pointer; }
-    .pill.on { background: rgba(200,162,201,0.15); border-color: var(--lilac); color: var(--lilac-deep); }
-
-    .save-btn { width: 100%; background: linear-gradient(135deg, #8B5E8C, #5A2E5B); color: white; border: none; border-radius: 15px; padding: 14px; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 5px 20px rgba(107,61,108,0.3); margin-top: 6px; }
-
-    .med-hero { background: linear-gradient(155deg, #1E1520 0%, #3A2B3C 55%, #5A3A5C 100%); padding: 48px 22px 26px; position: relative; overflow: hidden; }
-    .med-hero::before { content: ''; position: absolute; width: 160px; height: 160px; background: radial-gradient(circle, rgba(200,162,201,0.18) 0%, transparent 70%); top: -40px; right: -30px; border-radius: 50%; }
-    .med-lbl { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 4px; }
-    .med-name { font-size: 26px; font-weight: 700; color: #fff; margin-bottom: 18px; line-height: 1.2; }
-    .sos-strip { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); border-radius: 15px; padding: 11px 14px; display: flex; align-items: center; gap: 11px; }
-    .sos-icon { width: 34px; height: 34px; border-radius: 9px; background: rgba(220,50,50,0.25); border: 1px solid rgba(220,50,50,0.35); display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
-    .sos-txt { font-size: 11px; color: rgba(255,255,255,0.65); line-height: 1.5; }
-    .sos-txt strong { color: white; font-weight: 500; display: block; font-size: 12px; }
-    .sos-arrow { margin-left: auto; color: rgba(255,255,255,0.25); font-size: 16px; }
-
-    .med-body { padding: 14px 16px 20px; background: #fff; }
-    .info-block { background: #F8F6FA; border: 1px solid rgba(200,162,201,0.25); border-radius: 18px; overflow: hidden; margin-bottom: 11px; }
-    .block-title { padding: 10px 16px 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-soft); border-bottom: 1px solid rgba(200,162,201,0.15); }
-    .info-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; border-bottom: 1px solid rgba(200,162,201,0.12); }
-    .info-row:last-child { border-bottom: none; }
-    .i-lbl { font-size: 12px; color: var(--text-soft); }
-    .i-val { font-size: 13px; font-weight: 500; color: var(--text); text-align: right; }
-    .chip-blood { background: linear-gradient(135deg,#8B5E8C,#6B3D6C); color: white; padding: 4px 11px; border-radius: 8px; font-size: 14px; font-weight: 700; }
-    .chip-ok   { background: #E6F4EA; color: #2D7A3A; border-radius: 8px; padding: 4px 10px; font-size: 11px; font-weight: 600; }
-    .chip-warn { background: #FFF3E0; color: #C35A00; border-radius: 8px; padding: 4px 10px; font-size: 11px; font-weight: 600; }
-
-    .partner-hero { background: linear-gradient(155deg,#1A2F28 0%,#2A4A3C 50%,#3A6B5A 100%); padding: 48px 22px 26px; position: relative; overflow: hidden; }
-    .partner-hero::before { content: ''; position: absolute; width: 160px; height: 160px; background: radial-gradient(circle,rgba(95,158,136,0.25) 0%,transparent 70%); top: -40px; right: -30px; border-radius: 50%; }
-    .partner-avatars { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-    .p-av { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; border: 2px solid rgba(255,255,255,0.2); }
-    .p-av.mom     { background: linear-gradient(135deg,#C8A2C9,#8B5E8C); }
-    .p-av.partner { background: linear-gradient(135deg,#5F9E88,#3A7A65); }
-    .p-connector { width: 24px; height: 2px; background: rgba(255,255,255,0.2); position: relative; }
-    .p-connector::after { content: '💜'; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); font-size: 14px; }
-    .partner-status-bar { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); border-radius: 15px; padding: 11px 14px; display: flex; align-items: center; gap: 11px; }
-    .p-status-dot { width: 8px; height: 8px; border-radius: 50%; background: #5F9E88; flex-shrink: 0; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.6;transform:scale(1.2);} }
-    .p-status-txt { font-size: 12px; color: rgba(255,255,255,0.8); }
-    .p-status-txt strong { color: white; font-weight: 600; }
-
-    .connect-card { margin: 16px; background: #fff; border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); overflow: hidden; }
-    .connect-card-hdr { background: linear-gradient(135deg,rgba(200,162,201,0.15),rgba(95,158,136,0.1)); padding: 16px 18px 12px; border-bottom: 1px solid rgba(200,162,201,0.15); }
-    .connect-card-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
-    .connect-card-sub { font-size: 11px; color: var(--text-soft); }
-    .connect-card-body { padding: 16px 18px; }
-    .invite-code-box { background: linear-gradient(135deg,rgba(131,77,132,0.06),rgba(95,158,136,0.06)); border: 1px dashed rgba(200,162,201,0.5); border-radius: 14px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; cursor: pointer; transition: all 0.2s; }
-    .invite-code-box:hover { border-color: var(--lilac); background: rgba(200,162,201,0.1); }
-    .invite-code-text { font-size: 12px; color: var(--lilac-deep); font-weight: 600; word-break: break-all; flex: 1; }
-    .invite-copy-btn { width: 32px; height: 32px; border-radius: 10px; background: var(--lilac-deep); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-left: 10px; }
-    .invite-copy-btn i { font-size: 14px; color: white; }
-
-    .partner-feed-section { padding: 16px; }
-    .pf-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-    .pf-title { font-size: 15px; font-weight: 700; color: var(--text); }
-    .pf-badge { background: rgba(95,158,136,0.15); border: 1px solid rgba(95,158,136,0.3); border-radius: 20px; padding: 3px 10px; font-size: 10px; font-weight: 700; color: var(--green); }
-    .pf-empty { text-align: center; padding: 40px 20px; color: var(--text-soft); font-size: 13px; }
-    .feed-item.partner-entry { border-left: 3px solid var(--green); }
-    .feed-item.mine-entry    { border-left: 3px solid var(--lilac); }
-
-    .login-wrap { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 32px; }
-    .login-logo { font-size: 52px; font-weight: 800; color: var(--text); margin-bottom: 8px; letter-spacing: -1px; }
-    .login-sub  { font-size: 13px; color: var(--text-soft); margin-bottom: 48px; }
-    .login-fields { width: 100%; display: flex; flex-direction: column; gap: 12px; }
-    .login-btn-sub { width: 100%; background: rgba(200,162,201,0.15); color: var(--lilac-deep); border: none; border-radius: 15px; padding: 14px; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; }
-
-    .setup-wrap { min-height: 100%; display: flex; flex-direction: column; padding: 60px 28px 40px; background: var(--bg); }
-    .setup-logo { font-size: 42px; font-weight: 800; color: var(--lilac-deep); letter-spacing: -1px; margin-bottom: 4px; }
-    .setup-sub  { font-size: 14px; color: var(--text-soft); margin-bottom: 48px; }
-    .setup-step { display: none; flex-direction: column; gap: 24px; }
-    .setup-step.on { display: flex; }
-    .setup-q    { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1.3; }
-    .setup-hint { font-size: 13px; color: var(--text-soft); margin-top: -16px; }
-    .setup-input { width: 100%; background: #fff; border: 1.5px solid rgba(200,162,201,0.4); border-radius: 14px; padding: 14px 16px; font-size: 16px; font-weight: 500; color: var(--text); font-family: 'Outfit', sans-serif; outline: none; }
-    .setup-input:focus { border-color: var(--lilac); }
-    .setup-calc { background: rgba(200,162,201,0.12); border-radius: 12px; padding: 14px 16px; font-size: 14px; color: var(--text-mid); min-height: 48px; }
-    .setup-calc strong { color: var(--lilac-deep); font-size: 18px; }
-    .setup-btn  { width: 100%; background: linear-gradient(135deg,#834D84,#5A2E5B); color: white; border: none; border-radius: 15px; padding: 16px; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 8px; }
-    .setup-skip { text-align: center; font-size: 13px; color: var(--text-soft); cursor: pointer; padding: 12px; text-decoration: underline; }
-
-    /* ── 새 기록 폼 ── */
-    #s-new {
-      background: var(--bg);
-      padding: 0;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-    }
-
-    .new-card {
-      background: #fff;
-      border-radius: 28px;
-      margin: 20px 16px 40px;
-      padding: 24px 20px 28px;
-      width: calc(100% - 32px);
-      box-shadow: 0 8px 32px rgba(30,21,32,0.08);
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .new-card-title {
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--text);
-      letter-spacing: -0.3px;
-      line-height: 1.3;
-    }
-
-    /* 타입 탭 */
-    .new-type-tabs {
-      display: flex;
-      background: rgba(95,158,136,0.15);
-      border-radius: 50px;
-      padding: 4px;
-      gap: 2px;
-    }
-
-    .new-type-tab {
-      flex: 1;
-      padding: 8px 6px;
-      border-radius: 50px;
-      text-align: center;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-soft);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .new-type-tab.on {
-      background: rgba(95,158,136,0.65);
-      color: #fff;
-    }
-
-    /* 사진 존 */
-    .new-cam-zone {
-      border: 2px dashed rgba(131,77,132,0.3);
-      border-radius: 16px;
-      height: 180px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      background: #F8F6FA;
-    }
-
-    .new-cam-placeholder {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0.35;
-    }
-
-    /* 날짜/노트 필드 */
-    .new-field {
-      background: #F8F6FA;
-      border-radius: 50px;
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      position: relative;
-    }
-
-    .date-field { cursor: pointer; }
-
-    .new-field-icon {
-      font-size: 18px;
-      color: var(--text-soft);
-      flex-shrink: 0;
-    }
-
-    .new-date-field {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      padding: 16px 24px;
-      width: 100%;
-      height: 56px;
-      background: #F8F6FA;
-      border-radius: 50px;
-      cursor: pointer;
-    }
-
-    .new-date-input {
-      flex: 1;
-      background: none;
-      border: none;
-      outline: none;
-      font-family: 'Outfit', sans-serif;
-      font-size: 15px;
-      font-weight: 500;
-      color: var(--text-mid);
-      cursor: pointer;
-      width: 100%;
-    }
-
-    /* 브라우저 기본 달력 아이콘 숨김 */
-    .new-date-input::-webkit-calendar-picker-indicator { opacity: 0; width: 0; padding: 0; margin: 0; }
-    .new-date-input::-webkit-inner-spin-button { display: none; }
-    .new-date-input::-webkit-clear-button { display: none; }
-
-    .new-text-input {
-      flex: 1;
-      background: none;
-      border: none;
-      outline: none;
-      font-family: 'Outfit', sans-serif;
-      font-size: 15px;
-      font-weight: 500;
-      color: var(--text-mid);
-    }
-
-    .new-text-input::placeholder { color: #BDBDBD; }
-
-    /* 감정 아이콘 행 */
-    .new-mood-row {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .mood-item {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      transition: background 0.18s;
-      flex-shrink: 0;
-      background: #F8F6FA;
-    }
-
-    .mood-item.on {
-      background: #7E477B;
-    }
-
-    .mood-item svg { display: block; }
-
-    /* 공개 범위 pills */
-    .new-privacy-pills {
-      display: flex;
-      gap: 8px;
-    }
-
-    .new-privacy-pill {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 12px;
-      border-radius: 50px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-soft);
-      background: #F8F6FA;
-      cursor: pointer;
-      transition: all 0.2s;
-      border: none;
-      outline: none;
-    }
-
-    .new-privacy-pill.on {
-      background: #7E477B;
-      color: #ffffff;
-      outline: none;
-    }
-
-    /* 저장 버튼 */
-    .new-submit-btn {
-      width: 100%;
-      background: var(--lilac-deep);
-      color: white;
-      border: none;
-      border-radius: 50px;
-      padding: 16px;
-      font-family: 'Outfit', sans-serif;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      letter-spacing: -0.2px;
-      margin-top: 4px;
-    }
-
-    .settings-scroll { padding: 20px 18px; }
+```
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  background: var(--bg);
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.screen {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 120px;
+  transform: translateX(100%);
+  transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--bg);
+}
+
+.screen.active { transform: translateX(0); }
+.screen.exit { transform: translateX(-28%); }
+.screen.plain { background: #fff; }
+
+/* ── Bottom Nav ── */
+.bottom-nav {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  /* 피그마: width 353px, height 45px, gap 121px, space-between */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 353px;
+  height: 45px;
+  gap: 121px;
+  z-index: 999;
+}
+
+/* 왼쪽 pill — 아이콘 3개 */
+.nav-left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  gap: 0;
+  background: rgba(95, 158, 136, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 50px;
+  height: 45px;
+  flex: 1;
+  box-shadow: 0 4px 20px rgba(95, 158, 136, 0.22);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  height: 33px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.nav-item i {
+  font-size: 22px;
+  color: #ffffff;
+}
+
+.nav-item.active {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+/* SVG Union shape용 defs — 숨김 */
+.nav-fab-svg-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+/* 오른쪽 pill — + 버튼 (Union.svg 모양) */
+.nav-fab {
+  width: 45px;
+  height: 45px;
+  background: rgba(95, 158, 136, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+  border: none;
+  padding: 0;
+  /* Union.svg path를 clip-path로 적용 */
+  clip-path: url(#union-clip);
+  -webkit-clip-path: url(#union-clip);
+  box-shadow: 0 4px 20px rgba(95, 158, 136, 0.22);
+}
+
+.nav-fab i {
+  font-size: 22px;
+  color: #ffffff;
+  position: relative;
+  z-index: 1;
+}
+
+/* FAB open/close icon toggle */
+.nav-fab .fab-icon { display: flex; align-items: center; justify-content: center; position: absolute; transition: opacity 0.2s, transform 0.2s; }
+.nav-fab .fab-close { opacity: 0; transform: rotate(-90deg); }
+.nav-fab.is-open .fab-plus { opacity: 0; transform: rotate(90deg); }
+.nav-fab.is-open .fab-close { opacity: 1; transform: rotate(0); }
+
+/* ── Home ── */
+.home-pad {
+  padding: 17px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+#home-timeline { position: relative; }
+
+#timeline-fixed-line {
+  position: absolute;
+  width: 2px;
+  background: var(--lilac);
+  z-index: 1;
+  pointer-events: none;
+  transform-origin: top;
+}
+
+/* 홈 화면이 active 아닐 때 라인 숨김 */
+#s-home:not(.active) ~ * #timeline-fixed-line,
+#app:not(:has(#s-home.active)) #timeline-fixed-line {
+  display: none;
+}
+
+#timeline-fixed-line.animate {
+  animation: lineGrow 1.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes lineGrow {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+.week-section {
+  position: relative;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.week-section.visible { opacity: 1; }
+
+.week-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+  padding: 12px 10px 10px 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.dot-wrap {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+  border-radius: 40px;
+  overflow: hidden;
+}
+
+.dot-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(95, 158, 136, 0.10);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1;
+}
+
+.dot-inner {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 8px; height: 8px;
+  transform: translate(-50%, -50%);
+  background: var(--lilac);
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.week-section.current-week .dot-inner {
+  background: var(--lilac-deep);
+  animation: dotPulse 2s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(131, 77, 132, 0.4); }
+  50%       { box-shadow: 0 0 0 5px rgba(131, 77, 132, 0); }
+}
+
+.week-sticky .week-block {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.week-sticky .week-num {
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1;
+  color: var(--lilac-deep);
+}
+
+.week-sticky .week-label-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 2px;
+}
+
+.week-sticky .week-lbl {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--lilac-deep);
+  line-height: 100%;
+}
+
+.week-sticky .week-date-lbl {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #5F9E88;
+  line-height: 100%;
+}
+
+.week-fact { padding: 0 10px 12px 46px; }
+
+.fact-bar {
+  background: #C8A2C9;
+  border-radius: 10px;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.fact-icon {
+  width: 30px; height: 30px;
+  background: #B581B6;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.fact-main { font-size: 14px; font-weight: 700; color: var(--text-mid); }
+.fact-sub  { font-size: 14px; font-weight: 400; color: #fff; margin-left: auto; }
+
+.appt-scroll-row {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding: 10px 20px 10px 46px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.appt-scroll-row::-webkit-scrollbar { display: none; }
+
+.appt-card {
+  flex-shrink: 0;
+  width: 227px; height: 132px;
+  background: linear-gradient(180deg, rgba(254,251,206,0.55) 0%, rgba(240,230,241,0.35) 100%);
+  box-shadow: var(--card-shadow);
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.appt-top {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+  width: 187px;
+}
+
+.appt-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  background: rgba(200,162,201,0.18);
+  border: 1px solid rgba(200,162,201,0.45);
+  border-radius: 999px;
+  font-size: 12px; font-weight: 800;
+  color: #5C4D5E;
+  white-space: nowrap;
+}
+
+.appt-type { font-size: 12px; font-weight: 800; color: #000; }
+
+.appt-info {
+  display: flex; flex-direction: column; gap: 4px;
+  width: 187px;
+}
+
+.appt-date, .appt-place { font-size: 13px; font-weight: 500; color: #5C4D5E; }
+
+.feed-section {
+  padding: 0 12px 20px 46px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.feed-item {
+  background: #ffffff;
+  box-shadow: 0px 8px 22px rgba(30,21,32,0.06);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.feed-photo {
+  width: 100%; height: 243px;
+  object-fit: cover;
+  display: block;
+  border-radius: 10px 10px 0 0;
+}
+
+.feed-body {
+  padding: 0 10px;
+  display: flex; flex-direction: column; gap: 6px;
+  margin-top: 8px;
+}
+
+.feed-row1 { display: flex; flex-direction: row; align-items: flex-start; gap: 6px; }
+.feed-date { font-size: 12px; font-weight: 600; color: #9B8E9D; flex: 1; line-height: 15px; }
+.feed-time { font-size: 12px; font-weight: 600; color: #9B8E9D; line-height: 15px; white-space: nowrap; }
+.feed-type { font-size: 12px; font-weight: 900; color: #5C4D5E; letter-spacing: 0.2px; line-height: 15px; }
+.feed-text { font-size: 15px; font-weight: 800; color: #1E1520; letter-spacing: -0.2px; line-height: 19px; }
+
+.feed-mood {
+  width: 35px; height: 35px;
+  background: rgba(240,230,241,0.55);
+  border-radius: 999px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  padding-top: 3px;
+}
+
+.feed-divider { height: 1px; background: #C8A2C9; margin: 4px 10px 0; opacity: 0.4; }
+
+.partner-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(135deg, rgba(200,162,201,0.15), rgba(95,158,136,0.1));
+  border: 1px solid rgba(200,162,201,0.35);
+  border-radius: 20px;
+  padding: 3px 9px;
+  font-size: 10px; font-weight: 700;
+  color: var(--lilac-deep);
+  margin: 0 12px 6px;
+}
+
+.cmt-section { border-top: 1px solid rgba(200,162,201,0.4); margin-top: 8px; }
+.cmt-toggle i { font-size: 27px; }
+.cmt-toggle {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 12px;
+  font-size: 11px; font-weight: 600; color: var(--text-soft);
+  cursor: pointer; user-select: none;
+}
+.cmt-toggle:hover { color: var(--lilac-deep); }
+.cmt-toggle .cmt-count {
+  background: rgba(200,162,201,0.2);
+  border-radius: 20px;
+  width: 40px; height: 25px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 400;
+  font-family: 'Outfit', sans-serif;
+  color: #000000;
+}
+
+.cmt-list { padding: 0 12px 4px; display: flex; flex-direction: column; gap: 6px; }
+.cmt-row { display: flex; gap: 7px; align-items: flex-start; }
+.cmt-av { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
+.cmt-av.mine    { background: linear-gradient(135deg, #C8A2C9, #834D84); }
+.cmt-av.partner { background: linear-gradient(135deg, #5F9E88, #3A7A65); }
+.cmt-av.other   { background: rgba(200,162,201,0.25); }
+
+.cmt-bubble { background: rgba(240,230,241,0.5); border-radius: 4px 10px 10px 10px; padding: 6px 10px; flex: 1; }
+.cmt-bubble.mine    { background: rgba(131,77,132,0.1); border-radius: 10px 4px 10px 10px; }
+.cmt-bubble.partner { background: rgba(95,158,136,0.1); border-radius: 4px 10px 10px 10px; }
+.cmt-name { font-size: 9px; font-weight: 700; color: var(--lilac-deep); margin-bottom: 2px; }
+.cmt-name.partner-name { color: var(--green); }
+.cmt-text { font-size: 12px; color: var(--text-mid); line-height: 1.45; }
+.cmt-time { font-size: 9px; color: var(--text-soft); margin-top: 2px; }
+
+.cmt-input-area { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px; border-top: 1px solid rgba(200,162,201,0.12); }
+.cmt-av-input { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg,#C8A2C9,#834D84); display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+.cmt-input-wrap { flex: 1; display: flex; align-items: center; gap: 6px; background: rgba(240,230,241,0.5); border: 1px solid rgba(200,162,201,0.3); border-radius: 20px; padding: 6px 10px; }
+.cmt-input { flex: 1; background: none; border: none; outline: none; font-size: 12px; color: var(--text); font-family: 'Outfit', sans-serif; }
+.cmt-input::placeholder { color: var(--text-soft); }
+.cmt-send-btn { width: 28px; height: 28px; border-radius: 50%; background: var(--lilac-deep); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: transform 0.15s, background 0.15s; }
+.cmt-send-btn:hover { background: #5A2E5B; transform: scale(1.05); }
+.cmt-send-btn i { font-size: 13px; color: white; }
+
+.screen-hdr {
+  padding: 16px 18px 12px;
+  display: flex; align-items: center; gap: 11px;
+  background: #fff;
+  border-bottom: 1px solid rgba(200,162,201,0.2);
+}
+.back-btn { width: 34px; height: 34px; border-radius: 10px; background: #F8F6FA; border: 1px solid rgba(200,162,201,0.3); display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--text-mid); cursor: pointer; }
+.screen-title { font-size: 20px; font-weight: 700; color: var(--text); }
+
+.type-tabs { display: flex; background: #F8F6FA; border: 1px solid rgba(200,162,201,0.3); border-radius: 14px; padding: 4px; margin: 14px 18px 0; }
+.type-tab { flex: 1; padding: 8px 4px; border-radius: 10px; text-align: center; font-size: 11px; font-weight: 500; color: var(--text-soft); cursor: pointer; }
+.type-tab.on { background: #fff; color: var(--text); box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+
+.form-pad { padding: 14px 18px; }
+
+.cam-zone {
+  border: 1.5px dashed rgba(200,162,201,0.5);
+  border-radius: 20px;
+  height: 160px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  overflow: hidden;
+  position: relative;
+}
+
+.fld { margin-bottom: 14px; }
+.fld-lbl { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-soft); display: block; margin-bottom: 7px; }
+
+.txt-in { width: 100%; background: #F8F6FA; border: 1px solid rgba(200,162,201,0.3); border-radius: 13px; padding: 11px 14px; font-size: 13px; color: var(--text); font-family: 'Outfit', sans-serif; outline: none; }
+.txt-in:focus { border-color: var(--lilac); background: #fff; }
+
+.pills { display: flex; gap: 7px; flex-wrap: wrap; }
+.pill { padding: 6px 13px; border-radius: 20px; font-size: 11px; font-weight: 500; background: #F8F6FA; border: 1px solid rgba(200,162,201,0.3); color: var(--text-soft); cursor: pointer; }
+.pill.on { background: rgba(200,162,201,0.15); border-color: var(--lilac); color: var(--lilac-deep); }
+
+.save-btn { width: 100%; background: linear-gradient(135deg, #8B5E8C, #5A2E5B); color: white; border: none; border-radius: 15px; padding: 14px; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 5px 20px rgba(107,61,108,0.3); margin-top: 6px; }
+
+.med-hero { background: linear-gradient(155deg, #1E1520 0%, #3A2B3C 55%, #5A3A5C 100%); padding: 48px 22px 26px; position: relative; overflow: hidden; }
+.med-hero::before { content: ''; position: absolute; width: 160px; height: 160px; background: radial-gradient(circle, rgba(200,162,201,0.18) 0%, transparent 70%); top: -40px; right: -30px; border-radius: 50%; }
+.med-lbl { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 4px; }
+.med-name { font-size: 26px; font-weight: 700; color: #fff; margin-bottom: 18px; line-height: 1.2; }
+.sos-strip { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); border-radius: 15px; padding: 11px 14px; display: flex; align-items: center; gap: 11px; }
+.sos-icon { width: 34px; height: 34px; border-radius: 9px; background: rgba(220,50,50,0.25); border: 1px solid rgba(220,50,50,0.35); display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+.sos-txt { font-size: 11px; color: rgba(255,255,255,0.65); line-height: 1.5; }
+.sos-txt strong { color: white; font-weight: 500; display: block; font-size: 12px; }
+.sos-arrow { margin-left: auto; color: rgba(255,255,255,0.25); font-size: 16px; }
+
+.med-body { padding: 14px 16px 20px; background: #fff; }
+.info-block { background: #F8F6FA; border: 1px solid rgba(200,162,201,0.25); border-radius: 18px; overflow: hidden; margin-bottom: 11px; }
+.block-title { padding: 10px 16px 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-soft); border-bottom: 1px solid rgba(200,162,201,0.15); }
+.info-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; border-bottom: 1px solid rgba(200,162,201,0.12); }
+.info-row:last-child { border-bottom: none; }
+.i-lbl { font-size: 12px; color: var(--text-soft); }
+.i-val { font-size: 13px; font-weight: 500; color: var(--text); text-align: right; }
+.chip-blood { background: linear-gradient(135deg,#8B5E8C,#6B3D6C); color: white; padding: 4px 11px; border-radius: 8px; font-size: 14px; font-weight: 700; }
+.chip-ok   { background: #E6F4EA; color: #2D7A3A; border-radius: 8px; padding: 4px 10px; font-size: 11px; font-weight: 600; }
+.chip-warn { background: #FFF3E0; color: #C35A00; border-radius: 8px; padding: 4px 10px; font-size: 11px; font-weight: 600; }
+
+.partner-hero { background: linear-gradient(155deg,#1A2F28 0%,#2A4A3C 50%,#3A6B5A 100%); padding: 48px 22px 26px; position: relative; overflow: hidden; }
+.partner-hero::before { content: ''; position: absolute; width: 160px; height: 160px; background: radial-gradient(circle,rgba(95,158,136,0.25) 0%,transparent 70%); top: -40px; right: -30px; border-radius: 50%; }
+.partner-avatars { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.p-av { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; border: 2px solid rgba(255,255,255,0.2); }
+.p-av.mom     { background: linear-gradient(135deg,#C8A2C9,#8B5E8C); }
+.p-av.partner { background: linear-gradient(135deg,#5F9E88,#3A7A65); }
+.p-connector { width: 24px; height: 2px; background: rgba(255,255,255,0.2); position: relative; }
+.p-connector::after { content: '💜'; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); font-size: 14px; }
+.partner-status-bar { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); border-radius: 15px; padding: 11px 14px; display: flex; align-items: center; gap: 11px; }
+.p-status-dot { width: 8px; height: 8px; border-radius: 50%; background: #5F9E88; flex-shrink: 0; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.6;transform:scale(1.2);} }
+.p-status-txt { font-size: 12px; color: rgba(255,255,255,0.8); }
+.p-status-txt strong { color: white; font-weight: 600; }
+
+.connect-card { margin: 16px; background: #fff; border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); overflow: hidden; }
+.connect-card-hdr { background: linear-gradient(135deg,rgba(200,162,201,0.15),rgba(95,158,136,0.1)); padding: 16px 18px 12px; border-bottom: 1px solid rgba(200,162,201,0.15); }
+.connect-card-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+.connect-card-sub { font-size: 11px; color: var(--text-soft); }
+.connect-card-body { padding: 16px 18px; }
+.invite-code-box { background: linear-gradient(135deg,rgba(131,77,132,0.06),rgba(95,158,136,0.06)); border: 1px dashed rgba(200,162,201,0.5); border-radius: 14px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; cursor: pointer; transition: all 0.2s; }
+.invite-code-box:hover { border-color: var(--lilac); background: rgba(200,162,201,0.1); }
+.invite-code-text { font-size: 12px; color: var(--lilac-deep); font-weight: 600; word-break: break-all; flex: 1; }
+.invite-copy-btn { width: 32px; height: 32px; border-radius: 10px; background: var(--lilac-deep); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-left: 10px; }
+.invite-copy-btn i { font-size: 14px; color: white; }
+
+.partner-feed-section { padding: 16px; }
+.pf-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.pf-title { font-size: 15px; font-weight: 700; color: var(--text); }
+.pf-badge { background: rgba(95,158,136,0.15); border: 1px solid rgba(95,158,136,0.3); border-radius: 20px; padding: 3px 10px; font-size: 10px; font-weight: 700; color: var(--green); }
+.pf-empty { text-align: center; padding: 40px 20px; color: var(--text-soft); font-size: 13px; }
+.feed-item.partner-entry { border-left: 3px solid var(--green); }
+.feed-item.mine-entry    { border-left: 3px solid var(--lilac); }
+
+.login-wrap { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 32px; }
+.login-logo { font-size: 52px; font-weight: 800; color: var(--text); margin-bottom: 8px; letter-spacing: -1px; }
+.login-sub  { font-size: 13px; color: var(--text-soft); margin-bottom: 48px; }
+.login-fields { width: 100%; display: flex; flex-direction: column; gap: 12px; }
+.login-btn-sub { width: 100%; background: rgba(200,162,201,0.15); color: var(--lilac-deep); border: none; border-radius: 15px; padding: 14px; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; }
+
+.setup-wrap { min-height: 100%; display: flex; flex-direction: column; padding: 60px 28px 40px; background: var(--bg); }
+.setup-logo { font-size: 42px; font-weight: 800; color: var(--lilac-deep); letter-spacing: -1px; margin-bottom: 4px; }
+.setup-sub  { font-size: 14px; color: var(--text-soft); margin-bottom: 48px; }
+.setup-step { display: none; flex-direction: column; gap: 24px; }
+.setup-step.on { display: flex; }
+.setup-q    { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1.3; }
+.setup-hint { font-size: 13px; color: var(--text-soft); margin-top: -16px; }
+.setup-input { width: 100%; background: #fff; border: 1.5px solid rgba(200,162,201,0.4); border-radius: 14px; padding: 14px 16px; font-size: 16px; font-weight: 500; color: var(--text); font-family: 'Outfit', sans-serif; outline: none; }
+.setup-input:focus { border-color: var(--lilac); }
+.setup-calc { background: rgba(200,162,201,0.12); border-radius: 12px; padding: 14px 16px; font-size: 14px; color: var(--text-mid); min-height: 48px; }
+.setup-calc strong { color: var(--lilac-deep); font-size: 18px; }
+.setup-btn  { width: 100%; background: linear-gradient(135deg,#834D84,#5A2E5B); color: white; border: none; border-radius: 15px; padding: 16px; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 8px; }
+.setup-skip { text-align: center; font-size: 13px; color: var(--text-soft); cursor: pointer; padding: 12px; text-decoration: underline; }
+
+/* ── 새 기록 폼 ── */
+#s-new {
+  background: var(--bg);
+  padding: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.new-card {
+  background: #fff;
+  border-radius: 28px;
+  margin: 20px 16px 40px;
+  padding: 24px 20px 28px;
+  width: calc(100% - 32px);
+  box-shadow: 0 8px 32px rgba(30,21,32,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.new-card-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.3px;
+  line-height: 1.3;
+}
+
+/* 타입 탭 */
+.new-type-tabs {
+  display: flex;
+  background: #EEE2EE;
+  border-radius: 50px;
+  padding: 5px 7px;
+  gap: 0;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 49px;
+}
+
+.new-type-tab {
+  flex: 1;
+  padding: 10px;
+  border-radius: 30px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 400;
+  color: #693F66;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.new-type-tab.on {
+  background: #B581B6;
+  color: #ffffff;
+}
+
+/* 사진 존 */
+.new-cam-zone {
+  border: 3px dashed #834D84;
+  border-radius: 20px;
+  height: 229px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  background: #F8F6FA;
+  width: 100%;
+}
+
+.new-cam-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.35;
+}
+
+/* 날짜/노트 필드 */
+.new-field {
+  background: #F8F6FA;
+  border-radius: 50px;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.date-field { cursor: pointer; }
+
+.new-field-icon {
+  font-size: 18px;
+  color: var(--text-soft);
+  flex-shrink: 0;
+}
+
+.new-date-field {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 16px 24px;
+  width: 100%;
+  height: 56px;
+  background: #F8F6FA;
+  border-radius: 50px;
+  cursor: pointer;
+}
+
+.new-date-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-mid);
+  cursor: pointer;
+  width: 100%;
+}
+
+/* 브라우저 기본 달력 아이콘 숨김 */
+.new-date-input::-webkit-calendar-picker-indicator { opacity: 0; width: 0; padding: 0; margin: 0; }
+.new-date-input::-webkit-inner-spin-button { display: none; }
+.new-date-input::-webkit-clear-button { display: none; }
+
+.new-text-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-mid);
+}
+
+.new-text-input::placeholder { color: #BDBDBD; }
+
+/* 감정 아이콘 행 */
+.new-mood-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mood-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  transition: background 0.18s;
+  flex-shrink: 0;
+  background: #F8F6FA;
+}
+
+.mood-item.on {
+  background: #7E477B;
+}
+
+.mood-item svg { display: block; }
+
+/* 공개 범위 토글 */
+.new-privacy-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 40px;
+}
+
+.privacy-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000000;
+}
+
+.privacy-label svg { flex-shrink: 0; }
+
+.toggle-wrap {
+  width: 70px;
+  height: 40px;
+  background: #EEE2EE;
+  border-radius: 30px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.25s;
+  flex-shrink: 0;
+}
+
+.toggle-wrap.on {
+  background: #7E477B;
+  justify-content: flex-end;
+}
+
+.toggle-knob {
+  width: 30px;
+  height: 30px;
+  background: #F7F2F8;
+  border-radius: 50%;
+  transition: all 0.25s;
+}
+
+/* 저장 버튼 */
+.new-submit-btn {
+  width: 100%;
+  background: #A261A3;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 16px 0;
+  height: 56px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  cursor: pointer;
+  letter-spacing: 0;
+}
+
+.settings-scroll { padding: 20px 18px; }
+```
 
   </style>
 </head>
@@ -815,211 +841,216 @@
       </div>
     </div>
 
-    <div class="screen" id="s-home">
-      <div class="home-pad">
-        <div id="home-timeline"></div>
+```
+<div class="screen" id="s-home">
+  <div class="home-pad">
+    <div id="home-timeline"></div>
+  </div>
+</div>
+
+<div class="screen plain" id="s-new">
+  <!-- 새 기록 폼 카드 -->
+  <div class="new-card">
+    <div class="new-card-title">뭐에대하여 기록하고싶어?</div>
+
+    <!-- 타입 탭 -->
+    <div class="new-type-tabs">
+      <div class="new-type-tab on" onclick="selNewTab(this)" data-type="초음파">초음파</div>
+      <div class="new-type-tab" onclick="selNewTab(this)" data-type="하루 일기">하루 일기</div>
+      <div class="new-type-tab" onclick="selNewTab(this)" data-type="진료예약">진료예약</div>
+    </div>
+
+    <!-- 사진 업로드 존 -->
+    <div class="new-cam-zone" onclick="document.getElementById('photo-input').click()">
+      <div class="new-cam-placeholder" id="new-cam-placeholder">
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none"><rect x="8" y="14" width="48" height="36" rx="4" stroke="#C8C8C8" stroke-width="3" fill="none"/><circle cx="32" cy="32" r="8" stroke="#C8C8C8" stroke-width="3" fill="none"/><path d="M22 14l3-5h18l3 5" stroke="#C8C8C8" stroke-width="3" stroke-linejoin="round" fill="none"/></svg>
+      </div>
+      <img id="photo-preview" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:16px;">
+    </div>
+    <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="previewPhoto(this)">
+
+    <!-- 날짜 -->
+    <div class="new-date-field" onclick="document.getElementById('entry-date-input').showPicker?.() || document.getElementById('entry-date-input').focus()">
+      <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;margin-right:12px;"><path d="M16.5 1.53846H14.25V0.769231C14.25 0.565218 14.171 0.369561 14.0303 0.225302C13.8897 0.0810437 13.6989 0 13.5 0C13.3011 0 13.1103 0.0810437 12.9697 0.225302C12.829 0.369561 12.75 0.565218 12.75 0.769231V1.53846H5.25V0.769231C5.25 0.565218 5.17098 0.369561 5.03033 0.225302C4.88968 0.0810437 4.69891 0 4.5 0C4.30109 0 4.11032 0.0810437 3.96967 0.225302C3.82902 0.369561 3.75 0.565218 3.75 0.769231V1.53846H1.5C1.10218 1.53846 0.720644 1.70055 0.43934 1.98907C0.158035 2.27758 0 2.6689 0 3.07692V18.4615C0 18.8696 0.158035 19.2609 0.43934 19.5494C0.720644 19.8379 1.10218 20 1.5 20H16.5C16.8978 20 17.2794 19.8379 17.5607 19.5494C17.842 19.2609 18 18.8696 18 18.4615V3.07692C18 2.6689 17.842 2.27758 17.5607 1.98907C17.2794 1.70055 16.8978 1.53846 16.5 1.53846ZM16.5 18.4615H1.5V3.07692H3.75V3.84615C3.75 4.05017 3.82902 4.24582 3.96967 4.39008C4.11032 4.53434 4.30109 4.61538 4.5 4.61538C4.69891 4.61538 4.88968 4.53434 5.03033 4.39008C5.17098 4.24582 5.25 4.05017 5.25 3.84615V3.07692H12.75V3.84615C12.75 4.05017 12.829 4.24582 12.9697 4.39008C13.1103 4.53434 13.3011 4.61538 13.5 4.61538C13.6989 4.61538 13.8897 4.53434 14.0303 4.39008C14.171 4.24582 14.25 4.05017 14.25 3.84615V3.07692H16.5V18.4615ZM11.25 6.92308C10.8241 6.92283 10.4031 7.01586 10.015 7.19595C9.62701 7.37603 9.28095 7.63901 9 7.96731C8.59708 7.49873 8.06463 7.16705 7.47345 7.01638C6.88227 6.86572 6.26038 6.90321 5.69048 7.12386C5.12058 7.34451 4.62967 7.73788 4.28305 8.25164C3.93642 8.76541 3.75049 9.37523 3.75 10C3.75 13.5115 8.46375 15.9692 8.66438 16.0731C8.76857 16.1266 8.88348 16.1544 9 16.1544C9.11652 16.1544 9.23143 16.1266 9.33562 16.0731C9.53625 15.9692 14.25 13.5115 14.25 10C14.25 9.18395 13.9339 8.40132 13.3713 7.82429C12.8087 7.24725 12.0456 6.92308 11.25 6.92308ZM9 14.5125C7.70719 13.7635 5.25 11.9404 5.25 10C5.25 9.59198 5.40804 9.20066 5.68934 8.91214C5.97064 8.62363 6.35218 8.46154 6.75 8.46154C7.14782 8.46154 7.52936 8.62363 7.81066 8.91214C8.09196 9.20066 8.25 9.59198 8.25 10C8.25 10.204 8.32902 10.3997 8.46967 10.5439C8.61032 10.6882 8.80109 10.7692 9 10.7692C9.19891 10.7692 9.38968 10.6882 9.53033 10.5439C9.67098 10.3997 9.75 10.204 9.75 10C9.75 9.59198 9.90804 9.20066 10.1893 8.91214C10.4706 8.62363 10.8522 8.46154 11.25 8.46154C11.6478 8.46154 12.0294 8.62363 12.3107 8.91214C12.592 9.20066 12.75 9.59198 12.75 10C12.75 11.9413 10.2928 13.7644 9 14.5125Z" fill="#8A5286"/></svg>
+      <input type="date" id="entry-date-input" class="new-date-input" oninput="calcEntryWeek()">
+    </div>
+
+    <!-- 감정 아이콘 -->
+    <div class="new-mood-row" id="mood-pills">
+      <div class="mood-item on" onclick="selMood(this)" data-mood="기쁘다">
+        <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M34.3728 17.1864C34.3728 7.69462 26.6782 1.40926e-05 17.1864 1.45075e-05C7.69461 1.49224e-05 -1.16614e-06 7.69463 -7.51241e-07 17.1864C-3.36342e-07 26.6782 7.69461 34.3728 17.1864 34.3728C26.6782 34.3728 34.3728 26.6782 34.3728 17.1864Z" fill="url(#g0a)"/><g filter="url(#f0a)"><ellipse cx="7.99168" cy="15.3813" rx="3.5" ry="1.5" transform="rotate(6.68328 7.99168 15.3813)" fill="#DD8766"/></g><g filter="url(#f1a)"><ellipse cx="3.5" cy="1.5" rx="3.5" ry="1.5" transform="matrix(-0.993205 0.116381 0.116381 0.993205 30.2933 13.4841)" fill="#DD8766"/></g><path d="M7.452 18.3908C7.452 18.3908 16.3446 16.9259 26.923 18.3908C26.923 18.3908 27.2616 27.0553 17.1893 27.0553C7.11696 27.0553 7.45556 18.3908 7.45556 18.3908H7.452Z" fill="#5B0600"/><mask id="m0a" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="7" y="17" width="20" height="11"><path d="M7.452 18.3908C7.452 18.3908 16.3446 16.9259 26.923 18.3908C26.923 18.3908 27.2616 27.0553 17.1893 27.0553C7.11696 27.0553 7.45556 18.3908 7.45556 18.3908H7.452Z" fill="white"/></mask><g mask="url(#m0a)"><path d="M17.1857 31.3217C21.7486 31.3217 25.4475 29.4116 25.4475 27.0554C25.4475 24.6992 21.7486 22.7891 17.1857 22.7891C12.6229 22.7891 8.92401 24.6992 8.92401 27.0554C8.92401 29.4116 12.6229 31.3217 17.1857 31.3217Z" fill="#8E1112"/></g><path d="M8.29668 4.44043L10.7666 8.17924L15.0828 6.98524L12.2921 10.4888L14.7621 14.2241L10.5671 12.6523L7.77631 16.1558L7.9759 11.6828L3.78088 10.1074L8.09709 8.91702L8.29668 4.44043Z" fill="url(#g1a)"/><path d="M25.5365 4.44043L23.0666 8.17924L18.7504 6.98524L21.5411 10.4888L19.0711 14.2241L23.2662 12.6523L26.0569 16.1558L25.8573 11.6828L30.0523 10.1074L25.7361 8.91702L25.5365 4.44043Z" fill="url(#g2a)"/><defs><filter id="f0a" x="2.51099" y="11.8364" width="10.9614" height="7.08984" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_128_81"/></filter><filter id="f1a" x="21.5109" y="11.8364" width="10.9614" height="7.08984" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_128_81"/></filter><linearGradient id="g0a" x1="12.7389" y1="33.7928" x2="21.6379" y2="0.583526" gradientUnits="userSpaceOnUse"><stop stop-color="#EBB34D"/><stop offset="0.03" stop-color="#EBB64D"/><stop offset="0.18" stop-color="#EEC04F"/><stop offset="0.55" stop-color="#F0CC50"/><stop offset="1" stop-color="#F3D652"/></linearGradient><linearGradient id="g1a" x1="3.78088" y1="10.2999" x2="15.0828" y2="10.2999" gradientUnits="userSpaceOnUse"><stop stop-color="#D2254D"/><stop offset="1" stop-color="#D65C4E"/></linearGradient><linearGradient id="g2a" x1="30.0523" y1="-0.000518166" x2="18.7504" y2="-0.000518166" gradientUnits="userSpaceOnUse"><stop stop-color="#D2254D"/><stop offset="1" stop-color="#D65C4E"/></linearGradient></defs></svg>
+        <span class="mood-label" style="display:none">기쁘다</span>
+      </div>
+      <div class="mood-item" onclick="selMood(this)" data-mood="행복하다">
+        <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M34.37 17.1851C34.37 7.69411 26.676 0.000120904 17.185 0.000121319C7.69398 0.000121734 0 7.69411 0 17.1851C0 26.6761 7.69399 34.3701 17.185 34.3701C26.676 34.3701 34.37 26.6761 34.37 17.1851Z" fill="url(#g0b)"/><path d="M7.44867 18.3881C7.44867 18.3881 16.3405 16.9233 26.9181 18.3881C26.9181 18.3881 27.2567 27.0518 17.1852 27.0518C7.11367 27.0518 7.45223 18.3881 7.45223 18.3881H7.44867Z" fill="#5B0600"/><mask id="m0b" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="7" y="17" width="20" height="11"><path d="M7.44867 18.3881C7.44867 18.3881 16.3405 16.9233 26.9181 18.3881C26.9181 18.3881 27.2567 27.0518 17.1852 27.0518C7.11367 27.0518 7.45223 18.3881 7.45223 18.3881H7.44867Z" fill="white"/></mask><g mask="url(#m0b)"><path d="M17.1851 31.3178C21.7476 31.3178 25.4462 29.4079 25.4462 27.0518C25.4462 24.6958 21.7476 22.7859 17.1851 22.7859C12.6227 22.7859 8.92407 24.6958 8.92407 27.0518C8.92407 29.4079 12.6227 31.3178 17.1851 31.3178Z" fill="#8E1112"/></g><g filter="url(#f0b)"><ellipse cx="7.49995" cy="15.4999" rx="3.5" ry="1.5" transform="rotate(6.68328 7.49995 15.4999)" fill="#DD8766"/></g><g filter="url(#f1b)"><ellipse cx="3.5" cy="1.5" rx="3.5" ry="1.5" transform="matrix(-0.993205 0.116381 0.116381 0.993205 29.8016 13.6028)" fill="#DD8766"/></g><path fill-rule="evenodd" clip-rule="evenodd" d="M11.1872 6.66305C10.2285 6.90896 9.52642 7.75003 9.40169 8.65169C8.85641 7.92466 7.83715 7.52194 6.87847 7.76785C5.681 8.07434 4.95754 9.22904 5.27472 10.4728C5.70239 12.1479 7.86566 13.0246 10.9947 14.8742C12.848 11.7487 14.3234 9.94182 13.8922 8.26323C13.575 7.01944 12.3811 6.35299 11.1872 6.65949V6.66305Z" fill="url(#g1b)"/><path fill-rule="evenodd" clip-rule="evenodd" d="M22.9587 6.6629C21.7612 6.35641 20.5709 7.01929 20.2537 8.26664C19.826 9.94166 21.3014 11.7485 23.1511 14.8776C26.2766 13.0244 28.4399 12.1513 28.8711 10.4762C29.1883 9.23245 28.4648 8.07776 27.2674 7.77126C26.3087 7.52536 25.2894 7.92807 24.7441 8.6551C24.6158 7.75701 23.9138 6.91237 22.9587 6.66646V6.6629Z" fill="url(#g2b)"/><defs><filter id="f0b" x="2.01929" y="11.9551" width="10.9614" height="7.08984" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_128_162"/></filter><filter id="f1b" x="21.0192" y="11.9551" width="10.9614" height="7.08984" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_128_162"/></filter><linearGradient id="g0b" x1="12.7369" y1="33.7875" x2="21.6352" y2="0.580948" gradientUnits="userSpaceOnUse"><stop stop-color="#EBB34D"/><stop offset="0.03" stop-color="#EBB64D"/><stop offset="0.18" stop-color="#EEC04F"/><stop offset="0.55" stop-color="#F0CC50"/><stop offset="1" stop-color="#F3D652"/></linearGradient><linearGradient id="g1b" x1="5.72225" y1="12.1422" x2="14.3394" y2="9.93448" gradientUnits="userSpaceOnUse"><stop stop-color="#D2254D"/><stop offset="1" stop-color="#D65C4E"/></linearGradient><linearGradient id="g2b" x1="28.4702" y1="12.2451" x2="19.8531" y2="10.0374" gradientUnits="userSpaceOnUse"><stop stop-color="#D2254D"/><stop offset="1" stop-color="#D65C4E"/></linearGradient></defs></svg>
+        <span class="mood-label" style="display:none">행복하다</span>
+      </div>
+      <div class="mood-item" onclick="selMood(this)" data-mood="놀랐다">
+        <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.0993 34.8831C26.543 34.8831 34.1986 27.2275 34.1986 17.7839C34.1986 8.34018 26.543 0.68457 17.0993 0.68457C7.65561 0.68457 0 8.34018 0 17.7839C0 27.2275 7.65561 34.8831 17.0993 34.8831Z" fill="url(#g0c)"/><path d="M34.2021 17.7837C34.2021 27.227 0 27.227 0 17.7837C0 8.34048 7.65603 0.680908 17.0993 0.680908C26.5426 0.680908 34.1986 8.33694 34.1986 17.7802L34.2021 17.7837Z" fill="url(#g1c)"/><path d="M22.5213 21.8382C22.5213 26.008 20.5213 28.883 17.1028 28.883C13.6844 28.883 11.6844 26.008 11.6844 21.8382C11.6844 17.6684 14.5674 14.2908 17.1028 14.2908C19.8794 14.2908 22.5213 17.6726 22.5213 21.8382Z" fill="#5B0600"/><mask id="m0c" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="11" y="14" width="12" height="15"><path d="M22.5213 21.8382C22.5213 26.008 20.5213 28.883 17.1028 28.883C13.6844 28.883 11.6844 26.008 11.6844 21.8382C11.6844 17.6684 14.5674 14.2908 17.1028 14.2908C19.8794 14.2908 22.5213 17.6726 22.5213 21.8382Z" fill="white"/></mask><g mask="url(#m0c)"><path d="M17.0993 37.576C20.6696 37.576 23.5638 34.7099 23.5638 31.1744C23.5638 27.6388 20.6696 24.7727 17.0993 24.7727C13.529 24.7727 10.6348 27.6388 10.6348 31.1744C10.6348 34.7099 13.529 37.576 17.0993 37.576Z" fill="#8E1112"/></g><g filter="url(#f0c)"><ellipse cx="9.0174" cy="13.383" rx="3.5" ry="1.5" transform="rotate(6.68328 9.0174 13.383)" fill="#DD8766"/></g><g filter="url(#f1c)"><ellipse cx="3.5" cy="1.5" rx="3.5" ry="1.5" transform="matrix(-0.993205 0.116381 0.116381 0.993205 28.3191 11.4858)" fill="#DD8766"/></g><path d="M10.8262 9.56401C11.7212 9.56401 12.4468 8.37487 12.4468 6.90798C12.4468 5.4411 11.7212 4.25195 10.8262 4.25195C9.93118 4.25195 9.20563 5.4411 9.20563 6.90798C9.20563 8.37487 9.93118 9.56401 10.8262 9.56401Z" fill="black"/><path d="M23.6489 9.56401C24.5439 9.56401 25.2695 8.37487 25.2695 6.90798C25.2695 5.4411 24.5439 4.25195 23.6489 4.25195C22.7539 4.25195 22.0283 5.4411 22.0283 6.90798C22.0283 8.37487 22.7539 9.56401 23.6489 9.56401Z" fill="black"/><path d="M13.5142 3.43972C13.1241 3.43972 12.7695 3.18085 12.6596 2.79078C12.6064 2.61702 12.2837 1.77305 10.9965 1.77305H10.9894C9.7234 1.77305 9.34042 2.73404 9.29787 2.84397C9.1312 3.30142 8.62766 3.54255 8.17021 3.38298C7.71276 3.2234 7.46454 2.73404 7.61702 2.27305C7.64893 2.18085 8.40071 0.0035461 10.9823 0H10.9929C13.1808 0 14.1596 1.52128 14.3688 2.32979C14.4929 2.80496 14.2092 3.28723 13.734 3.41135C13.6596 3.43262 13.5851 3.43972 13.5106 3.43972H13.5142Z" fill="#660001"/><path d="M26.117 3.43972C25.727 3.43972 25.3723 3.18085 25.2624 2.79078C25.2092 2.61702 24.8865 1.77305 23.5993 1.77305H23.5922C22.3262 1.77305 21.9397 2.73404 21.9007 2.84397C21.734 3.30142 21.2305 3.54255 20.7731 3.38298C20.3156 3.2234 20.0674 2.73404 20.2199 2.27305C20.2518 2.18085 21.0036 0.0035461 23.5851 0H23.5957C25.7837 0 26.7624 1.52128 26.9716 2.32979C27.0957 2.80496 26.8121 3.28723 26.3369 3.41135C26.2624 3.43262 26.1879 3.43972 26.1135 3.43972H26.117Z" fill="#660001"/><defs><filter id="f0c" x="3.53674" y="9.83813" width="10.9614" height="7.08984" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_128_178"/></filter><filter id="f1c" x="19.5367" y="9.83813" width="10.9614" height="7.08984" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_128_178"/></filter><linearGradient id="g0c" x1="0" y1="17.7839" x2="34.2021" y2="17.7839" gradientUnits="userSpaceOnUse"><stop stop-color="#EBB34D"/><stop offset="0.03" stop-color="#EBB64D"/><stop offset="0.18" stop-color="#EEC04F"/><stop offset="0.55" stop-color="#F0CC50"/><stop offset="1" stop-color="#F3D652"/></linearGradient><linearGradient id="g1c" x1="17.0993" y1="0.680908" x2="17.0993" y2="24.5639" gradientUnits="userSpaceOnUse"><stop stop-color="#4F80C0"/><stop offset="1" stop-color="#4F80C0" stop-opacity="0"/></linearGradient></defs></svg>
+        <span class="mood-label" style="display:none">놀랐다</span>
+      </div>
+      <div class="mood-item" onclick="selMood(this)" data-mood="걱정">
+        <svg width="34" height="35" viewBox="0 0 34 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.7402 34.3701C25.9856 34.3701 33.4804 26.8752 33.4804 17.6298C33.4804 8.38449 25.9856 0.889648 16.7402 0.889648C7.49484 0.889648 0 8.38449 0 17.6298C0 26.8752 7.49484 34.3701 16.7402 34.3701Z" fill="url(#g0d)"/><g filter="url(#f0d)"><ellipse cx="9.4997" cy="22.4999" rx="3.5" ry="1.5" transform="rotate(6.68328 9.4997 22.4999)" fill="#DD8766"/></g><g filter="url(#f1d)"><ellipse cx="3.5" cy="1.5" rx="3.5" ry="1.5" transform="matrix(-0.993205 0.116381 0.116381 0.993205 27.8014 20.6028)" fill="#DD8766"/></g><path d="M22.899 20.4696C20.757 20.4696 19.7988 18.9803 19.594 18.1887C19.4725 17.7235 19.7502 17.2514 20.2154 17.1299C20.6736 17.0084 21.1458 17.2826 21.2708 17.7374C21.3228 17.9075 21.6283 18.7234 22.9059 18.7338C24.1453 18.7338 24.5237 17.793 24.5619 17.6853C24.725 17.2375 25.218 17.0014 25.6658 17.1577C26.1137 17.3139 26.3567 17.793 26.2074 18.2443C26.1762 18.3345 25.4402 20.4661 22.9128 20.4696H22.9024H22.899Z" fill="black"/><path d="M10.5642 20.4696C8.42218 20.4696 7.46401 18.9803 7.25918 18.1887C7.13768 17.7235 7.41541 17.2514 7.8806 17.1299C8.33886 17.0084 8.811 17.2826 8.93598 17.7374C8.98805 17.9075 9.30397 18.7338 10.5642 18.7338H10.5711C11.807 18.7338 12.1854 17.793 12.2271 17.6853C12.3903 17.241 12.8832 17.0014 13.3311 17.1577C13.7789 17.3139 14.0219 17.793 13.8726 18.2443C13.8414 18.3345 13.1054 20.4661 10.5781 20.4696H10.5676H10.5642Z" fill="black"/><path d="M20.3889 27.7287C20.2674 27.7287 20.1424 27.6975 20.0279 27.628C16.2993 25.3611 13.6435 27.4788 13.5324 27.569C13.2374 27.812 12.7999 27.7704 12.5569 27.4753C12.3139 27.1802 12.3521 26.7462 12.6437 26.4998C12.786 26.3817 16.1466 23.6391 20.75 26.4373C21.0763 26.6352 21.1805 27.0622 20.9826 27.392C20.8506 27.6072 20.6215 27.7252 20.3889 27.7252V27.7287Z" fill="#5B0600"/><path d="M5.31163 0.143193C5.31163 0.143193 8.46387 4.99653 9.35955 7.5586C10.2344 10.0651 9.63034 12.8146 7.26616 14.0228C4.90198 15.2309 2.01011 14.2936 0.801982 11.9294C0.0764114 10.513 0.256936 8.93336 0.801982 7.5586C2.11426 4.24319 4.8499 0.143193 4.8499 0.143193C4.91586 0.0147423 5.07209 -0.0373321 5.20054 0.0286289C5.25261 0.0529303 5.2908 0.0945898 5.3151 0.143193H5.31163Z" fill="url(#g1d)"/><defs><filter id="f0d" x="4.01904" y="18.9551" width="10.9614" height="7.08984" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_128_199"/></filter><filter id="f1d" x="19.019" y="18.9551" width="10.9614" height="7.08984" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_128_199"/></filter><linearGradient id="g0d" x1="2.2392" y1="26" x2="31.2412" y2="9.25628" gradientUnits="userSpaceOnUse"><stop stop-color="#EBB34D"/><stop offset="0.03" stop-color="#EBB64D"/><stop offset="0.18" stop-color="#EEC04F"/><stop offset="0.55" stop-color="#F0CC50"/><stop offset="1" stop-color="#F3D652"/></linearGradient><linearGradient id="g1d" x1="5.03043" y1="14.5505" x2="5.03043" y2="0.000855083" gradientUnits="userSpaceOnUse"><stop stop-color="#77AAF2"/><stop offset="0.35" stop-color="#8EBAF3"/><stop offset="0.74" stop-color="#A1C7F5"/><stop offset="1" stop-color="#A9CCF6"/></linearGradient></defs></svg>
+        <span class="mood-label" style="display:none">걱정</span>
+      </div>
+      <div class="mood-item" onclick="selMood(this)" data-mood="화남">
+        <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.185 34.37C26.676 34.37 34.37 26.676 34.37 17.185C34.37 7.69399 26.676 0 17.185 0C7.69399 0 0 7.69399 0 17.185C0 26.676 7.69399 34.37 17.185 34.37Z" fill="url(#g0e)"/><path d="M17.185 34.37C26.676 34.37 34.37 26.676 34.37 17.185C34.37 7.69399 26.676 0 17.185 0C7.69399 0 0 7.69399 0 17.185C0 26.676 7.69399 34.37 17.185 34.37Z" fill="url(#g1e)"/><g filter="url(#f0e)"><ellipse cx="9.4997" cy="23.4999" rx="3.5" ry="1.5" transform="rotate(6.68328 9.4997 23.4999)" fill="#DD8766"/></g><g filter="url(#f1e)"><ellipse cx="3.5" cy="1.5" rx="3.5" ry="1.5" transform="matrix(-0.993205 0.116381 0.116381 0.993205 27.8014 21.6028)" fill="#DD8766"/></g><path fill-rule="evenodd" clip-rule="evenodd" d="M13.8966 28.4588C13.595 28.7111 13.1458 28.6714 12.8931 28.3699C12.6402 28.0682 12.6798 27.6187 12.9815 27.3658L13.4349 27.9067C12.9815 27.3658 12.9818 27.3655 12.9821 27.3652L12.9829 27.3646L12.9846 27.3632L12.9888 27.3597L13.001 27.3498C13.0106 27.342 13.0234 27.3318 13.0393 27.3195C13.071 27.295 13.1151 27.2618 13.1711 27.2221C13.283 27.1428 13.4431 27.037 13.6475 26.9209C14.0554 26.6892 14.6455 26.4136 15.386 26.2299C16.8851 25.858 18.9563 25.8756 21.3044 27.303C21.6408 27.5074 21.7477 27.9459 21.5433 28.2823C21.3388 28.6187 20.9003 28.7256 20.5639 28.5211C18.5677 27.3077 16.8915 27.3252 15.7293 27.6135C15.1391 27.7599 14.6701 27.9795 14.3515 28.1604C14.1927 28.2507 14.0726 28.3305 13.9953 28.3853C13.9567 28.4127 13.9289 28.4337 13.9123 28.4465C13.904 28.4529 13.8986 28.4572 13.8961 28.4593C13.8954 28.4598 13.895 28.4602 13.8947 28.4604L13.8961 28.4593L13.8966 28.4588ZM13.8947 28.4604C13.8944 28.4606 13.8946 28.4605 13.8947 28.4604Z" fill="#5B0600"/><path d="M10.7415 22.2349C11.641 22.2349 12.3702 21.0398 12.3702 19.5656C12.3702 18.0913 11.641 16.8962 10.7415 16.8962C9.84204 16.8962 9.11285 18.0913 9.11285 19.5656C9.11285 21.0398 9.84204 22.2349 10.7415 22.2349Z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M8.11598 15.3336C8.3393 15.0094 8.78314 14.9277 9.10731 15.151L13.277 18.0235C13.6012 18.2468 13.683 18.6907 13.4597 19.0148C13.2363 19.339 12.7925 19.4208 12.4683 19.1974L8.29859 16.325C7.97441 16.1016 7.89266 15.6578 8.11598 15.3336Z" fill="black"/><path d="M25.2607 19.5656C25.2607 21.041 24.5301 22.2349 23.632 22.2349C22.734 22.2349 22.0034 21.041 22.0034 19.5656C22.0034 18.0901 22.734 16.8962 23.632 16.8962C24.5301 16.8962 25.2607 18.0901 25.2607 19.5656Z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M25.7978 15.3336C26.0211 15.6578 25.9394 16.1016 25.6152 16.325L21.4454 19.1974C21.1213 19.4208 20.6774 19.339 20.4541 19.0148C20.2308 18.6907 20.3125 18.2468 20.6367 18.0235L24.8065 15.151C25.1306 14.9277 25.5745 15.0094 25.7978 15.3336Z" fill="black"/><defs><filter id="f0e" x="4.01904" y="19.9551" width="10.9614" height="7.08984" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_128_147"/></filter><filter id="f1e" x="19.019" y="19.9551" width="10.9614" height="7.08984" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_128_147"/></filter><linearGradient id="g0e" x1="2.2987" y1="25.7811" x2="32.0713" y2="8.5925" gradientUnits="userSpaceOnUse"><stop stop-color="#EBB34D"/><stop offset="0.03" stop-color="#EBB64D"/><stop offset="0.18" stop-color="#EEC04F"/><stop offset="0.55" stop-color="#F0CC50"/><stop offset="1" stop-color="#F3D652"/></linearGradient><linearGradient id="g1e" x1="17.185" y1="0" x2="17.185" y2="34.3736" gradientUnits="userSpaceOnUse"><stop stop-color="#DD5F70"/><stop offset="0.16" stop-color="#DD636F" stop-opacity="0.97"/><stop offset="0.45" stop-color="#E48965" stop-opacity="0.64"/><stop offset="1" stop-color="#F3D652" stop-opacity="0"/></linearGradient></defs></svg>
+        <span class="mood-label" style="display:none">화남</span>
       </div>
     </div>
 
-    <div class="screen plain" id="s-new">
-      <!-- 새 기록 폼 카드 -->
-      <div class="new-card">
-        <div class="new-card-title">뭐에대하여 기록하고싶어?</div>
+    <!-- 짧은 노트 -->
+    <div class="new-field">
+      <div class="new-field-icon"><i class="ph ph-pencil-simple"></i></div>
+      <input id="entry-content" class="new-text-input" placeholder="짧은 노트">
+    </div>
 
-        <!-- 타입 탭 -->
-        <div class="new-type-tabs">
-          <div class="new-type-tab on" onclick="selNewTab(this)" data-type="초음파">초음파</div>
-          <div class="new-type-tab" onclick="selNewTab(this)" data-type="하루 일기">하루 일기</div>
-          <div class="new-type-tab" onclick="selNewTab(this)" data-type="진료예약">진료예약</div>
-        </div>
-
-        <!-- 사진 업로드 존 -->
-        <div class="new-cam-zone" onclick="document.getElementById('photo-input').click()">
-          <div class="new-cam-placeholder" id="new-cam-placeholder">
-            <svg width="64" height="64" viewBox="0 0 64 64" fill="none"><rect x="8" y="14" width="48" height="36" rx="4" stroke="#C8C8C8" stroke-width="3" fill="none"/><circle cx="32" cy="32" r="8" stroke="#C8C8C8" stroke-width="3" fill="none"/><path d="M22 14l3-5h18l3 5" stroke="#C8C8C8" stroke-width="3" stroke-linejoin="round" fill="none"/></svg>
-          </div>
-          <img id="photo-preview" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:16px;">
-        </div>
-        <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="previewPhoto(this)">
-
-        <!-- 날짜 -->
-        <div class="new-date-field" onclick="document.getElementById('entry-date-input').showPicker?.() || document.getElementById('entry-date-input').focus()">
-          <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;margin-right:12px;"><path d="M16.5 1.53846H14.25V0.769231C14.25 0.565218 14.171 0.369561 14.0303 0.225302C13.8897 0.0810437 13.6989 0 13.5 0C13.3011 0 13.1103 0.0810437 12.9697 0.225302C12.829 0.369561 12.75 0.565218 12.75 0.769231V1.53846H5.25V0.769231C5.25 0.565218 5.17098 0.369561 5.03033 0.225302C4.88968 0.0810437 4.69891 0 4.5 0C4.30109 0 4.11032 0.0810437 3.96967 0.225302C3.82902 0.369561 3.75 0.565218 3.75 0.769231V1.53846H1.5C1.10218 1.53846 0.720644 1.70055 0.43934 1.98907C0.158035 2.27758 0 2.6689 0 3.07692V18.4615C0 18.8696 0.158035 19.2609 0.43934 19.5494C0.720644 19.8379 1.10218 20 1.5 20H16.5C16.8978 20 17.2794 19.8379 17.5607 19.5494C17.842 19.2609 18 18.8696 18 18.4615V3.07692C18 2.6689 17.842 2.27758 17.5607 1.98907C17.2794 1.70055 16.8978 1.53846 16.5 1.53846ZM16.5 18.4615H1.5V3.07692H3.75V3.84615C3.75 4.05017 3.82902 4.24582 3.96967 4.39008C4.11032 4.53434 4.30109 4.61538 4.5 4.61538C4.69891 4.61538 4.88968 4.53434 5.03033 4.39008C5.17098 4.24582 5.25 4.05017 5.25 3.84615V3.07692H12.75V3.84615C12.75 4.05017 12.829 4.24582 12.9697 4.39008C13.1103 4.53434 13.3011 4.61538 13.5 4.61538C13.6989 4.61538 13.8897 4.53434 14.0303 4.39008C14.171 4.24582 14.25 4.05017 14.25 3.84615V3.07692H16.5V18.4615ZM11.25 6.92308C10.8241 6.92283 10.4031 7.01586 10.015 7.19595C9.62701 7.37603 9.28095 7.63901 9 7.96731C8.59708 7.49873 8.06463 7.16705 7.47345 7.01638C6.88227 6.86572 6.26038 6.90321 5.69048 7.12386C5.12058 7.34451 4.62967 7.73788 4.28305 8.25164C3.93642 8.76541 3.75049 9.37523 3.75 10C3.75 13.5115 8.46375 15.9692 8.66438 16.0731C8.76857 16.1266 8.88348 16.1544 9 16.1544C9.11652 16.1544 9.23143 16.1266 9.33562 16.0731C9.53625 15.9692 14.25 13.5115 14.25 10C14.25 9.18395 13.9339 8.40132 13.3713 7.82429C12.8087 7.24725 12.0456 6.92308 11.25 6.92308ZM9 14.5125C7.70719 13.7635 5.25 11.9404 5.25 10C5.25 9.59198 5.40804 9.20066 5.68934 8.91214C5.97064 8.62363 6.35218 8.46154 6.75 8.46154C7.14782 8.46154 7.52936 8.62363 7.81066 8.91214C8.09196 9.20066 8.25 9.59198 8.25 10C8.25 10.204 8.32902 10.3997 8.46967 10.5439C8.61032 10.6882 8.80109 10.7692 9 10.7692C9.19891 10.7692 9.38968 10.6882 9.53033 10.5439C9.67098 10.3997 9.75 10.204 9.75 10C9.75 9.59198 9.90804 9.20066 10.1893 8.91214C10.4706 8.62363 10.8522 8.46154 11.25 8.46154C11.6478 8.46154 12.0294 8.62363 12.3107 8.91214C12.592 9.20066 12.75 9.59198 12.75 10C12.75 11.9413 10.2928 13.7644 9 14.5125Z" fill="#8A5286"/></svg>
-          <input type="date" id="entry-date-input" class="new-date-input" oninput="calcEntryWeek()">
-        </div>
-
-        <!-- 감정 아이콘 -->
-        <div class="new-mood-row" id="mood-pills">
-          <div class="mood-item on" onclick="selMood(this)" data-mood="기쁘다">
-            <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M34.3728 17.1864C34.3728 7.69462 26.6782 1.40926e-05 17.1864 1.45075e-05C7.69461 1.49224e-05 -1.16614e-06 7.69463 -7.51241e-07 17.1864C-3.36342e-07 26.6782 7.69461 34.3728 17.1864 34.3728C26.6782 34.3728 34.3728 26.6782 34.3728 17.1864Z" fill="url(#g0a)"/><g filter="url(#f0a)"><ellipse cx="7.99168" cy="15.3813" rx="3.5" ry="1.5" transform="rotate(6.68328 7.99168 15.3813)" fill="#DD8766"/></g><g filter="url(#f1a)"><ellipse cx="3.5" cy="1.5" rx="3.5" ry="1.5" transform="matrix(-0.993205 0.116381 0.116381 0.993205 30.2933 13.4841)" fill="#DD8766"/></g><path d="M7.452 18.3908C7.452 18.3908 16.3446 16.9259 26.923 18.3908C26.923 18.3908 27.2616 27.0553 17.1893 27.0553C7.11696 27.0553 7.45556 18.3908 7.45556 18.3908H7.452Z" fill="#5B0600"/><mask id="m0a" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="7" y="17" width="20" height="11"><path d="M7.452 18.3908C7.452 18.3908 16.3446 16.9259 26.923 18.3908C26.923 18.3908 27.2616 27.0553 17.1893 27.0553C7.11696 27.0553 7.45556 18.3908 7.45556 18.3908H7.452Z" fill="white"/></mask><g mask="url(#m0a)"><path d="M17.1857 31.3217C21.7486 31.3217 25.4475 29.4116 25.4475 27.0554C25.4475 24.6992 21.7486 22.7891 17.1857 22.7891C12.6229 22.7891 8.92401 24.6992 8.92401 27.0554C8.92401 29.4116 12.6229 31.3217 17.1857 31.3217Z" fill="#8E1112"/></g><path d="M8.29668 4.44043L10.7666 8.17924L15.0828 6.98524L12.2921 10.4888L14.7621 14.2241L10.5671 12.6523L7.77631 16.1558L7.9759 11.6828L3.78088 10.1074L8.09709 8.91702L8.29668 4.44043Z" fill="url(#g1a)"/><path d="M25.5365 4.44043L23.0666 8.17924L18.7504 6.98524L21.5411 10.4888L19.0711 14.2241L23.2662 12.6523L26.0569 16.1558L25.8573 11.6828L30.0523 10.1074L25.7361 8.91702L25.5365 4.44043Z" fill="url(#g2a)"/><defs><filter id="f0a" x="2.51099" y="11.8364" width="10.9614" height="7.08984" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_128_81"/></filter><filter id="f1a" x="21.5109" y="11.8364" width="10.9614" height="7.08984" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_128_81"/></filter><linearGradient id="g0a" x1="12.7389" y1="33.7928" x2="21.6379" y2="0.583526" gradientUnits="userSpaceOnUse"><stop stop-color="#EBB34D"/><stop offset="0.03" stop-color="#EBB64D"/><stop offset="0.18" stop-color="#EEC04F"/><stop offset="0.55" stop-color="#F0CC50"/><stop offset="1" stop-color="#F3D652"/></linearGradient><linearGradient id="g1a" x1="3.78088" y1="10.2999" x2="15.0828" y2="10.2999" gradientUnits="userSpaceOnUse"><stop stop-color="#D2254D"/><stop offset="1" stop-color="#D65C4E"/></linearGradient><linearGradient id="g2a" x1="30.0523" y1="-0.000518166" x2="18.7504" y2="-0.000518166" gradientUnits="userSpaceOnUse"><stop stop-color="#D2254D"/><stop offset="1" stop-color="#D65C4E"/></linearGradient></defs></svg>
-            <span class="mood-label" style="display:none">기쁘다</span>
-          </div>
-          <div class="mood-item" onclick="selMood(this)" data-mood="행복하다">
-            <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M34.37 17.1851C34.37 7.69411 26.676 0.000120904 17.185 0.000121319C7.69398 0.000121734 0 7.69411 0 17.1851C0 26.6761 7.69399 34.3701 17.185 34.3701C26.676 34.3701 34.37 26.6761 34.37 17.1851Z" fill="url(#g0b)"/><path d="M7.44867 18.3881C7.44867 18.3881 16.3405 16.9233 26.9181 18.3881C26.9181 18.3881 27.2567 27.0518 17.1852 27.0518C7.11367 27.0518 7.45223 18.3881 7.45223 18.3881H7.44867Z" fill="#5B0600"/><mask id="m0b" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="7" y="17" width="20" height="11"><path d="M7.44867 18.3881C7.44867 18.3881 16.3405 16.9233 26.9181 18.3881C26.9181 18.3881 27.2567 27.0518 17.1852 27.0518C7.11367 27.0518 7.45223 18.3881 7.45223 18.3881H7.44867Z" fill="white"/></mask><g mask="url(#m0b)"><path d="M17.1851 31.3178C21.7476 31.3178 25.4462 29.4079 25.4462 27.0518C25.4462 24.6958 21.7476 22.7859 17.1851 22.7859C12.6227 22.7859 8.92407 24.6958 8.92407 27.0518C8.92407 29.4079 12.6227 31.3178 17.1851 31.3178Z" fill="#8E1112"/></g><g filter="url(#f0b)"><ellipse cx="7.49995" cy="15.4999" rx="3.5" ry="1.5" transform="rotate(6.68328 7.49995 15.4999)" fill="#DD8766"/></g><g filter="url(#f1b)"><ellipse cx="3.5" cy="1.5" rx="3.5" ry="1.5" transform="matrix(-0.993205 0.116381 0.116381 0.993205 29.8016 13.6028)" fill="#DD8766"/></g><path fill-rule="evenodd" clip-rule="evenodd" d="M11.1872 6.66305C10.2285 6.90896 9.52642 7.75003 9.40169 8.65169C8.85641 7.92466 7.83715 7.52194 6.87847 7.76785C5.681 8.07434 4.95754 9.22904 5.27472 10.4728C5.70239 12.1479 7.86566 13.0246 10.9947 14.8742C12.848 11.7487 14.3234 9.94182 13.8922 8.26323C13.575 7.01944 12.3811 6.35299 11.1872 6.65949V6.66305Z" fill="url(#g1b)"/><path fill-rule="evenodd" clip-rule="evenodd" d="M22.9587 6.6629C21.7612 6.35641 20.5709 7.01929 20.2537 8.26664C19.826 9.94166 21.3014 11.7485 23.1511 14.8776C26.2766 13.0244 28.4399 12.1513 28.8711 10.4762C29.1883 9.23245 28.4648 8.07776 27.2674 7.77126C26.3087 7.52536 25.2894 7.92807 24.7441 8.6551C24.6158 7.75701 23.9138 6.91237 22.9587 6.66646V6.6629Z" fill="url(#g2b)"/><defs><filter id="f0b" x="2.01929" y="11.9551" width="10.9614" height="7.08984" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_128_162"/></filter><filter id="f1b" x="21.0192" y="11.9551" width="10.9614" height="7.08984" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_128_162"/></filter><linearGradient id="g0b" x1="12.7369" y1="33.7875" x2="21.6352" y2="0.580948" gradientUnits="userSpaceOnUse"><stop stop-color="#EBB34D"/><stop offset="0.03" stop-color="#EBB64D"/><stop offset="0.18" stop-color="#EEC04F"/><stop offset="0.55" stop-color="#F0CC50"/><stop offset="1" stop-color="#F3D652"/></linearGradient><linearGradient id="g1b" x1="5.72225" y1="12.1422" x2="14.3394" y2="9.93448" gradientUnits="userSpaceOnUse"><stop stop-color="#D2254D"/><stop offset="1" stop-color="#D65C4E"/></linearGradient><linearGradient id="g2b" x1="28.4702" y1="12.2451" x2="19.8531" y2="10.0374" gradientUnits="userSpaceOnUse"><stop stop-color="#D2254D"/><stop offset="1" stop-color="#D65C4E"/></linearGradient></defs></svg>
-            <span class="mood-label" style="display:none">행복하다</span>
-          </div>
-          <div class="mood-item" onclick="selMood(this)" data-mood="놀랐다">
-            <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.0993 34.8831C26.543 34.8831 34.1986 27.2275 34.1986 17.7839C34.1986 8.34018 26.543 0.68457 17.0993 0.68457C7.65561 0.68457 0 8.34018 0 17.7839C0 27.2275 7.65561 34.8831 17.0993 34.8831Z" fill="url(#g0c)"/><path d="M34.2021 17.7837C34.2021 27.227 0 27.227 0 17.7837C0 8.34048 7.65603 0.680908 17.0993 0.680908C26.5426 0.680908 34.1986 8.33694 34.1986 17.7802L34.2021 17.7837Z" fill="url(#g1c)"/><path d="M22.5213 21.8382C22.5213 26.008 20.5213 28.883 17.1028 28.883C13.6844 28.883 11.6844 26.008 11.6844 21.8382C11.6844 17.6684 14.5674 14.2908 17.1028 14.2908C19.8794 14.2908 22.5213 17.6726 22.5213 21.8382Z" fill="#5B0600"/><mask id="m0c" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="11" y="14" width="12" height="15"><path d="M22.5213 21.8382C22.5213 26.008 20.5213 28.883 17.1028 28.883C13.6844 28.883 11.6844 26.008 11.6844 21.8382C11.6844 17.6684 14.5674 14.2908 17.1028 14.2908C19.8794 14.2908 22.5213 17.6726 22.5213 21.8382Z" fill="white"/></mask><g mask="url(#m0c)"><path d="M17.0993 37.576C20.6696 37.576 23.5638 34.7099 23.5638 31.1744C23.5638 27.6388 20.6696 24.7727 17.0993 24.7727C13.529 24.7727 10.6348 27.6388 10.6348 31.1744C10.6348 34.7099 13.529 37.576 17.0993 37.576Z" fill="#8E1112"/></g><g filter="url(#f0c)"><ellipse cx="9.0174" cy="13.383" rx="3.5" ry="1.5" transform="rotate(6.68328 9.0174 13.383)" fill="#DD8766"/></g><g filter="url(#f1c)"><ellipse cx="3.5" cy="1.5" rx="3.5" ry="1.5" transform="matrix(-0.993205 0.116381 0.116381 0.993205 28.3191 11.4858)" fill="#DD8766"/></g><path d="M10.8262 9.56401C11.7212 9.56401 12.4468 8.37487 12.4468 6.90798C12.4468 5.4411 11.7212 4.25195 10.8262 4.25195C9.93118 4.25195 9.20563 5.4411 9.20563 6.90798C9.20563 8.37487 9.93118 9.56401 10.8262 9.56401Z" fill="black"/><path d="M23.6489 9.56401C24.5439 9.56401 25.2695 8.37487 25.2695 6.90798C25.2695 5.4411 24.5439 4.25195 23.6489 4.25195C22.7539 4.25195 22.0283 5.4411 22.0283 6.90798C22.0283 8.37487 22.7539 9.56401 23.6489 9.56401Z" fill="black"/><path d="M13.5142 3.43972C13.1241 3.43972 12.7695 3.18085 12.6596 2.79078C12.6064 2.61702 12.2837 1.77305 10.9965 1.77305H10.9894C9.7234 1.77305 9.34042 2.73404 9.29787 2.84397C9.1312 3.30142 8.62766 3.54255 8.17021 3.38298C7.71276 3.2234 7.46454 2.73404 7.61702 2.27305C7.64893 2.18085 8.40071 0.0035461 10.9823 0H10.9929C13.1808 0 14.1596 1.52128 14.3688 2.32979C14.4929 2.80496 14.2092 3.28723 13.734 3.41135C13.6596 3.43262 13.5851 3.43972 13.5106 3.43972H13.5142Z" fill="#660001"/><path d="M26.117 3.43972C25.727 3.43972 25.3723 3.18085 25.2624 2.79078C25.2092 2.61702 24.8865 1.77305 23.5993 1.77305H23.5922C22.3262 1.77305 21.9397 2.73404 21.9007 2.84397C21.734 3.30142 21.2305 3.54255 20.7731 3.38298C20.3156 3.2234 20.0674 2.73404 20.2199 2.27305C20.2518 2.18085 21.0036 0.0035461 23.5851 0H23.5957C25.7837 0 26.7624 1.52128 26.9716 2.32979C27.0957 2.80496 26.8121 3.28723 26.3369 3.41135C26.2624 3.43262 26.1879 3.43972 26.1135 3.43972H26.117Z" fill="#660001"/><defs><filter id="f0c" x="3.53674" y="9.83813" width="10.9614" height="7.08984" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_128_178"/></filter><filter id="f1c" x="19.5367" y="9.83813" width="10.9614" height="7.08984" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_128_178"/></filter><linearGradient id="g0c" x1="0" y1="17.7839" x2="34.2021" y2="17.7839" gradientUnits="userSpaceOnUse"><stop stop-color="#EBB34D"/><stop offset="0.03" stop-color="#EBB64D"/><stop offset="0.18" stop-color="#EEC04F"/><stop offset="0.55" stop-color="#F0CC50"/><stop offset="1" stop-color="#F3D652"/></linearGradient><linearGradient id="g1c" x1="17.0993" y1="0.680908" x2="17.0993" y2="24.5639" gradientUnits="userSpaceOnUse"><stop stop-color="#4F80C0"/><stop offset="1" stop-color="#4F80C0" stop-opacity="0"/></linearGradient></defs></svg>
-            <span class="mood-label" style="display:none">놀랐다</span>
-          </div>
-          <div class="mood-item" onclick="selMood(this)" data-mood="걱정">
-            <svg width="34" height="35" viewBox="0 0 34 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.7402 34.3701C25.9856 34.3701 33.4804 26.8752 33.4804 17.6298C33.4804 8.38449 25.9856 0.889648 16.7402 0.889648C7.49484 0.889648 0 8.38449 0 17.6298C0 26.8752 7.49484 34.3701 16.7402 34.3701Z" fill="url(#g0d)"/><g filter="url(#f0d)"><ellipse cx="9.4997" cy="22.4999" rx="3.5" ry="1.5" transform="rotate(6.68328 9.4997 22.4999)" fill="#DD8766"/></g><g filter="url(#f1d)"><ellipse cx="3.5" cy="1.5" rx="3.5" ry="1.5" transform="matrix(-0.993205 0.116381 0.116381 0.993205 27.8014 20.6028)" fill="#DD8766"/></g><path d="M22.899 20.4696C20.757 20.4696 19.7988 18.9803 19.594 18.1887C19.4725 17.7235 19.7502 17.2514 20.2154 17.1299C20.6736 17.0084 21.1458 17.2826 21.2708 17.7374C21.3228 17.9075 21.6283 18.7234 22.9059 18.7338C24.1453 18.7338 24.5237 17.793 24.5619 17.6853C24.725 17.2375 25.218 17.0014 25.6658 17.1577C26.1137 17.3139 26.3567 17.793 26.2074 18.2443C26.1762 18.3345 25.4402 20.4661 22.9128 20.4696H22.9024H22.899Z" fill="black"/><path d="M10.5642 20.4696C8.42218 20.4696 7.46401 18.9803 7.25918 18.1887C7.13768 17.7235 7.41541 17.2514 7.8806 17.1299C8.33886 17.0084 8.811 17.2826 8.93598 17.7374C8.98805 17.9075 9.30397 18.7338 10.5642 18.7338H10.5711C11.807 18.7338 12.1854 17.793 12.2271 17.6853C12.3903 17.241 12.8832 17.0014 13.3311 17.1577C13.7789 17.3139 14.0219 17.793 13.8726 18.2443C13.8414 18.3345 13.1054 20.4661 10.5781 20.4696H10.5676H10.5642Z" fill="black"/><path d="M20.3889 27.7287C20.2674 27.7287 20.1424 27.6975 20.0279 27.628C16.2993 25.3611 13.6435 27.4788 13.5324 27.569C13.2374 27.812 12.7999 27.7704 12.5569 27.4753C12.3139 27.1802 12.3521 26.7462 12.6437 26.4998C12.786 26.3817 16.1466 23.6391 20.75 26.4373C21.0763 26.6352 21.1805 27.0622 20.9826 27.392C20.8506 27.6072 20.6215 27.7252 20.3889 27.7252V27.7287Z" fill="#5B0600"/><path d="M5.31163 0.143193C5.31163 0.143193 8.46387 4.99653 9.35955 7.5586C10.2344 10.0651 9.63034 12.8146 7.26616 14.0228C4.90198 15.2309 2.01011 14.2936 0.801982 11.9294C0.0764114 10.513 0.256936 8.93336 0.801982 7.5586C2.11426 4.24319 4.8499 0.143193 4.8499 0.143193C4.91586 0.0147423 5.07209 -0.0373321 5.20054 0.0286289C5.25261 0.0529303 5.2908 0.0945898 5.3151 0.143193H5.31163Z" fill="url(#g1d)"/><defs><filter id="f0d" x="4.01904" y="18.9551" width="10.9614" height="7.08984" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_128_199"/></filter><filter id="f1d" x="19.019" y="18.9551" width="10.9614" height="7.08984" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_128_199"/></filter><linearGradient id="g0d" x1="2.2392" y1="26" x2="31.2412" y2="9.25628" gradientUnits="userSpaceOnUse"><stop stop-color="#EBB34D"/><stop offset="0.03" stop-color="#EBB64D"/><stop offset="0.18" stop-color="#EEC04F"/><stop offset="0.55" stop-color="#F0CC50"/><stop offset="1" stop-color="#F3D652"/></linearGradient><linearGradient id="g1d" x1="5.03043" y1="14.5505" x2="5.03043" y2="0.000855083" gradientUnits="userSpaceOnUse"><stop stop-color="#77AAF2"/><stop offset="0.35" stop-color="#8EBAF3"/><stop offset="0.74" stop-color="#A1C7F5"/><stop offset="1" stop-color="#A9CCF6"/></linearGradient></defs></svg>
-            <span class="mood-label" style="display:none">걱정</span>
-          </div>
-          <div class="mood-item" onclick="selMood(this)" data-mood="화남">
-            <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.185 34.37C26.676 34.37 34.37 26.676 34.37 17.185C34.37 7.69399 26.676 0 17.185 0C7.69399 0 0 7.69399 0 17.185C0 26.676 7.69399 34.37 17.185 34.37Z" fill="url(#g0e)"/><path d="M17.185 34.37C26.676 34.37 34.37 26.676 34.37 17.185C34.37 7.69399 26.676 0 17.185 0C7.69399 0 0 7.69399 0 17.185C0 26.676 7.69399 34.37 17.185 34.37Z" fill="url(#g1e)"/><g filter="url(#f0e)"><ellipse cx="9.4997" cy="23.4999" rx="3.5" ry="1.5" transform="rotate(6.68328 9.4997 23.4999)" fill="#DD8766"/></g><g filter="url(#f1e)"><ellipse cx="3.5" cy="1.5" rx="3.5" ry="1.5" transform="matrix(-0.993205 0.116381 0.116381 0.993205 27.8014 21.6028)" fill="#DD8766"/></g><path fill-rule="evenodd" clip-rule="evenodd" d="M13.8966 28.4588C13.595 28.7111 13.1458 28.6714 12.8931 28.3699C12.6402 28.0682 12.6798 27.6187 12.9815 27.3658L13.4349 27.9067C12.9815 27.3658 12.9818 27.3655 12.9821 27.3652L12.9829 27.3646L12.9846 27.3632L12.9888 27.3597L13.001 27.3498C13.0106 27.342 13.0234 27.3318 13.0393 27.3195C13.071 27.295 13.1151 27.2618 13.1711 27.2221C13.283 27.1428 13.4431 27.037 13.6475 26.9209C14.0554 26.6892 14.6455 26.4136 15.386 26.2299C16.8851 25.858 18.9563 25.8756 21.3044 27.303C21.6408 27.5074 21.7477 27.9459 21.5433 28.2823C21.3388 28.6187 20.9003 28.7256 20.5639 28.5211C18.5677 27.3077 16.8915 27.3252 15.7293 27.6135C15.1391 27.7599 14.6701 27.9795 14.3515 28.1604C14.1927 28.2507 14.0726 28.3305 13.9953 28.3853C13.9567 28.4127 13.9289 28.4337 13.9123 28.4465C13.904 28.4529 13.8986 28.4572 13.8961 28.4593C13.8954 28.4598 13.895 28.4602 13.8947 28.4604L13.8961 28.4593L13.8966 28.4588ZM13.8947 28.4604C13.8944 28.4606 13.8946 28.4605 13.8947 28.4604Z" fill="#5B0600"/><path d="M10.7415 22.2349C11.641 22.2349 12.3702 21.0398 12.3702 19.5656C12.3702 18.0913 11.641 16.8962 10.7415 16.8962C9.84204 16.8962 9.11285 18.0913 9.11285 19.5656C9.11285 21.0398 9.84204 22.2349 10.7415 22.2349Z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M8.11598 15.3336C8.3393 15.0094 8.78314 14.9277 9.10731 15.151L13.277 18.0235C13.6012 18.2468 13.683 18.6907 13.4597 19.0148C13.2363 19.339 12.7925 19.4208 12.4683 19.1974L8.29859 16.325C7.97441 16.1016 7.89266 15.6578 8.11598 15.3336Z" fill="black"/><path d="M25.2607 19.5656C25.2607 21.041 24.5301 22.2349 23.632 22.2349C22.734 22.2349 22.0034 21.041 22.0034 19.5656C22.0034 18.0901 22.734 16.8962 23.632 16.8962C24.5301 16.8962 25.2607 18.0901 25.2607 19.5656Z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M25.7978 15.3336C26.0211 15.6578 25.9394 16.1016 25.6152 16.325L21.4454 19.1974C21.1213 19.4208 20.6774 19.339 20.4541 19.0148C20.2308 18.6907 20.3125 18.2468 20.6367 18.0235L24.8065 15.151C25.1306 14.9277 25.5745 15.0094 25.7978 15.3336Z" fill="black"/><defs><filter id="f0e" x="4.01904" y="19.9551" width="10.9614" height="7.08984" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_128_147"/></filter><filter id="f1e" x="19.019" y="19.9551" width="10.9614" height="7.08984" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_128_147"/></filter><linearGradient id="g0e" x1="2.2987" y1="25.7811" x2="32.0713" y2="8.5925" gradientUnits="userSpaceOnUse"><stop stop-color="#EBB34D"/><stop offset="0.03" stop-color="#EBB64D"/><stop offset="0.18" stop-color="#EEC04F"/><stop offset="0.55" stop-color="#F0CC50"/><stop offset="1" stop-color="#F3D652"/></linearGradient><linearGradient id="g1e" x1="17.185" y1="0" x2="17.185" y2="34.3736" gradientUnits="userSpaceOnUse"><stop stop-color="#DD5F70"/><stop offset="0.16" stop-color="#DD636F" stop-opacity="0.97"/><stop offset="0.45" stop-color="#E48965" stop-opacity="0.64"/><stop offset="1" stop-color="#F3D652" stop-opacity="0"/></linearGradient></defs></svg>
-            <span class="mood-label" style="display:none">화남</span>
-          </div>
-        </div>
-
-        <!-- 짧은 노트 -->
-        <div class="new-field">
-          <div class="new-field-icon"><i class="ph ph-pencil-simple"></i></div>
-          <input id="entry-content" class="new-text-input" placeholder="짧은 노트">
-        </div>
-
-        <!-- 공개 범위 -->
-        <div class="new-privacy-pills">
-          <div class="new-privacy-pill on" id="privacy-private" onclick="selPrivacy(false)">
-            <i class="ph ph-lock-simple"></i> 나만 보기
-          </div>
-          <div class="new-privacy-pill" id="privacy-public" onclick="selPrivacy(true)">
-            <i class="ph ph-heart"></i> 파트너 공유
-          </div>
-        </div>
-
-        <!-- 저장 버튼 -->
-        <button class="new-submit-btn" onclick="saveEntry()">글 올리기</button>
+    <!-- 공개 범위 -->
+    <div class="new-privacy-row">
+      <div class="privacy-label">
+        <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 7H14V5C14 2.24 11.76 0 9 0C6.24 0 4 2.24 4 5V7H3C1.9 7 1 7.9 1 9V19C1 20.1 1.9 21 3 21H15C16.1 21 17 20.1 17 19V9C17 7.9 16.1 7 15 7ZM9 16C7.9 16 7 15.1 7 14C7 12.9 7.9 12 9 12C10.1 12 11 12.9 11 14C11 15.1 10.1 16 9 16ZM12.1 7H5.9V5C5.9 3.29 7.29 1.9 9 1.9C10.71 1.9 12.1 3.29 12.1 5V7Z" fill="#875084"/></svg>
+        나만 보기
+      </div>
+      <div class="toggle-wrap" id="privacy-toggle" onclick="togglePrivacy()">
+        <div class="toggle-knob"></div>
       </div>
     </div>
 
-    <div class="screen" id="s-medical">
-      <div class="med-hero">
-        <div class="med-lbl">메디컬 프로필</div>
-        <div class="med-name">건강 기록</div>
-        <div class="sos-strip">
-          <div class="sos-icon">🆘</div>
-          <div class="sos-txt"><strong>응급 정보</strong>iPhone Health 앱에서 확인 가능</div>
-          <div class="sos-arrow">›</div>
-        </div>
+    <!-- 저장 버튼 -->
+    <button class="new-submit-btn" onclick="saveEntry()">글 올리기</button>
+  </div>
+</div>
+
+<div class="screen" id="s-medical">
+  <div class="med-hero">
+    <div class="med-lbl">메디컬 프로필</div>
+    <div class="med-name">건강 기록</div>
+    <div class="sos-strip">
+      <div class="sos-icon">🆘</div>
+      <div class="sos-txt"><strong>응급 정보</strong>iPhone Health 앱에서 확인 가능</div>
+      <div class="sos-arrow">›</div>
+    </div>
+  </div>
+  <div class="med-body">
+    <div class="info-block">
+      <div class="block-title">의료 정보</div>
+      <div class="info-row"><div class="i-lbl">혈액형</div><div class="chip-blood">A+</div></div>
+      <div class="info-row"><div class="i-lbl">임신 상태</div><div class="chip-ok">✓ 정상 임신</div></div>
+      <div class="info-row"><div class="i-lbl">알레르기</div><div class="chip-warn">⚠ 페니실린</div></div>
+    </div>
+    <div class="info-block">
+      <div class="block-title">담당의</div>
+      <div class="info-row"><div class="i-lbl">병원</div><div class="i-val">서울 성모 병원</div></div>
+      <div class="info-row"><div class="i-lbl">담당의</div><div class="i-val">Dr. 박미연</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="s-partner">
+  <div id="partner-hero-area"></div>
+  <div id="partner-connect-area"></div>
+  <div id="partner-feed-area"></div>
+</div>
+
+<div class="screen plain" id="s-settings">
+  <div class="screen-hdr">
+    <div class="back-btn" onclick="goBack()">&#8592;</div>
+    <div class="screen-title">설정</div>
+  </div>
+  <div class="settings-scroll">
+    <div class="info-block" style="margin-bottom:16px;">
+      <div class="block-title">내 프로필</div>
+      <div class="info-row">
+        <div class="i-lbl">임신 주수</div>
+        <input id="week-input" type="number" class="txt-in" style="width:80px;text-align:right;padding:6px 10px;" placeholder="24">
       </div>
-      <div class="med-body">
-        <div class="info-block">
-          <div class="block-title">의료 정보</div>
-          <div class="info-row"><div class="i-lbl">혈액형</div><div class="chip-blood">A+</div></div>
-          <div class="info-row"><div class="i-lbl">임신 상태</div><div class="chip-ok">✓ 정상 임신</div></div>
-          <div class="info-row"><div class="i-lbl">알레르기</div><div class="chip-warn">⚠ 페니실린</div></div>
+      <div class="info-row">
+        <div class="i-lbl">출산 예정일</div>
+        <input id="edd-input" type="date" class="txt-in" style="width:150px;text-align:right;padding:6px 10px;" oninput="autoCalcWeekFromEdd()">
+      </div>
+      <div style="padding:4px 16px 12px;font-size:12px;color:var(--text-soft);" id="settings-calc-hint"></div>
+      <div style="padding:12px 16px;">
+        <button class="save-btn" onclick="saveProfile()">저장</button>
+      </div>
+    </div>
+    <button onclick="signOut()" style="width:100%;background:#F8F6FA;color:var(--text-soft);border:1px solid rgba(200,162,201,0.3);border-radius:15px;padding:14px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">로그아웃</button>
+  </div>
+</div>
+
+<div class="screen plain" id="s-setup">
+  <div class="setup-wrap">
+    <div class="setup-logo">nuri 🌸</div>
+    <div class="setup-sub">임신 정보를 입력해줘요</div>
+    <div class="setup-step on" id="setup-step-1">
+      <div class="setup-q">어떤 정보를 알고 있어요?</div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div id="opt-week" onclick="selectSetupOpt('week')" style="border:1.5px solid rgba(200,162,201,0.4);border-radius:14px;padding:18px;cursor:pointer;background:#fff;">
+          <div style="font-size:15px;font-weight:700;color:var(--text);">현재 임신 주수</div>
+          <div style="font-size:12px;color:var(--text-soft);margin-top:4px;">지금 몇 주인지 알고 있어요</div>
         </div>
-        <div class="info-block">
-          <div class="block-title">담당의</div>
-          <div class="info-row"><div class="i-lbl">병원</div><div class="i-val">서울 성모 병원</div></div>
-          <div class="info-row"><div class="i-lbl">담당의</div><div class="i-val">Dr. 박미연</div></div>
+        <div id="opt-lmp" onclick="selectSetupOpt('lmp')" style="border:1.5px solid rgba(200,162,201,0.4);border-radius:14px;padding:18px;cursor:pointer;background:#fff;">
+          <div style="font-size:15px;font-weight:700;color:var(--text);">마지막 생리 시작일</div>
+          <div style="font-size:12px;color:var(--text-soft);margin-top:4px;">날짜로 자동 계산해요</div>
+        </div>
+        <div id="opt-edd" onclick="selectSetupOpt('edd')" style="border:1.5px solid rgba(200,162,201,0.4);border-radius:14px;padding:18px;cursor:pointer;background:#fff;">
+          <div style="font-size:15px;font-weight:700;color:var(--text);">출산 예정일 (EDD)</div>
+          <div style="font-size:12px;color:var(--text-soft);margin-top:4px;">산부인과에서 받은 날짜예요</div>
         </div>
       </div>
     </div>
-
-    <div class="screen" id="s-partner">
-      <div id="partner-hero-area"></div>
-      <div id="partner-connect-area"></div>
-      <div id="partner-feed-area"></div>
+    <div class="setup-step" id="setup-step-2">
+      <div class="setup-q" id="setup-step2-q">현재 임신 주수를 입력해줘요</div>
+      <div class="setup-hint" id="setup-step2-hint">예정일도 함께 입력하면 더 정확해요</div>
+      <div id="setup-week-row" style="display:flex;align-items:center;gap:10px;">
+        <input type="number" class="setup-input" id="setup-week-input" min="1" max="42" placeholder="24" style="font-size:28px;font-weight:800;text-align:center;width:120px;" oninput="calcWeekPreview()">
+        <span style="font-size:16px;color:var(--text-soft);">주차</span>
+      </div>
+      <div id="setup-date-row">
+        <input type="date" class="setup-input" id="setup-date-input" oninput="calcWeekPreview()">
+      </div>
+      <div class="setup-calc" id="setup-calc-result">입력하면 예정일을 계산해요 ✨</div>
+      <button class="setup-btn" onclick="saveSetup()">시작하기 🌱</button>
+      <div class="setup-skip" onclick="skipSetup()">나중에 입력할게요</div>
     </div>
+  </div>
+</div>
 
-    <div class="screen plain" id="s-settings">
-      <div class="screen-hdr">
-        <div class="back-btn" onclick="goBack()">&#8592;</div>
-        <div class="screen-title">설정</div>
-      </div>
-      <div class="settings-scroll">
-        <div class="info-block" style="margin-bottom:16px;">
-          <div class="block-title">내 프로필</div>
-          <div class="info-row">
-            <div class="i-lbl">임신 주수</div>
-            <input id="week-input" type="number" class="txt-in" style="width:80px;text-align:right;padding:6px 10px;" placeholder="24">
-          </div>
-          <div class="info-row">
-            <div class="i-lbl">출산 예정일</div>
-            <input id="edd-input" type="date" class="txt-in" style="width:150px;text-align:right;padding:6px 10px;" oninput="autoCalcWeekFromEdd()">
-          </div>
-          <div style="padding:4px 16px 12px;font-size:12px;color:var(--text-soft);" id="settings-calc-hint"></div>
-          <div style="padding:12px 16px;">
-            <button class="save-btn" onclick="saveProfile()">저장</button>
-          </div>
-        </div>
-        <button onclick="signOut()" style="width:100%;background:#F8F6FA;color:var(--text-soft);border:1px solid rgba(200,162,201,0.3);border-radius:15px;padding:14px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">로그아웃</button>
-      </div>
+<!-- Union.svg clip-path 정의 -->
+<svg style="position:absolute;width:0;height:0;overflow:hidden;" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <clipPath id="union-clip" clipPathUnits="objectBoundingBox">
+      <path d="M0.5 0C0.776 0 1 0.224 1 0.5C1 0.515 0.999 0.529 0.998 0.542C0.999 0.546 1 0.550 1 0.556V0.933C1 0.968 0.968 1 0.933 1H0.533C0.530 1 0.527 1 0.524 0.999C0.516 1 0.508 1 0.5 1C0.224 1 0 0.776 0 0.5C0 0.224 0.224 0 0.5 0Z"/>
+    </clipPath>
+  </defs>
+</svg>
+
+<!-- ── Bottom Nav (피그마 스펙: 353×45, gap 121, space-between) ── -->
+<nav class="bottom-nav">
+  <div class="nav-left">
+    <div class="nav-item active" id="n-home" onclick="navTo('s-home','n-home')">
+      <i class="ph ph-house"></i>
     </div>
-
-    <div class="screen plain" id="s-setup">
-      <div class="setup-wrap">
-        <div class="setup-logo">nuri 🌸</div>
-        <div class="setup-sub">임신 정보를 입력해줘요</div>
-        <div class="setup-step on" id="setup-step-1">
-          <div class="setup-q">어떤 정보를 알고 있어요?</div>
-          <div style="display:flex;flex-direction:column;gap:12px;">
-            <div id="opt-week" onclick="selectSetupOpt('week')" style="border:1.5px solid rgba(200,162,201,0.4);border-radius:14px;padding:18px;cursor:pointer;background:#fff;">
-              <div style="font-size:15px;font-weight:700;color:var(--text);">현재 임신 주수</div>
-              <div style="font-size:12px;color:var(--text-soft);margin-top:4px;">지금 몇 주인지 알고 있어요</div>
-            </div>
-            <div id="opt-lmp" onclick="selectSetupOpt('lmp')" style="border:1.5px solid rgba(200,162,201,0.4);border-radius:14px;padding:18px;cursor:pointer;background:#fff;">
-              <div style="font-size:15px;font-weight:700;color:var(--text);">마지막 생리 시작일</div>
-              <div style="font-size:12px;color:var(--text-soft);margin-top:4px;">날짜로 자동 계산해요</div>
-            </div>
-            <div id="opt-edd" onclick="selectSetupOpt('edd')" style="border:1.5px solid rgba(200,162,201,0.4);border-radius:14px;padding:18px;cursor:pointer;background:#fff;">
-              <div style="font-size:15px;font-weight:700;color:var(--text);">출산 예정일 (EDD)</div>
-              <div style="font-size:12px;color:var(--text-soft);margin-top:4px;">산부인과에서 받은 날짜예요</div>
-            </div>
-          </div>
-        </div>
-        <div class="setup-step" id="setup-step-2">
-          <div class="setup-q" id="setup-step2-q">현재 임신 주수를 입력해줘요</div>
-          <div class="setup-hint" id="setup-step2-hint">예정일도 함께 입력하면 더 정확해요</div>
-          <div id="setup-week-row" style="display:flex;align-items:center;gap:10px;">
-            <input type="number" class="setup-input" id="setup-week-input" min="1" max="42" placeholder="24" style="font-size:28px;font-weight:800;text-align:center;width:120px;" oninput="calcWeekPreview()">
-            <span style="font-size:16px;color:var(--text-soft);">주차</span>
-          </div>
-          <div id="setup-date-row">
-            <input type="date" class="setup-input" id="setup-date-input" oninput="calcWeekPreview()">
-          </div>
-          <div class="setup-calc" id="setup-calc-result">입력하면 예정일을 계산해요 ✨</div>
-          <button class="setup-btn" onclick="saveSetup()">시작하기 🌱</button>
-          <div class="setup-skip" onclick="skipSetup()">나중에 입력할게요</div>
-        </div>
-      </div>
+    <div class="nav-item" id="n-appt" onclick="navTo('s-medical','n-appt')">
+      <i class="ph ph-calendar-check"></i>
     </div>
+    <div class="nav-item" id="n-profile" onclick="navTo('s-settings','n-profile');loadProfile()">
+      <i class="ph ph-user"></i>
+    </div>
+  </div>
 
-    <!-- Union.svg clip-path 정의 -->
-    <svg style="position:absolute;width:0;height:0;overflow:hidden;" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <clipPath id="union-clip" clipPathUnits="objectBoundingBox">
-          <path d="M0.5 0C0.776 0 1 0.224 1 0.5C1 0.515 0.999 0.529 0.998 0.542C0.999 0.546 1 0.550 1 0.556V0.933C1 0.968 0.968 1 0.933 1H0.533C0.530 1 0.527 1 0.524 0.999C0.516 1 0.508 1 0.5 1C0.224 1 0 0.776 0 0.5C0 0.224 0.224 0 0.5 0Z"/>
-        </clipPath>
-      </defs>
-    </svg>
+  <button class="nav-fab" id="composer-fab" type="button"
+          aria-label="작성하기 열기" aria-expanded="false"
+          onclick="toggleComposer()">
+    <span class="fab-icon fab-plus"><i class="ph ph-plus"></i></span>
+    <span class="fab-icon fab-close"><i class="ph ph-x"></i></span>
+  </button>
+</nav>
+```
 
-    <!-- ── Bottom Nav (피그마 스펙: 353×45, gap 121, space-between) ── -->
-    <nav class="bottom-nav">
-      <div class="nav-left">
-        <div class="nav-item active" id="n-home" onclick="navTo('s-home','n-home')">
-          <i class="ph ph-house"></i>
-        </div>
-        <div class="nav-item" id="n-appt" onclick="navTo('s-medical','n-appt')">
-          <i class="ph ph-calendar-check"></i>
-        </div>
-        <div class="nav-item" id="n-profile" onclick="navTo('s-settings','n-profile');loadProfile()">
-          <i class="ph ph-user"></i>
-        </div>
-      </div>
-
-      <button class="nav-fab" id="composer-fab" type="button"
-              aria-label="작성하기 열기" aria-expanded="false"
-              onclick="toggleComposer()">
-        <span class="fab-icon fab-plus"><i class="ph ph-plus"></i></span>
-        <span class="fab-icon fab-close"><i class="ph ph-x"></i></span>
-      </button>
-    </nav>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script>
     const _supabase = supabase.createClient(
       'https://sctgioatjgudhtinvesf.supabase.co',
@@ -1053,10 +1084,10 @@
     }
 
     let isPublicEntry = false;
-    function selPrivacy(isPublic) {
-      isPublicEntry = isPublic;
-      document.getElementById('privacy-private').classList.toggle('on', !isPublic);
-      document.getElementById('privacy-public').classList.toggle('on', isPublic);
+    function togglePrivacy() {
+      isPublicEntry = !isPublicEntry;
+      const toggle = document.getElementById('privacy-toggle');
+      if (toggle) toggle.classList.toggle('on', isPublicEntry);
     }
 
     function selNewTab(el) {
@@ -1692,5 +1723,6 @@
     window.addEventListener('DOMContentLoaded', () => { syncComposerState(); checkAuth(); });
     window.addEventListener('resize', positionTimelineLine);
   </script>
+
 </body>
 </html>
