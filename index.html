@@ -591,26 +591,27 @@ html, body {
 #s-new {
   background: var(--bg);
   padding-bottom: 140px;
+  overflow-x: hidden;
 }
 
 .new-card {
   background: #fff;
   border-radius: 20px;
   margin: 19px 16px 20px;
-  padding: 20px 16px;
+  padding: 16px;
+  box-sizing: border-box;
   width: calc(100% - 32px);
+  max-width: 100%;
   box-shadow: 0px 16px 16px -8px rgba(12,12,13,0.1), 0px 4px 4px -4px rgba(12,12,13,0.05);
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  box-sizing: border-box;
+  gap: 12px;
 }
 
 /* 타입 탭 */
 .new-type-tabs {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
   padding: 3px 4px;
   width: 100%;
@@ -618,6 +619,7 @@ html, body {
   background: #EEE2EE;
   border-radius: 50px;
   flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .new-type-tab {
@@ -628,11 +630,12 @@ html, body {
   height: 39px;
   border-radius: 30px;
   text-align: center;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 400;
   color: #693F66;
   cursor: pointer;
   transition: all 0.2s;
+  white-space: nowrap;
 }
 
 .new-type-tab.on {
@@ -644,7 +647,7 @@ html, body {
 .new-cam-zone {
   border: 3px dashed #834D84;
   border-radius: 20px;
-  height: 200px;
+  height: 150px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -654,6 +657,7 @@ html, body {
   background: #F8F6FA;
   width: 100%;
   flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .new-cam-placeholder {
@@ -668,13 +672,14 @@ html, body {
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 16px 24px;
-  gap: 24px;
+  padding: 0 16px;
+  gap: 12px;
   width: 100%;
   height: 50px;
   background: #F8F6FA;
   border-radius: 50px;
   flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .date-field { cursor: pointer; }
@@ -689,14 +694,15 @@ html, body {
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 16px 24px;
-  gap: 75px;
+  padding: 0 16px;
+  gap: 12px;
   width: 100%;
   height: 50px;
   background: #F8F6FA;
   border-radius: 50px;
   cursor: pointer;
   flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .new-date-input {
@@ -737,6 +743,7 @@ html, body {
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .mood-item {
@@ -744,8 +751,8 @@ html, body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  width: 54px;
-  height: 54px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   transition: background 0.18s;
   flex-shrink: 0;
